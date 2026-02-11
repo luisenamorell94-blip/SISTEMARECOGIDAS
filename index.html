@@ -163,7 +163,6 @@
         /* --- MAPA HEADER CON IMAGENES REALES (V58) --- */
         .map-header {
             height: 90px;
-            /* Se define la imagen en línea por JS, aquí ponemos un fallback */
             background-color: #333;
             background-size: cover;
             background-position: center;
@@ -174,7 +173,6 @@
             cursor: pointer;
             position: relative;
         }
-        /* Capa oscura */
         .map-header::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7));
@@ -183,7 +181,7 @@
         .map-header:active { filter: brightness(0.9); }
         
         .dept-tag { 
-            background: #f59e0b; color: white; font-weight: 800; font-size: 11px; 
+            background: var(--primary-dark); color: white; font-weight: 800; font-size: 11px; 
             padding: 4px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 2;
         }
@@ -371,8 +369,22 @@
             </div>
 
             <div id="view-admin-team" class="app-view">
-                <div class="card"><div class="card-header">RECOGEDORES</div><div style="display:flex; gap:5px;"><input id="nuevo-recogedor" class="app-input"><button class="app-btn btn-success" onclick="agregarRecogedor()">+</button></div><ul id="lista-equipo"></ul></div>
-                <div class="card"><div class="card-header">VENDEDORES</div><div style="display:flex; gap:5px;"><input id="nuevo-vendedor" class="app-input"><button class="app-btn btn-success" onclick="agregarVendedor()">+</button></div><ul id="lista-vendedores-ui"></ul></div>
+                <div class="card">
+                    <div class="card-header">RECOGEDORES</div>
+                    <div style="display:flex; gap:5px;">
+                        <input id="nuevo-recogedor" class="app-input" placeholder="Nuevo..." style="margin:0;">
+                        <button class="app-btn btn-success" style="width:auto; margin:0;" onclick="agregarRecogedor()">+</button>
+                    </div>
+                    <ul id="lista-equipo" style="padding-left:0;"></ul>
+                </div>
+                <div class="card">
+                    <div class="card-header">VENDEDORES</div>
+                    <div style="display:flex; gap:5px;">
+                        <input id="nuevo-vendedor" class="app-input" placeholder="Nuevo..." style="margin:0;">
+                        <button class="app-btn btn-success" style="width:auto; margin:0;" onclick="agregarVendedor()">+</button>
+                    </div>
+                    <ul id="lista-vendedores-ui" style="padding-left:0;"></ul>
+                </div>
             </div>
 
             <div id="view-worker-list" class="app-view">
@@ -510,7 +522,7 @@
         function getMapInfo(zona) {
             const z = (zona || '').toString().toUpperCase();
             if(z.includes('SONAGUERA') || z.includes('TOCOA') || z.includes('TRUJILLO') || z.includes('BONITO')) {
-                return { dept: 'COLÓN 🌴', img: 'trujillo.jpg' }; // TU IMAGEN
+                return { dept: 'COLÓN 🌴', img: 'trujillo.jpg' };
             }
             if(z.includes('OLANCHITO')) {
                 return { dept: 'YORO 🌧️', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e4/Parque_Central_Olanchito.jpg' };
@@ -519,9 +531,9 @@
                 return { dept: 'ATLÁNTIDA 🌊', img: 'https://i.pinimg.com/originals/3d/95/92/3d95927357c3f8f17257929653066373.jpg' };
             }
             if(z.includes('OLANCHO')) {
-                return { dept: 'OLANCHO 🤠', img: 'olancho.webp' }; // TU IMAGEN
+                return { dept: 'OLANCHO 🤠', img: 'olancho.webp' };
             }
-            // Imagen por defecto (Honduras)
+            // Default
             return { dept: 'HONDURAS 🇭🇳', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tegucigalpa_at_dusk.jpg/1200px-Tegucigalpa_at_dusk.jpg' };
         }
 
@@ -533,10 +545,8 @@
         function renderMisiones() {
             const c = document.getElementById('worker-misiones-container'); c.innerHTML="";
             
-            // 1. Filtrar mis tarjetas
             let misPendientes = misDatos.filter(d => d.recogio===usuario.nombre && (d.estado==='PENDIENTE'||d.estado==='NO_RECOGIDO'));
             
-            // 2. Chips con botón TODAS
             const zonaContainer = document.getElementById('zona-summary');
             let counts = {}; misPendientes.forEach(d => { counts[d.zona] = (counts[d.zona] || 0) + 1; });
             
@@ -549,7 +559,6 @@
             });
             zonaContainer.innerHTML = htmlZonas;
 
-            // 3. Filtros
             let p = misPendientes;
             if (filtroZonaActivo) { p = p.filter(d => d.zona === filtroZonaActivo); }
 
@@ -567,7 +576,7 @@
                         <span class="map-action">📍 VER MAPA</span>
                     </div>
 
-                    <div style="padding:0 10px;">
+                    <div style="padding:10px;">
                         <div><span class="zona-badge">${d.zona}</span> <span class="vend-badge">${d.vendedor}</span></div>
                         <div style="font-size:22px; font-weight:800; color:var(--primary); margin:10px 0;">#${d.tarjeta}</div>
                         <div class="financial-info">💰 Saldo: ${d.saldo_actual} | 📅 Abono: ${formatDate(d.ultima_fecha_pago)}</div>
@@ -665,10 +674,51 @@
             document.getElementById('stats-zonas').innerHTML = Object.entries(cz).sort((a,b)=>b[1]-a[1]).slice(0,5).map(e=>`<div class="stat-row"><span>${e[0]}</span> <span class="stat-badge badge-green">${e[1]}</span></div>`).join('');
         }
 
-        function agregarRecogedor(){ let v=prompt("Nombre:"); if(v) { listaRecogedores.push(v.toUpperCase()); db.collection("config_recogedores").doc("lista").set({nombres:listaRecogedores}); }}
-        function agregarVendedor(){ let v=prompt("Nombre:"); if(v) { listaVendedores.push(v.toUpperCase()); db.collection("config_vendedores").doc("lista").set({nombres:listaVendedores}); }}
-        function eliminarItem(n,t){ if(confirm("Eliminar?")){ if(t=='recogedores') listaRecogedores=listaRecogedores.filter(x=>x!=n); else listaVendedores=listaVendedores.filter(x=>x!=n); db.collection("config_"+t).doc("lista").set({nombres:t=='recogedores'?listaRecogedores:listaVendedores}); } }
-        function renderList(id,l,t){ document.getElementById(id).innerHTML = l.map(i=>`<li style="padding:10px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;">${i} <button class="btn-icon" style="color:red;" onclick="eliminarItem('${i}','${t}')">🗑️</button></li>`).join(''); }
+        function agregarRecogedor() {
+            const input = document.getElementById('nuevo-recogedor');
+            const v = input.value.trim().toUpperCase();
+            if (v) {
+                if (!listaRecogedores.includes(v)) {
+                    listaRecogedores.push(v);
+                    db.collection("config_recogedores").doc("lista").set({nombres: listaRecogedores})
+                        .then(() => { input.value = ''; alert("Recogedor agregado"); })
+                        .catch(e => alert("Error: " + e.message));
+                } else {
+                    alert("Ya existe");
+                }
+            } else {
+                alert("Escribe un nombre primero");
+            }
+        }
+
+        function agregarVendedor() {
+            const input = document.getElementById('nuevo-vendedor');
+            const v = input.value.trim().toUpperCase();
+            if (v) {
+                if (!listaVendedores.includes(v)) {
+                    listaVendedores.push(v);
+                    db.collection("config_vendedores").doc("lista").set({nombres: listaVendedores})
+                        .then(() => { input.value = ''; alert("Vendedor agregado"); })
+                        .catch(e => alert("Error: " + e.message));
+                } else {
+                    alert("Ya existe");
+                }
+            } else {
+                alert("Escribe un nombre primero");
+            }
+        }
+
+        function eliminarItem(n,t){ 
+            if(confirm("¿Eliminar " + n + "?")){ 
+                if(t=='recogedores') listaRecogedores=listaRecogedores.filter(x=>x!=n); 
+                else listaVendedores=listaVendedores.filter(x=>x!=n); 
+                db.collection("config_"+t).doc("lista").set({nombres:t=='recogedores'?listaRecogedores:listaVendedores}); 
+            } 
+        }
+        
+        function renderList(id,l,t){ 
+            document.getElementById(id).innerHTML = l.map(i=>`<li style="padding:10px;border-bottom:1px solid #eee;display:flex;justify-content:space-between; align-items:center;">${i} <button class="btn-icon" style="color:red; background:#fee2e2;" onclick="eliminarItem('${i}','${t}')">🗑️</button></li>`).join(''); 
+        }
     </script>
 </body>
 </html>
