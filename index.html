@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Control CMR - By Luis Enamorado</title>
+    <title>Control CMR - V60</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,236 +21,101 @@
     <link rel="apple-touch-icon" href="logo-ctr.png">
 
     <style>
-        /* --- ESTILOS BASE --- */
+        /* --- ESTILOS V60 --- */
         :root {
             --primary: #1e40af; 
             --primary-dark: #0f172a;
             --bg: #f0f2f5; 
-            --bg-app: #f8fafc;
             --white: #ffffff;
             --danger: #ef4444;
             --success: #16a34a;
-            --warn: #f59e0b;
             --review: #8b5cf6;
-            --vend: #059669;
         }
 
-        body { 
-            font-family: 'Inter', 'Segoe UI', sans-serif; 
-            background: var(--bg); margin: 0; 
-            display: flex; flex-direction: column; height: 100vh; overflow: hidden; 
-        }
-
-        /* TRANSICIONES */
-        button, input, select, .card, .menu-card, .chip { transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        button, input, select { transition: all 0.2s; }
         
         .full-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: none; flex-direction: column; z-index: 100; overflow-y: auto; }
         .visible { display: flex !important; }
         .app-view { display: none; padding-bottom: 90px; padding: 15px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
-        /* --- LOGIN --- */
-        #screen-rol, #screen-auth {
-            align-items: center; justify-content: center; padding: 20px; background: var(--bg);
-        }
-        
-        .login-split-container {
-            display: flex; width: 100%; max-width: 900px; min-height: 550px;
-            background: linear-gradient(135deg, #1e58c8 0%, #00388b 100%);
-            border-radius: 25px; overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-        }
+        /* LOGIN SPLIT (Diseño Clásico Restaurado) */
+        #screen-rol, #screen-auth { align-items: center; justify-content: center; padding: 20px; }
+        .login-split-container { display: flex; width: 100%; max-width: 900px; min-height: 550px; background: linear-gradient(135deg, #1e58c8 0%, #00388b 100%); border-radius: 25px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
+        .welcome-side { flex: 1; padding: 50px; color: white; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+        .form-side { flex: 1; padding: 40px; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; }
+        .white-login-card { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 
-        .welcome-side {
-            flex: 1; padding: 60px; color: white; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden;
-        }
-        .welcome-side::before { content: ''; position: absolute; top: -20%; left: -20%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
-        
-        .brand-main-text { font-size: 36px; font-weight: 900; margin: 0; letter-spacing: -1px; line-height: 1.1; z-index: 1; }
-        .brand-sub-text { font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8; margin-top: 10px; margin-bottom: 20px; z-index: 1; }
-        .welcome-msg { font-size: 15px; line-height: 1.6; opacity: 0.8; max-width: 400px; z-index: 1; }
+        /* INPUTS & BOTONES */
+        .app-input, .new-login-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; box-sizing: border-box; margin-bottom: 10px; }
+        .app-btn, .btn-login-new { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .app-btn:active { transform: scale(0.98); }
+        .btn-success { background: var(--success); } .btn-danger { background: var(--danger); } .btn-review { background: var(--review); }
 
-        .form-side { flex: 1; padding: 40px; display: flex; align-items: center; justify-content: center; background: transparent; }
-        .white-login-card { background: white; padding: 40px; border-radius: 20px; width: 100%; max-width: 380px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        .white-login-card h3 { color: var(--primary); font-size: 26px; font-weight: 800; margin-top: 0; margin-bottom: 10px; }
-        .login-subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 30px; }
-
-        .input-group { position: relative; margin-bottom: 20px; }
-        .new-login-input {
-            width: 100%; padding: 16px; border: 1px solid #e2e8f0; border-radius: 10px;
-            font-size: 15px; background: #f8fafc; font-family: 'Inter', sans-serif; box-sizing: border-box;
-        }
-        .new-login-input:focus { border-color: var(--primary); background: white; outline: none; box-shadow: 0 0 0 3px rgba(30, 88, 200, 0.1); }
-        
-        .glass-select {
-            width: 100%; padding: 16px;
-            background: rgba(240, 247, 255, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 12px; font-size: 15px; font-family: 'Inter', sans-serif;
-            color: var(--primary); font-weight: 700; box-shadow: 0 4px 15px rgba(30, 88, 200, 0.1);
-            outline: none; appearance: none; cursor: pointer;
-            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org/2000%2Fsvg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%231e3a8a%27%20stroke-width%3D%272.5%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpolyline%20points%3D%276%209%2012%2015%2018%209%27%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat; background-position: right 15px center; background-size: 18px;
-        }
-
-        .show-pass-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: 700; color: var(--primary); cursor: pointer; user-select: none; }
-
-        .role-btn-new {
-            background: #f8fafc; border: 1px solid #e2e8f0; padding: 18px; border-radius: 12px;
-            margin-bottom: 15px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 15px;
-        }
-        .role-btn-new:hover { border-color: var(--primary); background: #f0f7ff; transform: translateY(-3px); }
-        .role-btn-new:active { transform: scale(0.98); }
-        
-        .role-icon { background: #e0e7ff; padding: 12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); }
-        .role-icon svg { width: 24px; height: 24px; }
-        .role-text b { display: block; color: #0f172a; font-size: 16px; }
-        .role-text span { color: #64748b; font-size: 13px; }
-
-        .btn-login-new {
-            width: 100%; padding: 16px; background: var(--primary); color: white;
-            border: none; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 12px rgba(30, 88, 200, 0.25);
-        }
-        .btn-login-new:hover { background-color: #15449e; transform: translateY(-2px); }
-        .btn-login-new:active { transform: scale(0.98); }
-
-        /* --- DASHBOARD ADMIN --- */
+        /* DASHBOARD & MENUS */
         .dashboard-grid { display: grid; gap: 15px; grid-template-columns: 1fr; }
-        @media(min-width: 600px) { .dashboard-grid { grid-template-columns: 1fr 1fr; } }
+        .menu-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px; cursor: pointer; border: 1px solid #eee; }
+        .menu-icon { font-size: 24px; background: #eff6ff; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
 
-        .menu-card {
-            background: white; padding: 20px; border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #f1f5f9; cursor: pointer;
-            display: flex; align-items: center; gap: 15px;
-        }
-        .menu-card:hover { transform: translateY(-3px); border-color: var(--primary); }
-        .menu-icon { width: 50px; height: 50px; background: #eff6ff; color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-        .menu-info h3 { margin: 0; font-size: 16px; font-weight: 800; color: #1e293b; }
-        .menu-info p { margin: 2px 0 0 0; font-size: 12px; color: #64748b; }
-
-        /* --- APP INTERNA --- */
-        #screen-app { background: var(--bg-app); }
-        header { background: var(--primary); color: white; padding: 12px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; font-family: 'Segoe UI', sans-serif; }
-        .header-left { display: flex; align-items: center; gap: 10px; }
-        .btn-back { background: rgba(255,255,255,0.2); border: none; padding: 6px 10px; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; display: none; font-size: 12px; }
-        .header-brand-main { font-weight: 900; font-size: 16px; letter-spacing: 0.5px; }
-
-        #network-status { text-align: center; padding: 8px; font-size: 12px; font-weight: bold; color: white; display: none; font-family: 'Segoe UI', sans-serif; }
-        .status-online { background: var(--success); } .status-offline { background: var(--danger); }
-
-        .card { background: var(--white); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #e2e8f0; font-family: 'Segoe UI', sans-serif; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; }
-        .card-header { font-weight: bold; color: var(--primary-dark); border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; }
-
-        label.app-label { font-size: 11px; font-weight: bold; color: #64748b; display: block; margin-bottom: 4px; text-transform: uppercase; font-family: 'Segoe UI', sans-serif;}
-        .app-input { width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 8px; margin-bottom: 12px; background: #fff; font-size: 15px; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        /* TARJETAS & LISTAS */
+        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; }
         
-        .app-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 5px; font-family: 'Segoe UI', sans-serif;}
-        .btn-danger { background: var(--danger); } .btn-success { background: var(--success); } .btn-review { background: var(--review); }
-        .btn-icon { width: auto; padding: 5px 10px; font-size: 12px; margin: 0; font-family: 'Segoe UI', sans-serif; cursor: pointer; border-radius: 6px; border:none;}
+        /* HEADER MAPA (V58/V60) */
+        .map-header { height: 90px; background-color: #333; background-size: cover; background-position: center; display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 15px; cursor: pointer; position: relative; }
+        .map-header::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.6)); }
+        .dept-tag { background: var(--primary-dark); color: white; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; z-index: 2; }
+        .map-action { background: white; color: var(--primary); font-weight: 800; font-size: 11px; padding: 6px 12px; border-radius: 20px; z-index: 2; display: flex; gap: 5px; }
 
-        .mision-card { border-left: 0; padding: 0 !important;} /* Reset para usar el header mapa */
-        .financial-info { background: #fff7ed; border: 1px solid #ffedd5; padding: 8px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; color: #9a3412; font-weight: bold; }
-        .zona-badge { background: #eff6ff; color: var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 5px; }
-        .vend-badge { background: #ecfdf5; color: var(--success); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-
-        .stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; font-size: 12px; }
-        .stat-badge { padding: 2px 8px; border-radius: 10px; color: white; font-weight: bold; font-size: 10px; }
-        .badge-blue { background: var(--primary); } .badge-green { background: var(--success); }
-
-        table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: 'Segoe UI', sans-serif;}
-        th { background: #f1f5f9; padding: 8px; text-align: left; color: #475569; }
-        td { padding: 8px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        /* TABLAS & LISTAS EQUIPO */
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
         .row-review { background-color: #f3e8ff !important; }
-
-        /* --- MAPA HEADER CON IMAGENES REALES (V58) --- */
-        .map-header {
-            height: 90px;
-            background-color: #333;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            padding: 10px 15px;
-            cursor: pointer;
-            position: relative;
-        }
-        .map-header::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7));
-        }
-        .map-header:hover { filter: brightness(1.1); }
-        .map-header:active { filter: brightness(0.9); }
         
-        .dept-tag { 
-            background: var(--primary-dark); color: white; font-weight: 800; font-size: 11px; 
-            padding: 4px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 2;
-        }
-        .map-action {
-            background: white; color: var(--primary); font-weight: 800; font-size: 11px;
-            padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 2;
-        }
+        /* ITEM EQUIPO */
+        .team-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; }
+        .btn-trash { background: #fee2e2; color: #ef4444; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; }
 
-        /* --- CHIPS DE FILTRO --- */
+        /* CHIPS */
         .chip-container { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px; }
-        .chip { 
-            padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; 
-            white-space: nowrap; border: 1px solid #e2e8f0; background: white; 
-            display: flex; align-items: center; gap: 5px; cursor: pointer; user-select: none;
-        }
-        .chip:hover { transform: translateY(-2px); }
-        .chip:active { transform: scale(0.95); }
-        .chip-blue { color: var(--primary); background: #eff6ff; }
-        
-        /* Chip Activo */
-        .chip.active { background: var(--primary) !important; color: white !important; border-color: var(--primary) !important; }
-        .chip.active span { background: rgba(255,255,255,0.2); color: white; padding: 1px 6px; border-radius: 10px; }
+        .chip { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid #eee; background: white; white-space: nowrap; cursor: pointer; }
+        .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        #bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; padding: 10px 0; border-top: 1px solid #e2e8f0; z-index: 90; font-family: 'Segoe UI', sans-serif;}
-        .nav-item { flex: 1; text-align: center; font-size: 10px; color: #94a3b8; cursor: pointer; padding: 5px 0; border-radius: 8px; margin: 0 5px;}
-        .nav-item:hover { background-color: #f1f5f9; }
-        .active-nav { color: var(--primary); font-weight: bold; }
-        .nav-icon { font-size: 22px; display: block; }
-
+        /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; display: none; align-items: center; justify-content: center; }
-        .modal-box { background: white; width: 90%; max-width: 400px; padding: 20px; border-radius: 12px; font-family: 'Segoe UI', sans-serif;}
+        .modal-box { background: white; width: 90%; max-width: 400px; padding: 20px; border-radius: 12px; }
 
+        /* HEADER APP */
+        header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        
         @media (max-width: 768px) {
-            .login-split-container { flex-direction: column; min-height: auto; max-width: 95%; margin: auto; }
-            .welcome-side { padding: 40px 30px; text-align: center; }
-            .form-side { padding: 30px 20px; }
-            .white-login-card { padding: 20px; box-shadow: none; }
+            .login-split-container { flex-direction: column; min-height: auto; width: 95%; margin: 20px auto; }
+            .welcome-side { padding: 30px; } .form-side { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="network-status"></div>
-
-    <div id="screen-loading" class="full-screen visible" style="justify-content:center; align-items:center; color:white; text-align:center; background: linear-gradient(135deg, #1e58c8 0%, #00388b 100%);">
-        <h1 style="margin:0; font-size:32px; font-weight:900;">CONTROL CMR</h1>
-        <div style="font-size:14px; letter-spacing:3px; font-weight:700; opacity:0.8;">BY LUIS ENAMORADO</div>
-        <div style="margin-top:30px; font-size:12px; opacity:0.7;">Cargando...</div>
+    <div id="screen-loading" class="full-screen visible" style="justify-content:center; align-items:center; color:white; background: linear-gradient(135deg, #1e58c8 0%, #00388b 100%);">
+        <h1>CONTROL CMR</h1>
+        <p>V60 - CARGANDO...</p>
     </div>
 
     <div id="screen-rol" class="full-screen">
         <div class="login-split-container">
             <div class="welcome-side">
-                <h1 class="brand-main-text">CONTROL CMR</h1>
-                <div class="brand-sub-text">BY LUIS ENAMORADO</div>
-                <p class="welcome-msg">Bienvenido al sistema de gestión. Selecciona tu perfil para acceder al panel de control correspondiente.</p>
+                <h1 style="margin:0; font-size:32px;">CONTROL CMR</h1>
+                <p>SISTEMA INTEGRAL</p>
+                <div style="font-size:10px; opacity:0.7; margin-top:20px;">Versión 60 (Estable)</div>
             </div>
             <div class="form-side">
                 <div class="white-login-card">
                     <h3>Selecciona Perfil</h3>
-                    <div class="role-btn-new" onclick="irLogin('admin')">
-                        <div class="role-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.745 3.745 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.745 3.745 0 013.296-1.043A3.745 3.745 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.745 3.745 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg></div>
-                        <div class="role-text"><b>ADMINISTRADOR</b><span>Gestión y Control</span></div>
-                    </div>
-                    <div class="role-btn-new" onclick="irLogin('worker')">
-                        <div class="role-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" /></svg></div>
-                        <div class="role-text"><b>RECOGEDOR</b><span>Ruta y Entregas</span></div>
-                    </div>
+                    <button class="app-btn" style="background:#fff; color:#333; border:1px solid #ddd; display:flex; align-items:center; justify-content:center; gap:10px;" onclick="irLogin('admin')">
+                        <span>👔</span> ADMINISTRADOR
+                    </button>
+                    <button class="app-btn" style="background:#fff; color:#333; border:1px solid #ddd; display:flex; align-items:center; justify-content:center; gap:10px;" onclick="irLogin('worker')">
+                        <span>🚚</span> RECOGEDOR
+                    </button>
                 </div>
             </div>
         </div>
@@ -259,29 +124,24 @@
     <div id="screen-auth" class="full-screen">
         <div class="login-split-container">
             <div class="welcome-side">
-                <h1 class="brand-main-text">BIENVENIDO</h1>
-                <div class="brand-sub-text">AL SISTEMA</div>
-                <p class="welcome-msg">Ingresa tus credenciales seguras.</p>
+                <h1>ACCESO</h1>
+                <p>Ingresa tus credenciales</p>
             </div>
             <div class="form-side">
                 <div class="white-login-card">
-                    <h3 id="auth-title">Iniciar Sesión</h3>
+                    <h3 id="auth-title">Login</h3>
+                    
                     <div id="form-admin" style="display:none;">
-                        <div class="input-group">
-                            <input type="password" id="admin-pass" class="new-login-input" placeholder="Contraseña Maestra">
-                            <span class="show-pass-btn" onclick="togglePassword()">MOSTRAR</span>
-                        </div>
-                        <label style="display:flex; align-items:center; margin-bottom:15px; font-size:12px; color:#666; cursor:pointer; text-transform:none;"><input type="checkbox" id="remember-me" style="margin-right:8px;"> Recordarme</label>
-                        <button onclick="validarAdmin()" class="btn-login-new">ACCEDER AL PANEL</button>
+                        <input type="password" id="admin-pass" class="app-input" placeholder="Contraseña">
+                        <button onclick="validarAdmin()" class="app-btn">ENTRAR</button>
                     </div>
+
                     <div id="form-worker" style="display:none;">
-                        <div class="input-group" style="margin-bottom:25px;">
-                            <label style="display:block; margin-bottom:8px; font-weight:600; color:#64748b;">Selecciona tu usuario:</label>
-                            <select id="worker-select" class="glass-select"><option>Cargando lista...</option></select>
-                        </div>
-                        <button onclick="validarWorker()" class="btn-login-new" style="background:var(--success);">VER MI RUTA</button>
+                        <select id="worker-select" class="app-input"><option>Cargando...</option></select>
+                        <button onclick="validarWorker()" class="app-btn btn-success">ENTRAR</button>
                     </div>
-                    <button onclick="verPantalla('screen-rol')" style="background:transparent; color:#64748b; border:none; margin-top:25px; cursor:pointer; font-weight:700; width:100%; font-size:14px;">← Volver a Perfiles</button>
+
+                    <button onclick="verPantalla('screen-rol')" style="background:none; border:none; color:#666; margin-top:20px; cursor:pointer;">← Volver</button>
                 </div>
             </div>
         </div>
@@ -289,136 +149,138 @@
 
     <div id="screen-app" class="full-screen">
         <header>
-            <div class="header-left">
-                <button id="btn-home" class="btn-back" onclick="goHome()">← MENÚ</button>
-                <span style="font-weight:900; font-size:16px; margin-left:10px;">CONTROL CMR</span>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button id="btn-home" onclick="nav('admin-dashboard')" style="background:rgba(255,255,255,0.2); border:none; color:white; padding:5px 10px; border-radius:5px; font-weight:bold; cursor:pointer;">← MENÚ</button>
+                <span style="font-weight:900;">CONTROL CMR</span>
             </div>
-            <button onclick="cerrarSesionSegura()" class="btn-icon" style="background:rgba(255,255,255,0.2); color:white;">🚪 SALIR</button>
+            <button onclick="cerrarSesion()" style="background:rgba(255,255,255,0.2); border:none; color:white; padding:5px 10px; border-radius:5px; font-weight:bold; cursor:pointer;">SALIR</button>
         </header>
 
         <div id="app-content">
             
             <div id="view-admin-dashboard" class="app-view">
-                <h2 style="color:#1e293b; margin-top:0;">Panel de Control</h2>
+                <h2>Panel de Control</h2>
                 <div class="dashboard-grid">
                     <div class="menu-card" onclick="nav('admin-reg')">
-                        <div class="menu-icon" style="background:#dbeafe; color:#2563eb;">📝</div>
-                        <div class="menu-info"><h3>NUEVA ORDEN</h3><p>Registrar tarjetas</p></div>
+                        <div class="menu-icon">📝</div>
+                        <div><b>NUEVA ORDEN</b><br><span style="font-size:12px; color:#666;">Registrar envíos</span></div>
                     </div>
                     <div class="menu-card" onclick="nav('admin-tab')">
-                        <div class="menu-icon" style="background:#e0e7ff; color:#4f46e5;">📊</div>
-                        <div class="menu-info"><h3>CONTROL TOTAL</h3><p>Ver tablas y reportes</p></div>
+                        <div class="menu-icon">📊</div>
+                        <div><b>CONTROL</b><br><span style="font-size:12px; color:#666;">Reportes y Tablas</span></div>
                     </div>
                     <div class="menu-card" onclick="nav('admin-team')">
-                        <div class="menu-icon" style="background:#d1fae5; color:#059669;">👥</div>
-                        <div class="menu-info"><h3>EQUIPO</h3><p>Recogedores y Vendedores</p></div>
+                        <div class="menu-icon">👥</div>
+                        <div><b>EQUIPO</b><br><span style="font-size:12px; color:#666;">Personal</span></div>
                     </div>
                 </div>
             </div>
 
             <div id="view-admin-reg" class="app-view">
                 <div class="card">
-                    <div class="card-header">NUEVA ORDEN</div>
-                    <label class="app-label">N° TARJETA</label><input type="number" id="reg-tarjeta" class="app-input" style="background:#eff6ff; font-weight:bold; font-size:18px;">
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                        <div><label class="app-label">F. CUENTA</label><input type="date" id="reg-fecha-cuenta" class="app-input" onchange="checkMulta()"></div>
-                        <div><label class="app-label">MULTA</label><input type="number" id="reg-multa" class="app-input" value="0"></div>
+                    <div style="font-weight:bold; color:#1e40af; border-bottom:1px solid #eee; padding-bottom:5px; margin-bottom:10px;">NUEVA ORDEN</div>
+                    <input type="number" id="reg-tarjeta" class="app-input" placeholder="N° Tarjeta" style="background:#eff6ff; font-weight:bold;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <input type="date" id="reg-fecha-cuenta" class="app-input" onchange="checkMulta()">
+                        <input type="number" id="reg-multa" class="app-input" value="0" placeholder="Multa">
                     </div>
-                    <div id="alerta-multa" style="display:none; color:red; font-weight:bold; text-align:center; margin-bottom:10px;">⚠️ APLICA MULTA 100 Lps</div>
+                    <div id="alerta-multa" style="display:none; color:red; font-weight:bold; text-align:center;">⚠️ MULTA APLICABLE</div>
                     
-                    <div style="background:#f0f9ff; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #bae6fd;">
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                            <div><label class="app-label">SALDO</label><input type="number" id="reg-saldo" class="app-input"></div>
-                            <div><label class="app-label">ULT. PAGO</label><input type="date" id="reg-ultima-fecha" class="app-input"></div>
+                    <div style="background:#f9f9f9; padding:10px; border-radius:8px; margin-bottom:10px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <input type="number" id="reg-saldo" class="app-input" placeholder="Saldo" style="margin:0;">
+                            <input type="date" id="reg-ultima-fecha" class="app-input" style="margin:0;">
                         </div>
                     </div>
 
-                    <label class="app-label">RECOGEDOR</label><select id="reg-recogedor" class="app-input"></select>
-                    <label class="app-label">CLIENTE</label><input type="text" id="reg-cliente" class="app-input">
-                    <label class="app-label">DIRECCIÓN</label><textarea id="reg-direccion" class="app-input"></textarea>
-                    <label class="app-label">TELÉFONO</label><input type="tel" id="reg-telefono" class="app-input">
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                        <div><label class="app-label">ZONA</label><select id="reg-zona" class="app-input"><option value="">--</option><option value="SONAGUERA">SONAGUERA</option><option value="SABA TOCOA">SABA TOCOA</option><option value="SABA OLANCHITO">SABA OLANCHITO</option><option value="BALFATE">BALFATE</option><option value="PLANES JUTIAPA">PLANES JUTIAPA</option><option value="BONITO ORIENTAL">BONITO ORIENTAL</option><option value="HONDURAS AGUAN">HONDURAS AGUAN</option><option value="TRUJILLO">TRUJILLO</option><option value="MARGEN IZQUIERDA">MARGEN IZQUIERDA</option><option value="FAOUS">FAOUS</option><option value="OLANCHO">OLANCHO</option></select></div>
-                        <div><label class="app-label">VENDEDOR</label><select id="reg-vendedor" class="app-input"></select></div>
+                    <select id="reg-recogedor" class="app-input"></select>
+                    <input id="reg-cliente" class="app-input" placeholder="Cliente">
+                    <textarea id="reg-direccion" class="app-input" placeholder="Dirección"></textarea>
+                    <input id="reg-telefono" class="app-input" placeholder="Teléfono" type="tel">
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <select id="reg-zona" class="app-input">
+                            <option value="">ZONA</option>
+                            <option value="SONAGUERA">SONAGUERA</option>
+                            <option value="SABA TOCOA">SABA TOCOA</option>
+                            <option value="SABA OLANCHITO">SABA OLANCHITO</option>
+                            <option value="BALFATE">BALFATE</option>
+                            <option value="PLANES JUTIAPA">PLANES JUTIAPA</option>
+                            <option value="BONITO ORIENTAL">BONITO ORIENTAL</option>
+                            <option value="HONDURAS AGUAN">HONDURAS AGUAN</option>
+                            <option value="TRUJILLO">TRUJILLO</option>
+                            <option value="MARGEN IZQUIERDA">MARGEN IZQUIERDA</option>
+                            <option value="FAOUS">FAOUS</option>
+                            <option value="OLANCHO">OLANCHO</option>
+                        </select>
+                        <select id="reg-vendedor" class="app-input"></select>
                     </div>
-                    <label class="app-label">ARTÍCULO</label><input type="text" id="reg-articulo" class="app-input">
-                    <button onclick="guardarMision()" id="btn-save" class="app-btn">CREAR ORDEN</button>
+                    <input id="reg-articulo" class="app-input" placeholder="Artículo">
+                    <button id="btn-save" class="app-btn" onclick="guardarMision()">GUARDAR ORDEN</button>
                 </div>
             </div>
 
             <div id="view-admin-tab" class="app-view">
                 <div class="card">
-                    <div class="card-header">CONTROL</div>
+                    <div style="font-weight:bold; color:#1e40af; margin-bottom:10px;">CONTROL DE ENVÍOS</div>
                     <div style="display:flex; gap:5px; margin-bottom:10px;">
-                        <input type="date" id="filtro-inicio" class="app-input"> <input type="date" id="filtro-fin" class="app-input">
+                        <button class="app-btn btn-success" style="margin:0; flex:1;" onclick="exportarExcel()">Excel</button>
+                        <button class="app-btn btn-review" style="margin:0; flex:1;" onclick="generarPDFProfesional()">PDF</button>
                     </div>
-                    <div style="display:flex; gap:10px;">
-                        <button class="app-btn btn-success" style="margin-top:0;" onclick="exportarExcel()">Excel</button>
-                        <button class="app-btn btn-review" style="margin-top:0;" onclick="generarPDFProfesional()">PDF Reporte</button>
-                    </div>
-                    <br>
                     <div style="overflow-x:auto;">
-                        <table id="tabla-admin"><thead><tr><th>ACCION</th><th>TARJETA</th><th>FECHA</th><th>ZONA</th><th>ESTADO</th></tr></thead><tbody id="tbody-admin"></tbody></table>
-                    </div>
-                    
-                    <div style="margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <div style="background:#fff; padding:10px; border:1px solid #ccc; border-radius:5px;"><b>🏆 VENDEDORES:</b><div id="stats-vendedores" style="margin-top:10px;"></div></div>
-                        <div style="background:#fff; padding:10px; border:1px solid #ccc; border-radius:5px;"><b>🌍 ZONAS:</b><div id="stats-zonas" style="margin-top:10px;"></div></div>
+                        <table id="tabla-admin"><thead><tr><th>Acción</th><th>Tarjeta</th><th>Zona</th><th>Estado</th></tr></thead><tbody id="tbody-admin"></tbody></table>
                     </div>
                 </div>
             </div>
 
             <div id="view-admin-team" class="app-view">
                 <div class="card">
-                    <div class="card-header">RECOGEDORES</div>
-                    <div style="display:flex; gap:5px;">
-                        <input id="nuevo-recogedor" class="app-input" placeholder="Nuevo..." style="margin:0;">
-                        <button class="app-btn btn-success" style="width:auto; margin:0;" onclick="agregarRecogedor()">+</button>
+                    <div style="font-weight:bold; margin-bottom:10px;">RECOGEDORES</div>
+                    <div style="display:flex; gap:5px; margin-bottom:10px;">
+                        <input id="nuevo-recogedor" class="app-input" placeholder="Nombre..." style="margin:0;">
+                        <button class="app-btn btn-success" style="margin:0; width:50px;" onclick="agregarRecogedor()">+</button>
                     </div>
-                    <ul id="lista-equipo" style="padding-left:0;"></ul>
+                    <div id="lista-equipo"></div>
                 </div>
                 <div class="card">
-                    <div class="card-header">VENDEDORES</div>
-                    <div style="display:flex; gap:5px;">
-                        <input id="nuevo-vendedor" class="app-input" placeholder="Nuevo..." style="margin:0;">
-                        <button class="app-btn btn-success" style="width:auto; margin:0;" onclick="agregarVendedor()">+</button>
+                    <div style="font-weight:bold; margin-bottom:10px;">VENDEDORES</div>
+                    <div style="display:flex; gap:5px; margin-bottom:10px;">
+                        <input id="nuevo-vendedor" class="app-input" placeholder="Nombre..." style="margin:0;">
+                        <button class="app-btn btn-success" style="margin:0; width:50px;" onclick="agregarVendedor()">+</button>
                     </div>
-                    <ul id="lista-vendedores-ui" style="padding-left:0;"></ul>
+                    <div id="lista-vendedores-ui"></div>
                 </div>
             </div>
 
             <div id="view-worker-list" class="app-view">
-                <div style="text-align:center; margin-bottom:10px;">Hola <b id="worker-name-display" style="color:var(--primary);"></b></div>
+                <div style="text-align:center; margin-bottom:15px; font-weight:bold;" id="worker-name-display"></div>
                 
-                <div style="display:flex; gap:10px; margin-bottom:15px;">
-                    <button class="app-btn" style="flex:1; margin:0; background:var(--primary);">📍 RUTA</button>
-                    <button class="app-btn" style="flex:1; margin:0; background:#e2e8f0; color:#64748b; box-shadow:none;" onclick="nav('worker-hist')">📜 HISTORIAL</button>
+                <div style="display:flex; gap:5px; margin-bottom:15px;">
+                    <button class="app-btn" style="margin:0; background:#1e40af;">RUTA</button>
+                    <button class="app-btn" style="margin:0; background:#ccc; color:#333;" onclick="nav('worker-hist')">HISTORIAL</button>
                 </div>
 
-                <input type="text" id="worker-search" class="app-input" placeholder="🔍 Buscar tarjeta..." onkeyup="renderMisiones()">
-                
-                <div id="zona-summary" class="chip-container" style="margin-bottom:15px;"></div>
-                
+                <input id="worker-search" class="app-input" placeholder="🔍 Buscar..." onkeyup="renderMisiones()">
+                <div id="zona-summary" class="chip-container" style="margin-bottom:10px;"></div>
                 <div id="worker-misiones-container"></div>
             </div>
 
             <div id="view-worker-hist" class="app-view">
-                <div style="display:flex; gap:10px; margin-bottom:15px;">
-                    <button class="app-btn" style="flex:1; margin:0; background:#e2e8f0; color:#64748b; box-shadow:none;" onclick="nav('worker-list')">📍 RUTA</button>
-                    <button class="app-btn" style="flex:1; margin:0; background:var(--primary);">📜 HISTORIAL</button>
+                <div style="display:flex; gap:5px; margin-bottom:15px;">
+                    <button class="app-btn" style="margin:0; background:#ccc; color:#333;" onclick="nav('worker-list')">RUTA</button>
+                    <button class="app-btn" style="margin:0; background:#1e40af;">HISTORIAL</button>
                 </div>
-                <div style="text-align:center; margin-bottom:10px; font-weight:bold;">HISTORIAL HOY</div>
-                <div id="hist-zona-summary" class="chip-container" style="margin-bottom:5px;"></div>
+                <div id="hist-zona-summary" class="chip-container" style="margin-bottom:10px;"></div>
                 <div id="worker-hist-container"></div>
             </div>
+
         </div>
-        <div id="bottom-nav"></div>
     </div>
 
-    <div id="modal-confirm" class="modal-overlay"><div class="modal-box"><h3>ENTREGAR</h3><p>¿Confirmar recogida?</p><input type="hidden" id="conf-id"><button onclick="confirmarEntregaWorker()" class="app-btn btn-success">SÍ, RECOGIDO</button><button onclick="document.getElementById('modal-confirm').style.display='none'" class="app-btn" style="background:#ccc; color:black; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-obs" class="modal-overlay"><div class="modal-box"><h3>REPORTAR</h3><input type="hidden" id="obs-id"><textarea id="obs-texto" class="app-input" placeholder="Motivo..."></textarea><button onclick="reportarFalloWorker()" class="app-btn btn-danger">ENVIAR</button><button onclick="document.getElementById('modal-obs').style.display='none'" class="app-btn" style="background:#ccc; color:black; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-aprobar" class="modal-overlay"><div class="modal-box"><h3>APROBAR</h3><p>¿Confirmar recepción?</p><input type="hidden" id="aprobar-id"><button onclick="aprobarRecepcionAdmin()" class="app-btn btn-review">CONFIRMAR</button><button onclick="document.getElementById('modal-aprobar').style.display='none'" class="app-btn" style="background:#ccc; color:black; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-edit" class="modal-overlay"><div class="modal-box" style="text-align:left;"><h3>EDITAR</h3><input type="hidden" id="edit-id"><label>Estado</label><select id="edit-estado" class="app-input"><option value="PENDIENTE">PENDIENTE</option><option value="EN_REVISION">EN REVISIÓN</option><option value="RECOGIDO">RECOGIDO</option><option value="NO_RECOGIDO">NO RECOGIDO</option></select><input type="number" id="edit-tarjeta" class="app-input" placeholder="Tarjeta"><input type="number" id="edit-multa" class="app-input" placeholder="Multa"><select id="edit-recogedor" class="app-input"></select><select id="edit-vendedor" class="app-input"></select><input type="text" id="edit-direccion" class="app-input"><button onclick="guardarEdicion()" class="app-btn">GUARDAR</button><button onclick="borrarRegistro()" class="app-btn btn-danger" style="margin-top:10px;">BORRAR</button><button onclick="document.getElementById('modal-edit').style.display='none'" class="app-btn" style="background:#ccc; color:black; margin-top:10px; box-shadow:none;">CERRAR</button></div></div>
+    <div id="modal-confirm" class="modal-overlay"><div class="modal-box"><h3>Confirmar</h3><p>¿Recogido?</p><input type="hidden" id="conf-id"><button onclick="confirmarEntregaWorker()" class="app-btn btn-success">SÍ</button><button onclick="closeModal('modal-confirm')" class="app-btn" style="background:#ccc; color:#333;">NO</button></div></div>
+    <div id="modal-obs" class="modal-overlay"><div class="modal-box"><h3>Reportar</h3><input type="hidden" id="obs-id"><textarea id="obs-texto" class="app-input"></textarea><button onclick="reportarFalloWorker()" class="app-btn btn-danger">ENVIAR</button><button onclick="closeModal('modal-obs')" class="app-btn" style="background:#ccc; color:#333;">CANCELAR</button></div></div>
+    <div id="modal-aprobar" class="modal-overlay"><div class="modal-box"><h3>Aprobar</h3><p>¿Recibido en oficina?</p><input type="hidden" id="aprobar-id"><button onclick="aprobarRecepcionAdmin()" class="app-btn btn-review">CONFIRMAR</button><button onclick="closeModal('modal-aprobar')" class="app-btn" style="background:#ccc; color:#333;">CANCELAR</button></div></div>
+    <div id="modal-edit" class="modal-overlay"><div class="modal-box"><h3>Editar</h3><input type="hidden" id="edit-id"><select id="edit-estado" class="app-input"><option value="PENDIENTE">PENDIENTE</option><option value="EN_REVISION">EN REVISIÓN</option><option value="RECOGIDO">RECOGIDO</option><option value="NO_RECOGIDO">NO RECOGIDO</option></select><button onclick="guardarEdicion()" class="app-btn">GUARDAR</button><button onclick="borrarRegistro()" class="app-btn btn-danger">BORRAR</button><button onclick="closeModal('modal-edit')" class="app-btn" style="background:#ccc; color:#333;">CERRAR</button></div></div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyAbyNccFOMXruf2Dk_qtARD97JwXPU2Q-Y", authDomain: "control-recogido.firebaseapp.com", projectId: "control-recogido", storageBucket: "control-recogido.firebasestorage.app", messagingSenderId: "757224344188", appId: "1:757224344188:web:e13c9574e2378fd7ead7f9", measurementId: "G-CPMJV5WHR3" };
@@ -426,299 +288,219 @@
         const auth = firebase.auth(); const db = firebase.firestore();
         db.enablePersistence().catch(console.error);
 
-        window.addEventListener('online', ()=>document.getElementById('network-status').style.display='none');
-        window.addEventListener('offline', ()=>document.getElementById('network-status').style.display='block');
-
         let misDatos = []; let listaRecogedores = ["DAVID", "RONNEY"]; let listaVendedores = ["ORLANDO", "NOE"]; let usuario = { rol: '', nombre: '' };
         let filtroZonaActivo = null;
 
         auth.signInAnonymously();
-        
-        function togglePassword() {
-            const passInput = document.getElementById('admin-pass');
-            const toggleBtn = document.querySelector('.show-pass-btn');
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                toggleBtn.textContent = 'OCULTAR';
-            } else {
-                passInput.type = 'password';
-                toggleBtn.textContent = 'MOSTRAR';
-            }
-        }
 
         window.onload = function() {
             setTimeout(() => {
-                const sp = localStorage.getItem('gyg_saved_pass'); if(sp){document.getElementById('admin-pass').value=sp; document.getElementById('remember-me').checked=true;}
+                const sp = localStorage.getItem('gyg_saved_pass'); if(sp){document.getElementById('admin-pass').value=sp;}
                 const w = localStorage.getItem('gyg_worker_name'); const a = localStorage.getItem('gyg_admin_logged');
                 if(a){ usuario={rol:'admin',nombre:'ADMIN'}; iniciar(); } else if(w){ usuario={rol:'worker',nombre:w}; iniciar(); } else { verPantalla('screen-rol'); }
-            }, 800);
+            }, 500);
         };
 
-        function verPantalla(id) { document.querySelectorAll('.full-screen').forEach(p => p.classList.remove('visible')); document.getElementById(id).classList.add('visible'); }
-        function irLogin(rol) { verPantalla('screen-auth'); document.getElementById('form-admin').style.display=rol=='admin'?'block':'none'; document.getElementById('form-worker').style.display=rol=='worker'?'block':'none'; document.getElementById('auth-title').innerText=rol=='admin'?'Acceso Admin':'Acceso Ruta'; if(navigator.onLine) cargarListas(); else actSelects(); }
+        function verPantalla(id) { document.querySelectorAll('.full-screen').forEach(p=>p.classList.remove('visible')); document.getElementById(id).classList.add('visible'); }
+        function closeModal(id) { document.getElementById(id).style.display='none'; }
         
-        function validarAdmin() { 
-            const p=document.getElementById('admin-pass').value; if(p){ 
-                if(document.getElementById('remember-me').checked)localStorage.setItem('gyg_saved_pass',p); else localStorage.removeItem('gyg_saved_pass');
-                localStorage.setItem('gyg_admin_logged','true'); localStorage.removeItem('gyg_worker_name'); 
-                usuario={rol:'admin',nombre:'ADMIN'}; iniciar(); 
-            } 
+        function irLogin(rol) { 
+            verPantalla('screen-auth'); 
+            document.getElementById('form-admin').style.display = rol==='admin'?'block':'none';
+            document.getElementById('form-worker').style.display = rol==='worker'?'block':'none';
+            if(rol==='worker' || navigator.onLine) cargarListas();
         }
-        function validarWorker() { 
-            const n=document.getElementById('worker-select').value; if(n){ 
-                localStorage.setItem('gyg_worker_name',n); localStorage.removeItem('gyg_admin_logged'); 
-                usuario={rol:'worker',nombre:n}; iniciar(); 
+
+        function validarAdmin() {
+            const p = document.getElementById('admin-pass').value;
+            if(p) {
+                if(document.getElementById('remember-me').checked) localStorage.setItem('gyg_saved_pass', p);
+                localStorage.setItem('gyg_admin_logged', 'true');
+                usuario = { rol: 'admin', nombre: 'ADMIN' };
+                iniciar();
             }
         }
-        function cerrarSesionSegura() { if(confirm("¿Salir?")){ localStorage.removeItem('gyg_admin_logged'); localStorage.removeItem('gyg_worker_name'); location.reload(); } }
 
-        function iniciar() { 
-            verPantalla('screen-app'); cargarDatos(); 
-            if(usuario.rol=='admin') { nav('admin-dashboard'); } 
-            else { nav('worker-list'); document.getElementById('btn-home').style.display='none'; } 
+        function validarWorker() {
+            const n = document.getElementById('worker-select').value;
+            if(n) {
+                localStorage.setItem('gyg_worker_name', n);
+                usuario = { rol: 'worker', nombre: n };
+                iniciar();
+            }
         }
-        
-        function nav(id) { 
-            document.querySelectorAll('.app-view').forEach(v=>v.style.display='none'); 
+
+        function cerrarSesion() { if(confirm("Salir?")){ localStorage.clear(); location.reload(); } }
+
+        function iniciar() {
+            verPantalla('screen-app'); cargarDatos(); cargarListas();
+            if(usuario.rol === 'admin') { nav('admin-dashboard'); document.getElementById('btn-home').style.display='none'; }
+            else { nav('worker-list'); document.getElementById('btn-home').style.display='none'; document.getElementById('worker-name-display').innerText = usuario.nombre; }
+        }
+
+        function nav(id) {
+            document.querySelectorAll('.app-view').forEach(v=>v.style.display='none');
             document.getElementById('view-'+id).style.display='block';
-            const btnHome = document.getElementById('btn-home');
-            if(usuario.rol === 'admin') {
-                if(id === 'admin-dashboard') btnHome.style.display = 'none';
-                else btnHome.style.display = 'block';
-            }
-        }
-        function goHome() { nav('admin-dashboard'); }
-
-        function cargarDatos() { db.collection("articulos_recogidos").orderBy("creado","desc").onSnapshot(s => { misDatos=[]; s.forEach(d => { let o=d.data(); o.id=d.id; misDatos.push(o); }); refrescarVistas(); calcularStats(); }); }
-        function cargarListas() { db.collection("config_recogedores").doc("lista").onSnapshot(d=>{if(d.exists){listaRecogedores=d.data().nombres;actSelects();}}); db.collection("config_vendedores").doc("lista").onSnapshot(d=>{if(d.exists){listaVendedores=d.data().nombres;actSelects();}}); }
-        function actSelects() { fill('worker-select', listaRecogedores); fill('reg-recogedor', listaRecogedores); fill('edit-recogedor', listaRecogedores); fill('reg-vendedor', listaVendedores); fill('edit-vendedor', listaVendedores); if(usuario.rol=='admin'){ renderList('lista-equipo', listaRecogedores, 'recogedores'); renderList('lista-vendedores-ui', listaVendedores, 'vendedores'); } }
-        function fill(id, l) { const s=document.getElementById(id); if(!s)return; let v=s.value; s.innerHTML='<option value="">Seleccionar...</option>'; l.forEach(i=>s.innerHTML+=`<option value="${i}">${i}</option>`); if(l.includes(v))s.value=v; }
-
-        function guardarMision() {
-            const t=document.getElementById('reg-tarjeta').value; const z=document.getElementById('reg-zona').value; const r=document.getElementById('reg-recogedor').value;
-            if(!t || !z || !r) return alert("Falta Tarjeta, Zona o Recogedor");
-            if(misDatos.some(d=>d.tarjeta==t)) return alert("Tarjeta duplicada");
-            const btn = document.getElementById('btn-save'); btn.disabled=true; btn.innerText="GUARDANDO...";
-            db.collection("articulos_recogidos").add({
-                uid: 'admin', tarjeta: t, zona: z, vendedor: document.getElementById('reg-vendedor').value, recogio: r, 
-                cliente: document.getElementById('reg-cliente').value, direccion: document.getElementById('reg-direccion').value, 
-                telefono: document.getElementById('reg-telefono').value, articulo: document.getElementById('reg-articulo').value, 
-                fecha_cuenta: document.getElementById('reg-fecha-cuenta').value, multa: Number(document.getElementById('reg-multa').value), 
-                saldo_actual: document.getElementById('reg-saldo').value, ultima_fecha_pago: document.getElementById('reg-ultima-fecha').value, 
-                estado: 'PENDIENTE', creado: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(()=>{
-                alert("Guardado"); btn.disabled=false; btn.innerText="CREAR ORDEN";
-                document.getElementById('reg-tarjeta').value=''; document.getElementById('reg-cliente').value=''; 
-                document.getElementById('reg-direccion').value=''; document.getElementById('reg-telefono').value=''; document.getElementById('reg-articulo').value='';
-            });
-        }
-        function checkMulta(){ const f=new Date(document.getElementById('reg-fecha-cuenta').value); const l=new Date("2025-02-24T00:00:00"); document.getElementById('reg-multa').value = f>=l ? 100 : 0; if(f>=l) document.getElementById('alerta-multa').style.display='block'; else document.getElementById('alerta-multa').style.display='none'; }
-
-        function refrescarVistas() { if(usuario.rol=='admin') renderTabla(); else { renderMisiones(); renderHist(); } }
-
-        function toggleFiltroZona(z) { filtroZonaActivo = z; renderMisiones(); }
-
-        // MAPA Y DEPARTAMENTOS (V58 - IMAGENES REALES)
-        function getMapInfo(zona) {
-            const z = (zona || '').toString().toUpperCase();
-            if(z.includes('SONAGUERA') || z.includes('TOCOA') || z.includes('TRUJILLO') || z.includes('BONITO')) {
-                return { dept: 'COLÓN 🌴', img: 'trujillo.jpg' };
-            }
-            if(z.includes('OLANCHITO')) {
-                return { dept: 'YORO 🌧️', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e4/Parque_Central_Olanchito.jpg' };
-            }
-            if(z.includes('BALFATE') || z.includes('JUTIAPA') || z.includes('LA CEIBA')) {
-                return { dept: 'ATLÁNTIDA 🌊', img: 'https://i.pinimg.com/originals/3d/95/92/3d95927357c3f8f17257929653066373.jpg' };
-            }
-            if(z.includes('OLANCHO')) {
-                return { dept: 'OLANCHO 🤠', img: 'olancho.webp' };
-            }
-            // Default
-            return { dept: 'HONDURAS 🇭🇳', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tegucigalpa_at_dusk.jpg/1200px-Tegucigalpa_at_dusk.jpg' };
+            if(usuario.rol === 'admin') document.getElementById('btn-home').style.display = (id === 'admin-dashboard') ? 'none' : 'block';
         }
 
-        function abrirMapa(direccion, zona) {
-            const query = encodeURIComponent(`${direccion}, ${zona}, Honduras`);
-            window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+        function cargarDatos() { db.collection("articulos_recogidos").orderBy("creado","desc").onSnapshot(s => { misDatos=[]; s.forEach(d => { let o=d.data(); o.id=d.id; misDatos.push(o); }); refrescarVistas(); }); }
+        
+        function cargarListas() { 
+            db.collection("config_recogedores").doc("lista").onSnapshot(d=>{if(d.exists){listaRecogedores=d.data().nombres; updateSelects(); if(usuario.rol==='admin') renderEquipo();}}); 
+            db.collection("config_vendedores").doc("lista").onSnapshot(d=>{if(d.exists){listaVendedores=d.data().nombres; updateSelects(); if(usuario.rol==='admin') renderEquipo();}}); 
         }
 
+        function updateSelects() {
+            fill('worker-select', listaRecogedores); fill('reg-recogedor', listaRecogedores); fill('edit-recogedor', listaRecogedores);
+            fill('reg-vendedor', listaVendedores); fill('edit-vendedor', listaVendedores);
+        }
+        function fill(id, list) { const s=document.getElementById(id); if(s) { let v=s.value; s.innerHTML='<option value="">Seleccionar...</option>'; list.forEach(i=>s.innerHTML+=`<option value="${i}">${i}</option>`); if(list.includes(v)) s.value=v; } }
+
+        // --- FUNCIONES EQUIPO CORREGIDAS V60 ---
+        function agregarRecogedor() {
+            const val = document.getElementById('nuevo-recogedor').value.trim().toUpperCase();
+            if(val && !listaRecogedores.includes(val)) {
+                listaRecogedores.push(val);
+                db.collection("config_recogedores").doc("lista").set({nombres:listaRecogedores});
+                document.getElementById('nuevo-recogedor').value = '';
+                renderEquipo(); // Instant UI
+            }
+        }
+        function agregarVendedor() {
+            const val = document.getElementById('nuevo-vendedor').value.trim().toUpperCase();
+            if(val && !listaVendedores.includes(val)) {
+                listaVendedores.push(val);
+                db.collection("config_vendedores").doc("lista").set({nombres:listaVendedores});
+                document.getElementById('nuevo-vendedor').value = '';
+                renderEquipo(); // Instant UI
+            }
+        }
+        function eliminarItem(nombre, tipo) {
+            if(confirm("Eliminar " + nombre + "?")) {
+                if(tipo === 'recogedor') listaRecogedores = listaRecogedores.filter(x => x !== nombre);
+                else listaVendedores = listaVendedores.filter(x => x !== nombre);
+                
+                db.collection(tipo === 'recogedor' ? "config_recogedores" : "config_vendedores").doc("lista").set({nombres: (tipo==='recogedor'?listaRecogedores:listaVendedores)});
+                renderEquipo();
+            }
+        }
+        function renderEquipo() {
+            const divR = document.getElementById('lista-equipo');
+            divR.innerHTML = listaRecogedores.map(i => `<div class="team-item"><span>${i}</span><button class="btn-trash" onclick="eliminarItem('${i}','recogedor')">🗑️</button></div>`).join('');
+            
+            const divV = document.getElementById('lista-vendedores-ui');
+            divV.innerHTML = listaVendedores.map(i => `<div class="team-item"><span>${i}</span><button class="btn-trash" onclick="eliminarItem('${i}','vendedor')">🗑️</button></div>`).join('');
+        }
+
+        // --- LOGICA MAPA (V60 FIX) ---
+        function getMapData(zona) {
+            const z = (zona||'').toUpperCase();
+            if(z.includes('SONAGUERA')||z.includes('TOCOA')||z.includes('TRUJILLO')) return {t:'COLÓN', i:'trujillo.jpg'};
+            if(z.includes('OLANCHO')) return {t:'OLANCHO', i:'olancho.webp'};
+            if(z.includes('LA CEIBA')||z.includes('JUTIAPA')) return {t:'ATLÁNTIDA', i:'https://upload.wikimedia.org/wikipedia/commons/e/e4/Parque_Central_Olanchito.jpg'};
+            return {t:'HONDURAS', i:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tegucigalpa_at_dusk.jpg/1200px-Tegucigalpa_at_dusk.jpg'};
+        }
+        function openMap(dir, zona) {
+            const q = encodeURIComponent(dir + ', ' + zona + ', Honduras');
+            window.open('https://www.google.com/maps/search/?api=1&query=' + q, '_blank');
+        }
+
+        // --- RENDERIZADO ---
         function renderMisiones() {
-            const c = document.getElementById('worker-misiones-container'); c.innerHTML="";
+            const c = document.getElementById('worker-misiones-container'); c.innerHTML = "";
+            let data = misDatos.filter(d => d.recogio === usuario.nombre && (d.estado === 'PENDIENTE' || d.estado === 'NO_RECOGIDO'));
             
-            let misPendientes = misDatos.filter(d => d.recogio===usuario.nombre && (d.estado==='PENDIENTE'||d.estado==='NO_RECOGIDO'));
-            
-            const zonaContainer = document.getElementById('zona-summary');
-            let counts = {}; misPendientes.forEach(d => { counts[d.zona] = (counts[d.zona] || 0) + 1; });
-            
-            let total = misPendientes.length;
-            let htmlZonas = `<div class="chip chip-blue ${filtroZonaActivo===null?'active':''}" onclick="toggleFiltroZona(null)">TODAS <span>${total}</span></div>`;
-            
-            Object.keys(counts).sort().forEach(z => {
-                const isActive = filtroZonaActivo === z ? 'active' : '';
-                htmlZonas += `<div class="chip chip-blue ${isActive}" onclick="toggleFiltroZona('${z}')">${z} <span>${counts[z]}</span></div>`;
-            });
-            zonaContainer.innerHTML = htmlZonas;
+            // Filtros chips
+            const zCont = document.getElementById('zona-summary');
+            let counts = {}; data.forEach(d => counts[d.zona] = (counts[d.zona]||0)+1);
+            let html = `<div class="chip ${filtroZonaActivo===null?'active':''}" onclick="filtroZonaActivo=null; renderMisiones()">TODAS</div>`;
+            Object.keys(counts).forEach(k => html += `<div class="chip ${filtroZonaActivo===k?'active':''}" onclick="filtroZonaActivo='${k}'; renderMisiones()">${k} (${counts[k]})</div>`);
+            zCont.innerHTML = html;
 
-            let p = misPendientes;
-            if (filtroZonaActivo) { p = p.filter(d => d.zona === filtroZonaActivo); }
-
+            if(filtroZonaActivo) data = data.filter(d => d.zona === filtroZonaActivo);
+            
             const term = document.getElementById('worker-search').value.toUpperCase();
-            if(term) p = p.filter(d => (d.tarjeta||'').toString().includes(term) || (d.cliente||'').toUpperCase().includes(term));
-            
-            if(p.length===0) c.innerHTML = "<p style='text-align:center;color:#94a3b8;margin-top:20px;'>Sin tarjetas.</p>";
-            
-            p.forEach(d => {
-                const mapInfo = getMapInfo(d.zona);
-                c.innerHTML += `
-                <div class="card mision-card" style="background:${d.estado==='NO_RECOGIDO'?'#fef2f2':'white'}">
-                    <div class="map-header" onclick="abrirMapa('${d.direccion}', '${d.zona}')" style="background-image: url('${mapInfo.img}');">
-                        <span class="dept-tag">${mapInfo.dept}</span>
-                        <span class="map-action">📍 VER MAPA</span>
-                    </div>
+            if(term) data = data.filter(d => (d.tarjeta||'').toString().includes(term) || (d.cliente||'').toUpperCase().includes(term));
 
-                    <div style="padding:10px;">
-                        <div><span class="zona-badge">${d.zona}</span> <span class="vend-badge">${d.vendedor}</span></div>
-                        <div style="font-size:22px; font-weight:800; color:var(--primary); margin:10px 0;">#${d.tarjeta}</div>
-                        <div class="financial-info">💰 Saldo: ${d.saldo_actual} | 📅 Abono: ${formatDate(d.ultima_fecha_pago)}</div>
-                        <div style="font-weight:700; margin-bottom:5px; color:#334155;">🏠 ${d.direccion}</div>
-                        <div style="margin-bottom:8px;"><a href="tel:${d.telefono}" style="text-decoration:none; color:var(--primary); font-weight:700; background:#eff6ff; padding:4px 8px; border-radius:6px;">📞 ${d.telefono || 'Llamar'}</a></div>
-                        <div style="font-size:13px; color:#64748b; margin-bottom:15px; border-top:1px dashed #e2e8f0; padding-top:8px;">📦 ${d.articulo} | 👤 ${d.cliente}</div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                            <button class="app-btn btn-success" style="margin:0;" onclick="abrirConfirmacionWorker('${d.id}')">RECOGER</button>
-                            <button class="app-btn btn-danger" style="margin:0;" onclick="abrirObservacionWorker('${d.id}')">REPORTAR</button>
+            if(data.length===0) c.innerHTML = "<p style='text-align:center; margin-top:20px; color:#999;'>Sin asignaciones.</p>";
+
+            data.forEach(d => {
+                const mapInfo = getMapData(d.zona);
+                c.innerHTML += `
+                <div class="card mision-card" style="padding:0; background:${d.estado==='NO_RECOGIDO'?'#fff5f5':'#fff'}">
+                    <div class="map-header" style="background-image:url('${mapInfo.i}')" onclick="openMap('${d.direccion}','${d.zona}')">
+                        <span class="dept-tag">${mapInfo.t}</span>
+                        <span class="map-action">📍 MAPA</span>
+                    </div>
+                    <div style="padding:15px;">
+                        <span class="zona-badge">${d.zona}</span>
+                        <div style="font-size:24px; font-weight:bold; color:var(--primary); margin:10px 0;">#${d.tarjeta}</div>
+                        <div class="financial-info">💰 Saldo: ${d.saldo_actual}</div>
+                        <div style="font-weight:bold; margin-bottom:5px;">🏠 ${d.direccion}</div>
+                        <div><a href="tel:${d.telefono}" style="text-decoration:none; color:var(--primary);">📞 ${d.telefono}</a></div>
+                        <div style="margin-top:10px; display:flex; gap:10px;">
+                            <button class="app-btn btn-success" style="margin:0;" onclick="abrirModal('modal-confirm', '${d.id}')">RECOGER</button>
+                            <button class="app-btn btn-danger" style="margin:0;" onclick="abrirModal('modal-obs', '${d.id}')">REPORTAR</button>
                         </div>
                     </div>
                 </div>`;
             });
         }
 
-        function renderHist() {
-            const c = document.getElementById('worker-hist-container'); c.innerHTML="";
-            const h = misDatos.filter(d => d.recogio===usuario.nombre && d.estado!=='PENDIENTE');
-            const exitosos = h.filter(d => d.estado!=='NO_RECOGIDO');
-            renderChips(exitosos, 'zona', 'hist-zona-summary', 'chip-blue');
-            h.forEach(d => {
-                let st = d.estado==='EN_REVISION'?'⏳ EN REVISIÓN':(d.estado==='RECOGIDO'?'✅ LISTO':'⚠️ FALLIDO');
-                c.innerHTML += `
-                <div class="card" style="padding:15px; border-left:5px solid ${d.estado==='NO_RECOGIDO'?'#ef4444':'#cbd5e1'};">
-                    <div style="display:flex; justify-content:space-between; align-items:start;">
-                         <div><span class="zona-badge" style="font-size:10px;">${d.zona}</span><div style="font-weight:800; font-size:16px; color:#1e293b; margin-top:5px;">#${d.tarjeta}</div></div>
-                         <div style="text-align:right;"><div style="font-size:11px; font-weight:800; margin-bottom:5px; color:${d.estado==='NO_RECOGIDO'?'#dc2626':'#64748b'}">${st}</div>${d.estado!=='RECOGIDO'?`<button class="btn-icon" style="background:#f1f5f9; color:#475569;" onclick="deshacer('${d.id}')">Deshacer</button>`:''}</div>
-                    </div>
-                    <div style="font-size:12px; color:#64748b; margin-top:5px;">📦 ${d.articulo || '-'}</div>
-                </div>`;
-            });
-        }
-
         function renderTabla() {
-            const t = document.getElementById('tbody-admin'); t.innerHTML="";
+            const t = document.getElementById('tbody-admin'); t.innerHTML = "";
             misDatos.forEach(d => {
-                let btn = `<button class="btn-icon" style="background:#f1f5f9; color:#475569;" onclick="abrirEditar('${d.id}')" title="Editar">✏️</button>`;
-                let rowClass = '';
+                let btn = `<button style="background:#eee; border:none; padding:5px;" onclick="editar('${d.id}')">✏️</button>`;
+                let rowClass = "";
                 if(d.estado === 'EN_REVISION') {
-                    btn = `<button class="btn-icon btn-review" onclick="abrirAprobacionAdmin('${d.id}')" title="Aprobar" style="margin-right:5px; color:white;">✅</button>` + btn;
-                    rowClass = 'row-review';
+                    btn = `<button style="background:var(--review); color:white; border:none; padding:5px; margin-right:5px;" onclick="abrirModal('modal-aprobar','${d.id}')">✅</button>` + btn;
+                    rowClass = "row-review";
                 }
-                let color = d.estado==='RECOGIDO'?'#16a34a':(d.estado==='NO_RECOGIDO'?'#dc2626':(d.estado==='EN_REVISION'?'#7c3aed':'#ea580c'));
-                t.innerHTML += `<tr class="${rowClass}">
-                    <td style="white-space:nowrap;">${btn}</td>
-                    <td><b>${d.tarjeta}</b></td>
-                    <td>${formatDate(d.creado)}</td>
-                    <td><span style="font-size:11px; font-weight:600; color:#64748b;">${d.zona}</span></td>
-                    <td style="color:${color}; font-weight:800; font-size:11px;">${d.estado.replace('_',' ')}</td>
-                </tr>`;
+                t.innerHTML += `<tr class="${rowClass}"><td>${btn}</td><td>${d.tarjeta}</td><td>${d.zona}</td><td>${d.estado}</td></tr>`;
             });
         }
 
-        function renderChips(data, field, containerId, cssClass) {
-            let counts = {}; data.forEach(d => { let k = (d[field]||'?').toString().toUpperCase().trim(); counts[k] = (counts[k] || 0) + 1; });
-            let html = ""; Object.keys(counts).forEach(k => html += `<div class="chip ${cssClass}">${k} <span>${counts[k]}</span></div>`);
-            document.getElementById(containerId).innerHTML = html;
+        // --- ACCIONES BD ---
+        function guardarMision() {
+            const t = document.getElementById('reg-tarjeta').value;
+            if(!t) return alert("Falta tarjeta");
+            db.collection("articulos_recogidos").add({
+                tarjeta: t, zona: document.getElementById('reg-zona').value,
+                vendedor: document.getElementById('reg-vendedor').value, recogio: document.getElementById('reg-recogedor').value,
+                cliente: document.getElementById('reg-cliente').value, direccion: document.getElementById('reg-direccion').value,
+                telefono: document.getElementById('reg-telefono').value, articulo: document.getElementById('reg-articulo').value,
+                fecha_cuenta: document.getElementById('reg-fecha-cuenta').value, multa: document.getElementById('reg-multa').value,
+                saldo_actual: document.getElementById('reg-saldo').value, ultima_fecha_pago: document.getElementById('reg-ultima-fecha').value,
+                estado: 'PENDIENTE', creado: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => { alert("Guardado"); document.getElementById('reg-tarjeta').value = ''; });
         }
 
-        function updateState(id, st, ex={}) { db.collection("articulos_recogidos").doc(id).update({estado:st,...ex}); }
-        window.confirmarEntregaWorker = function() { updateState(document.getElementById('conf-id').value, 'EN_REVISION'); document.getElementById('modal-confirm').style.display='none'; }
-        window.reportarFalloWorker = function() { updateState(document.getElementById('obs-id').value, 'NO_RECOGIDO', {observacion:document.getElementById('obs-texto').value}); document.getElementById('modal-obs').style.display='none'; }
-        window.aprobarRecepcionAdmin = function() { updateState(document.getElementById('aprobar-id').value, 'RECOGIDO', {fecha_confirmacion: new Date().toISOString()}); document.getElementById('modal-aprobar').style.display='none'; }
-        window.deshacer = function(id) { if(confirm("¿Deshacer acción?")) updateState(id, 'PENDIENTE'); }
+        function abrirModal(id, uid) { document.getElementById(id).style.display = 'flex'; if(uid){ 
+            if(id==='modal-confirm') document.getElementById('conf-id').value=uid;
+            if(id==='modal-obs') document.getElementById('obs-id').value=uid;
+            if(id==='modal-aprobar') document.getElementById('aprobar-id').value=uid;
+        }}
         
-        window.abrirConfirmacionWorker = function(id){document.getElementById('conf-id').value=id;document.getElementById('modal-confirm').style.display='flex';}
-        window.abrirObservacionWorker = function(id){document.getElementById('obs-id').value=id;document.getElementById('modal-obs').style.display='flex';}
-        window.abrirAprobacionAdmin = function(id){document.getElementById('aprobar-id').value=id;document.getElementById('modal-aprobar').style.display='flex';}
-        window.abrirEditar = function(id){const d=misDatos.find(x=>x.id===id); document.getElementById('edit-id').value=id; document.getElementById('edit-estado').value=d.estado; document.getElementById('edit-tarjeta').value=d.tarjeta; document.getElementById('edit-recogedor').value=d.recogio; document.getElementById('edit-vendedor').value=d.vendedor; document.getElementById('edit-direccion').value=d.direccion; document.getElementById('edit-multa').value=d.multa; document.getElementById('modal-edit').style.display='flex';}
-        window.guardarEdicion = function(){ updateState(document.getElementById('edit-id').value, document.getElementById('edit-estado').value, {tarjeta:document.getElementById('edit-tarjeta').value, recogio:document.getElementById('edit-recogedor').value, vendedor:document.getElementById('edit-vendedor').value, direccion:document.getElementById('edit-direccion').value, multa:Number(document.getElementById('edit-multa').value)}); document.getElementById('modal-edit').style.display='none'; }
-        window.borrarRegistro = function(){ if(confirm("Borrar permanentemente?")) db.collection("articulos_recogidos").doc(document.getElementById('edit-id').value).delete().then(()=>document.getElementById('modal-edit').style.display='none'); }
-
-        function formatDate(t) { if(!t)return'-'; let d=t.seconds?new Date(t.seconds*1000):new Date(t); return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`; }
-        function norm(s) { return s?s.toString().toUpperCase().trim():'SIN ASIGNAR'; }
+        function confirmarEntregaWorker() { db.collection("articulos_recogidos").doc(document.getElementById('conf-id').value).update({estado:'EN_REVISION'}); closeModal('modal-confirm'); }
+        function reportarFalloWorker() { db.collection("articulos_recogidos").doc(document.getElementById('obs-id').value).update({estado:'NO_RECOGIDO', obs: document.getElementById('obs-texto').value}); closeModal('modal-obs'); }
+        function aprobarRecepcionAdmin() { db.collection("articulos_recogidos").doc(document.getElementById('aprobar-id').value).update({estado:'RECOGIDO'}); closeModal('modal-aprobar'); }
+        function editar(id) { 
+            const d = misDatos.find(x=>x.id===id);
+            document.getElementById('edit-id').value=id; document.getElementById('edit-estado').value=d.estado;
+            document.getElementById('edit-tarjeta').value=d.tarjeta; document.getElementById('edit-direccion').value=d.direccion;
+            abrirModal('modal-edit');
+        }
+        function guardarEdicion() {
+            db.collection("articulos_recogidos").doc(document.getElementById('edit-id').value).update({
+                estado: document.getElementById('edit-estado').value, tarjeta: document.getElementById('edit-tarjeta').value, direccion: document.getElementById('edit-direccion').value
+            }); closeModal('modal-edit');
+        }
+        function borrarRegistro() { if(confirm("Borrar?")) db.collection("articulos_recogidos").doc(document.getElementById('edit-id').value).delete(); closeModal('modal-edit'); }
+        function refrescarVistas() { if(usuario.rol==='admin') renderTabla(); else { renderMisiones(); renderHist(); } }
+        function renderHist() { document.getElementById('worker-hist-container').innerHTML = misDatos.filter(d=>d.recogio===usuario.nombre && d.estado!=='PENDIENTE').map(d=>`<div class="card" style="padding:10px;"><b>#${d.tarjeta}</b> - ${d.estado}</div>`).join(''); }
         
-        window.exportarExcel = function() {
-            const d = misDatos.map(x=>({Tarjeta:x.tarjeta, Estado:x.estado, Recogedor:x.recogio, Zona:x.zona, Vendedor:x.vendedor, Articulo:x.articulo, Fecha:formatDate(x.creado), Multa:x.multa||0}));
-            XLSX.utils.book_append_sheet(wb=XLSX.utils.book_new(), XLSX.utils.json_to_sheet(d), "GYG"); XLSX.writeFile(wb, "GYG_Data.xlsx");
-        }
-        window.generarPDFProfesional = function() {
-            const i=document.getElementById('filtro-inicio').value; const f=document.getElementById('filtro-fin').value; 
-            let start=i?new Date(i+"T00:00:00"):null; let end=f?new Date(f+"T23:59:59"):null;
-            const data = misDatos.filter(d=>{ if(d.estado!=='RECOGIDO') return false; if(d.creado && start && end){ let date=new Date(d.creado.seconds*1000); if(date<start || date>end) return false; } return true; });
-            if(!data.length) return alert("Sin datos RECOGIDOS en fecha");
-            const { jsPDF } = window.jspdf; const doc = new jsPDF();
-            doc.setFillColor(37, 99, 235); doc.rect(0,0,210,25,'F'); doc.setTextColor(255); doc.setFontSize(16); doc.text("CONTROL CMR", 14, 16);
-            const body = data.map(x=>[x.tarjeta, x.recogio, x.zona, x.vendedor, x.articulo||'-', formatDate(x.creado), formatDate(x.fecha_confirmacion), x.multa||0]);
-            doc.autoTable({ startY:35, head:[['#','REC','ZONA','VEND','ART','ASIG','RECOG','MULTA']], body:body });
-            doc.save("Reporte_CMR.pdf");
-        }
-
-        function calcularStats() {
-            let cv={}, cz={}; misDatos.forEach(d=>{ let v=norm(d.vendedor); let z=norm(d.zona); cv[v]=(cv[v]||0)+1; cz[z]=(cz[z]||0)+1; });
-            document.getElementById('stats-vendedores').innerHTML = Object.entries(cv).sort((a,b)=>b[1]-a[1]).slice(0,5).map(e=>`<div class="stat-row"><span>${e[0]}</span> <span class="stat-badge badge-blue">${e[1]}</span></div>`).join('');
-            document.getElementById('stats-zonas').innerHTML = Object.entries(cz).sort((a,b)=>b[1]-a[1]).slice(0,5).map(e=>`<div class="stat-row"><span>${e[0]}</span> <span class="stat-badge badge-green">${e[1]}</span></div>`).join('');
-        }
-
-        function agregarRecogedor() {
-            const input = document.getElementById('nuevo-recogedor');
-            const v = input.value.trim().toUpperCase();
-            if (v) {
-                if (!listaRecogedores.includes(v)) {
-                    listaRecogedores.push(v);
-                    db.collection("config_recogedores").doc("lista").set({nombres: listaRecogedores})
-                        .then(() => { input.value = ''; alert("Recogedor agregado"); })
-                        .catch(e => alert("Error: " + e.message));
-                } else {
-                    alert("Ya existe");
-                }
-            } else {
-                alert("Escribe un nombre primero");
-            }
-        }
-
-        function agregarVendedor() {
-            const input = document.getElementById('nuevo-vendedor');
-            const v = input.value.trim().toUpperCase();
-            if (v) {
-                if (!listaVendedores.includes(v)) {
-                    listaVendedores.push(v);
-                    db.collection("config_vendedores").doc("lista").set({nombres: listaVendedores})
-                        .then(() => { input.value = ''; alert("Vendedor agregado"); })
-                        .catch(e => alert("Error: " + e.message));
-                } else {
-                    alert("Ya existe");
-                }
-            } else {
-                alert("Escribe un nombre primero");
-            }
-        }
-
-        function eliminarItem(n,t){ 
-            if(confirm("¿Eliminar " + n + "?")){ 
-                if(t=='recogedores') listaRecogedores=listaRecogedores.filter(x=>x!=n); 
-                else listaVendedores=listaVendedores.filter(x=>x!=n); 
-                db.collection("config_"+t).doc("lista").set({nombres:t=='recogedores'?listaRecogedores:listaVendedores}); 
-            } 
-        }
-        
-        function renderList(id,l,t){ 
-            document.getElementById(id).innerHTML = l.map(i=>`<li style="padding:10px;border-bottom:1px solid #eee;display:flex;justify-content:space-between; align-items:center;">${i} <button class="btn-icon" style="color:red; background:#fee2e2;" onclick="eliminarItem('${i}','${t}')">🗑️</button></li>`).join(''); 
-        }
+        function togglePassword() { const x=document.getElementById('admin-pass'); x.type = x.type==='password'?'text':'password'; }
     </script>
 </body>
 </html>
