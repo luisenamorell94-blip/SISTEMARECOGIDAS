@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Control CMR - V69</title>
+    <title>Control CMR - V71</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -21,14 +21,17 @@
     <link rel="apple-touch-icon" href="logo-ctr.png">
 
     <style>
-        /* --- ESTILOS PREMIUM (Diseño Intacto) --- */
+        /* --- CORE --- */
         :root {
-            --primary: #1e40af; 
-            --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            --bg-body: #f3f4f6;
-            --text-main: #111827;
-            --text-muted: #6b7280;
-            --card-radius: 20px;
+            --primary: #2563eb; 
+            --primary-dark: #1e3a8a;
+            --accent: #3b82f6;
+            --bg-body: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --radius-xl: 24px;
+            --radius-md: 12px;
+            --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.1);
         }
 
         body { 
@@ -37,108 +40,177 @@
             display: flex; flex-direction: column; height: 100vh; overflow: hidden; color: var(--text-main);
         }
 
-        button, input, select, textarea, .card, .menu-card, .chip { transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); }
-
-        .full-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); display: none; flex-direction: column; z-index: 100; overflow-y: auto; }
+        button, input, select { transition: all 0.25s ease; outline: none; }
+        .full-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f1f5f9; display: none; flex-direction: column; z-index: 100; overflow-y: auto; }
         .visible { display: flex !important; }
+        
+        /* --- LOGIN PRO --- */
+        #screen-rol, #screen-auth {
+            align-items: center; justify-content: center; padding: 20px;
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .login-split-container {
+            display: flex; width: 100%; max-width: 1000px; min-height: 600px;
+            background: white; border-radius: var(--radius-xl); overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .welcome-side {
+            flex: 1.2; padding: 60px; color: white; display: flex; flex-direction: column; justify-content: center;
+            background: #0f172a;
+            background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1486406140926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+            position: relative;
+        }
+        
+        .brand-logo { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; opacity: 0.8; display: flex; align-items: center; gap: 10px; }
+        .brand-line { width: 40px; height: 2px; background: white; }
+        
+        .brand-main-text { font-size: 48px; font-weight: 800; line-height: 1.1; margin: 0; letter-spacing: -1px; }
+        .welcome-msg { font-size: 16px; line-height: 1.6; opacity: 0.7; margin-top: 20px; max-width: 400px; font-weight: 300; }
+
+        .form-side { flex: 1; padding: 50px; display: flex; align-items: center; justify-content: center; background: white; }
+        .white-login-card { width: 100%; max-width: 380px; }
+        
+        .login-title { font-size: 26px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+        .login-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
+
+        /* Tarjetas de Rol */
+        .role-card {
+            border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 15px;
+            cursor: pointer; display: flex; align-items: center; gap: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+        }
+        .role-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1); }
+        
+        .role-icon-box { 
+            width: 45px; height: 45px; background: #eff6ff; border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; color: var(--primary);
+        }
+        .role-icon-box svg { width: 24px; height: 24px; }
+        
+        .role-info h4 { margin: 0; font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .role-info p { margin: 3px 0 0 0; font-size: 12px; color: var(--text-muted); }
+
+        /* Inputs */
+        .input-group { margin-bottom: 20px; }
+        .input-label { display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 8px; text-transform: uppercase; }
+        .app-input {
+            width: 100%; padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 12px;
+            font-size: 15px; color: var(--text-main); background: #f8fafc;
+            box-sizing: border-box; font-family: 'Inter', sans-serif;
+        }
+        .app-input:focus { background: white; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+
+        .app-btn {
+            width: 100%; padding: 16px; border: none; border-radius: 12px;
+            font-weight: 600; font-size: 15px; color: white; cursor: pointer;
+            background: var(--text-main);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .app-btn:hover { background: #334155; transform: translateY(-1px); }
+        .btn-success { background: var(--primary); }
+        .btn-success:hover { background: var(--primary-dark); }
+
+        /* --- APP INTERNA --- */
         .app-view { display: none; padding: 15px; padding-bottom: 100px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-
-        /* LOGIN SPLIT */
-        #screen-rol, #screen-auth { align-items: center; justify-content: center; padding: 20px; background: radial-gradient(circle at top right, #e0e7ff, #f3f4f6); }
-        .login-split-container { display: flex; width: 100%; max-width: 900px; min-height: 550px; background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); }
-        .welcome-side { flex: 1; padding: 50px; color: white; display: flex; flex-direction: column; justify-content: center; background: var(--primary-gradient); }
-        .form-side { flex: 1; padding: 40px; display: flex; align-items: center; justify-content: center; }
-        .white-login-card { width: 100%; max-width: 360px; }
-
-        .role-btn-new { background: white; border: 1px solid #f1f5f9; padding: 20px; border-radius: 16px; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .role-btn-new:hover { transform: translateY(-3px); border-color: #2563eb; }
         
-        .app-input { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; background: #f3f4f6; font-size: 15px; box-sizing: border-box; margin-bottom: 10px; font-weight: 500; }
-        .app-input:focus { background: white; border-color: #2563eb; outline: none; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        header { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+        .header-brand { font-weight: 800; font-size: 18px; color: var(--text-main); letter-spacing: -0.5px; }
+        
+        .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); overflow: hidden; }
+        .card-header { font-size: 14px; font-weight: 700; color: #64748b; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .app-btn { width: 100%; padding: 16px; border: none; border-radius: 50px; font-weight: 800; font-size: 15px; color: white; background: var(--primary-gradient); cursor: pointer; text-transform: uppercase; margin-top: 10px; box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4); }
-        .app-btn:active { transform: scale(0.98); }
-        .btn-success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .btn-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
-        .btn-review { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .map-header { height: 100px; background-color: #333; background-size: cover; background-position: center; display: flex; align-items: flex-end; justify-content: space-between; padding: 15px; cursor: pointer; margin: -20px -20px 15px -20px; position: relative; }
+        .map-header::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.6)); pointer-events: none; }
+        .dept-tag { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: white; font-weight: 700; font-size: 10px; padding: 4px 10px; border-radius: 20px; z-index: 2; border: 1px solid rgba(255,255,255,0.2); }
+        .map-action { background: white; color: var(--text-main); font-weight: 700; font-size: 11px; padding: 6px 14px; border-radius: 20px; z-index: 2; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
-        /* DASHBOARD */
         .dashboard-grid { display: grid; gap: 15px; grid-template-columns: 1fr; }
-        .menu-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; cursor: pointer; display: flex; align-items: center; gap: 20px; }
-        .menu-card:hover { transform: translateY(-3px); border-color: #bfdbfe; }
-        .menu-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: #eff6ff; color: #2563eb; }
+        .menu-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #f1f5f9; cursor: pointer; display: flex; align-items: center; gap: 20px; transition: transform 0.2s; }
+        .menu-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+        .menu-icon { width: 48px; height: 48px; background: #eff6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--primary); }
 
-        /* TARJETAS CON MAPA */
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.06); overflow: hidden; }
-        .card-header { font-size: 15px; font-weight: 800; color: #334155; margin-bottom: 15px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
-        
-        .map-header { height: 90px; background-color: #333; background-size: cover; background-position: center; display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 15px; cursor: pointer; margin: -20px -20px 15px -20px; position: relative; }
-        .map-header::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7)); }
-        .dept-tag { background: #1e3a8a; color: white; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .map-action { background: white; color: #2563eb; font-weight: 800; font-size: 11px; padding: 6px 12px; border-radius: 20px; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        /* Utilidades */
+        .chip-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .chip { padding: 8px 16px; border-radius: 100px; font-size: 12px; font-weight: 600; background: white; border: 1px solid #e2e8f0; cursor: pointer; white-space: nowrap; color: var(--text-muted); }
+        .chip.active { background: var(--text-main); color: white; border-color: var(--text-main); }
 
-        .financial-info { background: #fff7ed; color: #c2410c; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 13px; display: inline-block; margin-bottom: 10px; }
-        .zona-badge { background: #eff6ff; color: #2563eb; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-right: 5px; }
-        .vend-badge { background: #ecfdf5; color: #059669; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-
-        /* UI */
-        .chip-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; }
-        .chip { padding: 8px 16px; border-radius: 30px; font-size: 11px; font-weight: 700; background: white; border: 1px solid #e5e7eb; cursor: pointer; white-space: nowrap; }
-        .chip.active { background: #2563eb; color: white; border-color: #2563eb; }
-
-        header { background: white; padding: 15px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; z-index: 50; }
-        .btn-back { background: #f1f5f9; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; color: #6b7280; display: none; }
-        
-        .team-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #374151; }
-        .btn-trash { background: #fee2e2; color: #dc2626; border: none; width: 32px; height: 32px; border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-box { background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; }
+        .zona-badge { background: #f1f5f9; color: var(--text-main); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
         
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { background: #f8fafc; padding: 15px; text-align: left; color: #475569; }
-        td { padding: 15px; border-bottom: 1px solid #f1f5f9; }
-        .row-review { background-color: #f5f3ff !important; }
-        .btn-icon { padding: 8px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; background: #f3f4f6; }
+        th { background: #f8fafc; padding: 12px; text-align: left; color: var(--text-muted); font-weight: 600; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
+        .btn-icon { background: #f1f5f9; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        
+        .team-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-weight: 500; }
+        .btn-trash { background: #fef2f2; color: #ef4444; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        #bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; padding: 10px 0; border-top: 1px solid #e2e8f0; z-index: 90; font-family: 'Segoe UI', sans-serif;}
-        .nav-item { flex: 1; text-align: center; font-size: 10px; color: #94a3b8; cursor: pointer; padding: 5px 0; border-radius: 8px; margin: 0 5px;}
-        .nav-item:hover { background-color: #f1f5f9; }
-        .active-nav { color: #2563eb; font-weight: bold; }
+        #bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; padding: 10px 0; border-top: 1px solid #f1f5f9; z-index: 90; display: flex; justify-content: space-around; backdrop-filter: blur(10px); }
+        .nav-item { text-align: center; color: #94a3b8; cursor: pointer; font-size: 10px; font-weight: 600; }
+        .nav-item.active-nav { color: var(--primary); }
+        .nav-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
+        .modal-box { background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
 
         @media (max-width: 768px) {
             .login-split-container { flex-direction: column; min-height: auto; width: 92%; margin: 20px auto; }
-            .welcome-side { padding: 40px 30px; }
-            .dashboard-grid { grid-template-columns: 1fr; }
+            .welcome-side { padding: 40px 30px; min-height: 200px; }
+            .form-side { padding: 30px 20px; }
+            .brand-main-text { font-size: 32px; }
+            .app-view { padding: 15px; padding-bottom: 90px; }
         }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="network-status" style="display:none; position:fixed; top:0; width:100%; background:#ef4444; color:white; text-align:center; padding:5px; font-size:12px; font-weight:bold; z-index:200;">SIN CONEXIÓN</div>
-
-    <div id="screen-loading" class="full-screen visible" style="justify-content:center; align-items:center; color:white; text-align:center; background: var(--primary-gradient);">
-        <h1 style="margin:0; font-size:36px; font-weight:900;">CONTROL CMR</h1>
-        <div style="font-size:14px; letter-spacing:4px; font-weight:700; opacity:0.8;">BY LUIS ENAMORADO</div>
-        <div style="margin-top:20px;">V69 - Fix Listas</div>
+    <div id="screen-loading" class="full-screen visible" style="justify-content:center; align-items:center; background:#0f172a; color:white;">
+        <div style="text-align:center;">
+            <h1 style="margin:0; font-size:32px; font-weight:800; letter-spacing:-1px;">CONTROL CMR</h1>
+            <div style="font-size:12px; opacity:0.6; margin-top:10px; letter-spacing:2px;">BY LUIS ENAMORADO</div>
+            <div style="margin-top:20px; font-size:12px; color:#3b82f6;">V71 - Fix Historial</div>
+        </div>
     </div>
 
     <div id="screen-rol" class="full-screen">
         <div class="login-split-container">
             <div class="welcome-side">
-                <h1 style="margin:0; font-size:42px; font-weight:900;">CONTROL CMR</h1>
-                <div style="font-size:14px; font-weight:600; letter-spacing:3px; opacity:0.8; margin-top:10px;">SISTEMA INTELIGENTE</div>
+                <div class="brand-logo"><div class="brand-line"></div>SISTEMA LOGÍSTICO</div>
+                <h1 class="brand-main-text">Control<br>Inteligente.</h1>
+                <p class="welcome-msg">Gestiona rutas, entregas y equipo desde una plataforma centralizada.</p>
             </div>
             <div class="form-side">
                 <div class="white-login-card">
-                    <h3 style="font-size:24px; font-weight:800; margin-bottom:20px; color:#1e293b;">Bienvenido</h3>
-                    <div class="role-btn-new" onclick="irLogin('admin')">
-                        <div class="menu-icon">👔</div>
-                        <div><b style="display:block; font-size:16px;">ADMINISTRADOR</b><span style="font-size:13px; color:#6b7280;">Gestión</span></div>
+                    <div class="login-title">Bienvenido</div>
+                    <div class="login-subtitle">Selecciona tu perfil</div>
+                    
+                    <div class="role-card" onclick="irLogin('admin')">
+                        <div class="role-icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </div>
+                        <div class="role-info">
+                            <h4>Administrador</h4>
+                            <p>Gestión global</p>
+                        </div>
                     </div>
-                    <div class="role-btn-new" onclick="irLogin('worker')">
-                        <div class="menu-icon">🚚</div>
-                        <div><b style="display:block; font-size:16px;">RECOGEDOR</b><span style="font-size:13px; color:#6b7280;">Ruta</span></div>
+
+                    <div class="role-card" onclick="irLogin('worker')">
+                        <div class="role-icon-box" style="color:#10b981; background:#ecfdf5;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                        </div>
+                        <div class="role-info">
+                            <h4>Recogedor</h4>
+                            <p>Ruta y entregas</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,21 +220,35 @@
     <div id="screen-auth" class="full-screen">
         <div class="login-split-container">
             <div class="welcome-side">
-                <h1>ACCESO</h1>
-                <p>Ingresa tus credenciales.</p>
+                <h1 class="brand-main-text">Acceso<br>Seguro.</h1>
+                <p class="welcome-msg">Ingresa tus credenciales para acceder.</p>
             </div>
             <div class="form-side">
                 <div class="white-login-card">
-                    <h3 id="auth-title" style="margin-top:0; color:#1e293b;">Iniciar Sesión</h3>
+                    <h3 class="login-title" id="auth-title">Iniciar Sesión</h3>
+                    <p class="login-subtitle">Introduce tus datos</p>
+                    
                     <div id="form-admin" style="display:none;">
-                        <input type="password" id="admin-pass" class="app-input" placeholder="Contraseña Maestra">
-                        <button onclick="validarAdmin()" class="app-btn">ENTRAR AL PANEL</button>
+                        <div class="input-group">
+                            <label class="input-label">Contraseña</label>
+                            <input type="password" id="admin-pass" class="app-input" placeholder="••••••••">
+                        </div>
+                        <button onclick="validarAdmin()" class="app-btn">
+                            ENTRAR <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </button>
                     </div>
+
                     <div id="form-worker" style="display:none;">
-                        <select id="worker-select" class="app-input"><option>Cargando usuarios...</option></select>
-                        <button onclick="validarWorker()" class="app-btn btn-success">VER MI RUTA</button>
+                        <div class="input-group">
+                            <label class="input-label">Usuario</label>
+                            <select id="worker-select" class="app-input"><option>Cargando lista...</option></select>
+                        </div>
+                        <button onclick="validarWorker()" class="app-btn btn-success">
+                            VER RUTA <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </button>
                     </div>
-                    <button onclick="verPantalla('screen-rol')" style="background:transparent; border:none; color:#6b7280; font-weight:700; margin-top:20px; cursor:pointer;">← Volver</button>
+
+                    <button onclick="verPantalla('screen-rol')" style="background:transparent; border:none; color:#94a3b8; font-weight:600; margin-top:25px; cursor:pointer; font-size:13px;">← Regresar</button>
                 </div>
             </div>
         </div>
@@ -171,98 +257,105 @@
     <div id="screen-app" class="full-screen">
         <header>
             <div class="header-left">
-                <button id="btn-home" class="btn-back" onclick="goHome()">← MENÚ</button>
-                <div style="font-weight:900; font-size:18px; color:#1e3a8a;">CONTROL CMR</div>
+                <div class="header-brand">CONTROL CMR</div>
             </div>
-            <button onclick="cerrarSesionSegura()" style="background:#fee2e2; color:#ef4444; border:none; padding:8px 12px; border-radius:8px; font-weight:bold; cursor:pointer;">SALIR</button>
+            <button onclick="cerrarSesionSegura()" style="background:#fef2f2; color:#ef4444; border:none; padding:8px 12px; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;">SALIR</button>
         </header>
 
         <div id="view-admin-dashboard" class="app-view">
-            <h2 style="color:#111827; margin-top:0;">Hola, Admin 👋</h2>
+            <h2 style="color:var(--text-main); margin-top:0; font-weight:800;">Hola, Admin.</h2>
             <div class="dashboard-grid">
                 <div class="menu-card" onclick="nav('admin-reg')">
                     <div class="menu-icon">📝</div>
-                    <div><span style="font-weight:800; color:#1e3a8a; display:block;">NUEVA ORDEN</span><span style="font-size:12px; color:#6b7280;">Registrar</span></div>
+                    <div><span style="font-weight:700; color:var(--text-main); display:block; font-size:16px;">Nueva Orden</span><span style="font-size:12px; color:var(--text-muted);">Crear registros</span></div>
                 </div>
                 <div class="menu-card" onclick="nav('admin-tab')">
                     <div class="menu-icon">📊</div>
-                    <div><span style="font-weight:800; color:#1e3a8a; display:block;">CONTROL</span><span style="font-size:12px; color:#6b7280;">Tablas</span></div>
+                    <div><span style="font-weight:700; color:var(--text-main); display:block; font-size:16px;">Control Total</span><span style="font-size:12px; color:var(--text-muted);">Tablas y reportes</span></div>
                 </div>
                 <div class="menu-card" onclick="nav('admin-team')">
                     <div class="menu-icon">👥</div>
-                    <div><span style="font-weight:800; color:#1e3a8a; display:block;">EQUIPO</span><span style="font-size:12px; color:#6b7280;">Personal</span></div>
+                    <div><span style="font-weight:700; color:var(--text-main); display:block; font-size:16px;">Equipo</span><span style="font-size:12px; color:var(--text-muted);">Gestionar personal</span></div>
                 </div>
             </div>
         </div>
 
         <div id="view-admin-reg" class="app-view">
+            <button onclick="nav('admin-dashboard')" style="background:none; border:none; color:var(--text-muted); font-weight:600; cursor:pointer; margin-bottom:15px;">← Volver</button>
             <div class="card">
-                <div class="card-header">NUEVA ORDEN</div>
-                <input type="number" id="reg-tarjeta" class="app-input" style="font-size:20px; color:#2563eb; font-weight:bold;" placeholder="N° Tarjeta">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <input type="date" id="reg-fecha-cuenta" class="app-input" onchange="checkMulta()">
-                    <input type="number" id="reg-multa" class="app-input" value="0" placeholder="Multa">
+                <div class="card-header">DETALLES DE ORDEN</div>
+                <label class="input-label">N° TARJETA</label>
+                <input type="number" id="reg-tarjeta" class="app-input" style="font-size:20px; font-weight:700; color:var(--primary);" placeholder="0000">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+                    <div><label class="input-label">FECHA</label><input type="date" id="reg-fecha-cuenta" class="app-input" onchange="checkMulta()"></div>
+                    <div><label class="input-label">MULTA</label><input type="number" id="reg-multa" class="app-input" value="0"></div>
                 </div>
-                <div id="alerta-multa" style="display:none; background:#fee2e2; color:#b91c1c; padding:10px; border-radius:8px; text-align:center; font-weight:bold; font-size:12px; margin-bottom:10px;">⚠️ APLICA MULTA</div>
-                <div style="background:#f9fafb; padding:15px; border-radius:12px; margin-bottom:15px;">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <input type="number" id="reg-saldo" class="app-input" style="margin-bottom:0;" placeholder="Saldo">
-                        <input type="date" id="reg-ultima-fecha" class="app-input" style="margin-bottom:0;">
+                <div id="alerta-multa" style="display:none; background:#fef2f2; color:#b91c1c; padding:12px; border-radius:12px; text-align:center; font-weight:700; font-size:12px; margin-bottom:15px;">⚠️ MULTA APLICABLE</div>
+                
+                <div style="background:#f8fafc; padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #e2e8f0;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div><label class="input-label">SALDO</label><input type="number" id="reg-saldo" class="app-input" style="margin-bottom:0;" placeholder="0.00"></div>
+                        <div><label class="input-label">ULT. PAGO</label><input type="date" id="reg-ultima-fecha" class="app-input" style="margin-bottom:0;"></div>
                     </div>
                 </div>
-                
-                <label style="font-size:12px; font-weight:bold; color:#6b7280;">RECOGEDOR</label>
+
+                <label class="input-label">ASIGNAR A RECOGEDOR</label>
                 <select id="reg-recogedor" class="app-input"><option>Cargando...</option></select>
                 
-                <input type="text" id="reg-cliente" class="app-input" placeholder="Cliente">
-                <textarea id="reg-direccion" class="app-input" rows="2" placeholder="Dirección"></textarea>
+                <label class="input-label" style="margin-top:10px;">CLIENTE</label>
+                <input type="text" id="reg-cliente" class="app-input" placeholder="Nombre completo">
+                <input type="text" id="reg-direccion" class="app-input" placeholder="Dirección exacta">
                 <input type="tel" id="reg-telefono" class="app-input" placeholder="Teléfono">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <select id="reg-zona" class="app-input">
-                        <option value="">ZONA</option><option value="SONAGUERA">SONAGUERA</option><option value="SABA TOCOA">SABA TOCOA</option><option value="SABA OLANCHITO">SABA OLANCHITO</option><option value="BALFATE">BALFATE</option><option value="PLANES JUTIAPA">PLANES JUTIAPA</option><option value="BONITO ORIENTAL">BONITO ORIENTAL</option><option value="HONDURAS AGUAN">HONDURAS AGUAN</option><option value="TRUJILLO">TRUJILLO</option><option value="MARGEN IZQUIERDA">MARGEN IZQUIERDA</option><option value="FAOUS">FAOUS</option><option value="OLANCHO">OLANCHO</option>
-                    </select>
-                    <div>
-                        <label style="font-size:12px; font-weight:bold; color:#6b7280;">VENDEDOR</label>
-                        <select id="reg-vendedor" class="app-input"><option>Cargando...</option></select>
-                    </div>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:10px;">
+                    <div><label class="input-label">ZONA</label><select id="reg-zona" class="app-input"><option value="">--</option><option value="SONAGUERA">SONAGUERA</option><option value="SABA TOCOA">SABA TOCOA</option><option value="SABA OLANCHITO">SABA OLANCHITO</option><option value="BALFATE">BALFATE</option><option value="PLANES JUTIAPA">PLANES JUTIAPA</option><option value="BONITO ORIENTAL">BONITO ORIENTAL</option><option value="HONDURAS AGUAN">HONDURAS AGUAN</option><option value="TRUJILLO">TRUJILLO</option><option value="MARGEN IZQUIERDA">MARGEN IZQUIERDA</option><option value="FAOUS">FAOUS</option><option value="OLANCHO">OLANCHO</option></select></div>
+                    <div><label class="input-label">VENDEDOR</label><select id="reg-vendedor" class="app-input"><option>Cargando...</option></select></div>
                 </div>
-                <input type="text" id="reg-articulo" class="app-input" placeholder="Artículo">
-                <button onclick="guardarMision()" id="btn-save" class="app-btn">CREAR ORDEN</button>
+                <input type="text" id="reg-articulo" class="app-input" placeholder="Artículo vendido" style="margin-top:10px;">
+                <button onclick="guardarMision()" id="btn-save" class="app-btn btn-success">GUARDAR ORDEN</button>
             </div>
         </div>
 
         <div id="view-admin-tab" class="app-view">
+            <button onclick="nav('admin-dashboard')" style="background:none; border:none; color:var(--text-muted); font-weight:600; cursor:pointer; margin-bottom:15px;">← Volver</button>
+            
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <button class="app-btn btn-success" style="margin:0; flex:1;" onclick="exportarExcel()">Excel</button>
-                <button class="app-btn btn-review" style="margin:0; flex:1;" onclick="generarPDFProfesional()">PDF</button>
+                <button class="app-btn" style="margin:0; background:#10b981;" onclick="exportarExcel()">Excel</button>
+                <button class="app-btn" style="margin:0; background:#6366f1;" onclick="generarPDFProfesional()">PDF</button>
             </div>
+            
             <div class="card">
                 <div style="display:flex; gap:10px;">
                     <input type="date" id="filtro-inicio" class="app-input" style="margin:0;">
                     <input type="date" id="filtro-fin" class="app-input" style="margin:0;">
                 </div>
             </div>
-            <div style="overflow-x:auto; background:white; border-radius:15px; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
-                <table id="tabla-admin"><thead><tr><th>ACCION</th><th>TARJETA</th><th>FECHA</th><th>ZONA</th><th>ESTADO</th></tr></thead><tbody id="tbody-admin"></tbody></table>
+            
+            <div style="overflow-x:auto; background:white; border-radius:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); border:1px solid #e2e8f0;">
+                <table id="tabla-admin"><thead><tr><th>ACCION</th><th>#</th><th>ZONA</th><th>ESTADO</th></tr></thead><tbody id="tbody-admin"></tbody></table>
             </div>
+            
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
-                <div class="card"><div class="card-header">VENDEDORES</div><div id="stats-vendedores"></div></div>
-                <div class="card"><div class="card-header">ZONAS</div><div id="stats-zonas"></div></div>
+                <div class="card"><div class="card-header">TOP VENDEDORES</div><div id="stats-vendedores"></div></div>
+                <div class="card"><div class="card-header">TOP ZONAS</div><div id="stats-zonas"></div></div>
             </div>
         </div>
 
         <div id="view-admin-team" class="app-view">
+            <button onclick="nav('admin-dashboard')" style="background:none; border:none; color:var(--text-muted); font-weight:600; cursor:pointer; margin-bottom:15px;">← Volver</button>
+            
             <div class="card">
                 <div class="card-header">RECOGEDORES</div>
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
                     <input id="nuevo-recogedor" class="app-input" placeholder="Nombre..." style="margin-bottom:0;">
                     <button class="app-btn btn-success" style="width:auto; margin:0;" onclick="agregarRecogedor()">+</button>
                 </div>
                 <div id="lista-equipo">Cargando...</div>
             </div>
+            
             <div class="card">
                 <div class="card-header">VENDEDORES</div>
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
                     <input id="nuevo-vendedor" class="app-input" placeholder="Nombre..." style="margin-bottom:0;">
                     <button class="app-btn btn-success" style="width:auto; margin:0;" onclick="agregarVendedor()">+</button>
                 </div>
@@ -272,35 +365,40 @@
 
         <div id="view-worker-list" class="app-view">
             <div style="text-align:center; margin-bottom:20px;">
-                <span style="font-size:12px; color:#6b7280;">HOLA</span>
-                <div style="font-size:24px; font-weight:800; color:#111827;" id="worker-name-display"></div>
+                <div style="font-size:11px; font-weight:700; color:var(--text-muted); letter-spacing:1px;">HOLA</div>
+                <div style="font-size:24px; font-weight:800; color:var(--text-main);" id="worker-name-display"></div>
             </div>
-            <input type="text" id="worker-search" class="app-input" placeholder="🔍 Buscar tarjeta..." onkeyup="renderMisiones()">
-            <div id="zona-summary" class="chip-container" style="margin-bottom:15px;"></div>
+            
+            <div class="input-group">
+                <input type="text" id="worker-search" class="app-input" placeholder="🔍 Buscar tarjeta o cliente..." onkeyup="renderMisiones()">
+            </div>
+            
+            <div id="zona-summary" class="chip-container" style="margin-bottom:20px;"></div>
+            
             <div id="worker-misiones-container"></div>
         </div>
 
         <div id="view-worker-hist" class="app-view">
-            <div style="text-align:center; font-weight:bold; color:#6b7280; margin-bottom:15px;">HOY</div>
-            <div id="hist-zona-summary" class="chip-container" style="margin-bottom:15px;"></div>
+            <div style="text-align:center; font-weight:800; color:var(--text-main); margin-bottom:20px;">HISTORIAL DE HOY</div>
+            <div id="hist-zona-summary" class="chip-container" style="margin-bottom:20px;"></div>
             <div id="worker-hist-container"></div>
         </div>
 
         <div id="bottom-nav">
-            <div id="nav-btn-ruta" class="nav-item" onclick="nav('worker-list')">
-                <div style="font-size:20px;">📍</div><div>RUTA</div>
+            <div id="nav-btn-ruta" class="nav-item active-nav" onclick="nav('worker-list')">
+                <span class="nav-icon">📍</span>RUTA
             </div>
             <div id="nav-btn-hist" class="nav-item" onclick="nav('worker-hist')">
-                <div style="font-size:20px;">📜</div><div>HISTORIAL</div>
+                <span class="nav-icon">📜</span>HISTORIAL
             </div>
         </div>
 
     </div>
 
-    <div id="modal-confirm" class="modal-overlay"><div class="modal-box"><h3>CONFIRMAR</h3><p>¿Marcar como recogido?</p><input type="hidden" id="conf-id"><button onclick="confirmarEntregaWorker()" class="app-btn btn-success">SÍ, RECOGIDO</button><button onclick="document.getElementById('modal-confirm').style.display='none'" class="app-btn" style="background:#f3f4f6; color:#4b5563; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-obs" class="modal-overlay"><div class="modal-box"><h3>REPORTAR</h3><input type="hidden" id="obs-id"><textarea id="obs-texto" class="app-input" placeholder="Motivo..."></textarea><button onclick="reportarFalloWorker()" class="app-btn btn-danger">ENVIAR</button><button onclick="document.getElementById('modal-obs').style.display='none'" class="app-btn" style="background:#f3f4f6; color:#4b5563; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-aprobar" class="modal-overlay"><div class="modal-box"><h3>APROBAR</h3><p>¿Confirmar recepción?</p><input type="hidden" id="aprobar-id"><button onclick="aprobarRecepcionAdmin()" class="app-btn btn-review">CONFIRMAR</button><button onclick="document.getElementById('modal-aprobar').style.display='none'" class="app-btn" style="background:#f3f4f6; color:#4b5563; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-edit" class="modal-overlay"><div class="modal-box"><h3>EDITAR</h3><input type="hidden" id="edit-id"><select id="edit-estado" class="app-input"><option value="PENDIENTE">PENDIENTE</option><option value="EN_REVISION">EN REVISIÓN</option><option value="RECOGIDO">RECOGIDO</option><option value="NO_RECOGIDO">NO RECOGIDO</option></select><input id="edit-tarjeta" class="app-input" placeholder="Tarjeta"><input id="edit-multa" class="app-input" placeholder="Multa"><select id="edit-recogedor" class="app-input"></select><select id="edit-vendedor" class="app-input"></select><input id="edit-direccion" class="app-input"><button onclick="guardarEdicion()" class="app-btn">GUARDAR</button><button onclick="borrarRegistro()" class="app-btn btn-danger" style="margin-top:10px;">BORRAR</button><button onclick="document.getElementById('modal-edit').style.display='none'" class="app-btn" style="background:#f3f4f6; color:#4b5563; margin-top:10px; box-shadow:none;">CERRAR</button></div></div>
+    <div id="modal-confirm" class="modal-overlay"><div class="modal-box"><h3>CONFIRMAR</h3><p style="color:#64748b;">¿Marcar tarjeta como recogida?</p><input type="hidden" id="conf-id"><button onclick="confirmarEntregaWorker()" class="app-btn btn-success">SÍ, RECOGIDO</button><button onclick="document.getElementById('modal-confirm').style.display='none'" class="app-btn" style="background:#f1f5f9; color:#475569; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
+    <div id="modal-obs" class="modal-overlay"><div class="modal-box"><h3>REPORTAR</h3><p style="color:#64748b;">Indica el motivo:</p><input type="hidden" id="obs-id"><textarea id="obs-texto" class="app-input" placeholder="Escribe aquí..."></textarea><button onclick="reportarFalloWorker()" class="app-btn" style="background:#ef4444;">ENVIAR REPORTE</button><button onclick="document.getElementById('modal-obs').style.display='none'" class="app-btn" style="background:#f1f5f9; color:#475569; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
+    <div id="modal-aprobar" class="modal-overlay"><div class="modal-box"><h3>APROBAR</h3><p style="color:#64748b;">¿Confirmar recepción de dinero/ficha?</p><input type="hidden" id="aprobar-id"><button onclick="aprobarRecepcionAdmin()" class="app-btn btn-review">CONFIRMAR</button><button onclick="document.getElementById('modal-aprobar').style.display='none'" class="app-btn" style="background:#f1f5f9; color:#475569; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
+    <div id="modal-edit" class="modal-overlay"><div class="modal-box"><h3>EDITAR</h3><input type="hidden" id="edit-id"><label class="input-label">Estado</label><select id="edit-estado" class="app-input"><option value="PENDIENTE">PENDIENTE</option><option value="EN_REVISION">EN REVISIÓN</option><option value="RECOGIDO">RECOGIDO</option><option value="NO_RECOGIDO">NO RECOGIDO</option></select><input id="edit-tarjeta" class="app-input" placeholder="Tarjeta"><input id="edit-multa" class="app-input" placeholder="Multa"><select id="edit-recogedor" class="app-input"></select><select id="edit-vendedor" class="app-input"></select><input id="edit-direccion" class="app-input"><button onclick="guardarEdicion()" class="app-btn">GUARDAR CAMBIOS</button><button onclick="borrarRegistro()" class="app-btn" style="background:#fee2e2; color:#ef4444; margin-top:10px; box-shadow:none;">BORRAR</button><button onclick="document.getElementById('modal-edit').style.display='none'" class="app-btn" style="background:#f1f5f9; color:#475569; margin-top:10px; box-shadow:none;">CERRAR</button></div></div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyAbyNccFOMXruf2Dk_qtARD97JwXPU2Q-Y", authDomain: "control-recogido.firebaseapp.com", projectId: "control-recogido", storageBucket: "control-recogido.firebasestorage.app", messagingSenderId: "757224344188", appId: "1:757224344188:web:e13c9574e2378fd7ead7f9", measurementId: "G-CPMJV5WHR3" };
@@ -314,9 +412,7 @@
         auth.signInAnonymously();
 
         window.onload = function() {
-            // CARGA FORZADA DE LISTAS AL INICIO PARA QUE SIEMPRE ESTEN
             cargarListas();
-            
             setTimeout(() => {
                 const sp = localStorage.getItem('gyg_saved_pass'); if(sp){document.getElementById('admin-pass').value=sp;}
                 const w = localStorage.getItem('gyg_worker_name'); const a = localStorage.getItem('gyg_admin_logged');
@@ -329,11 +425,9 @@
             verPantalla('screen-auth'); 
             document.getElementById('form-admin').style.display = rol === 'admin' ? 'block' : 'none';
             document.getElementById('form-worker').style.display = rol === 'worker' ? 'block' : 'none';
-            // Cargar listas si no se cargaron antes
             if(rol === 'worker') updateSelects();
         }
 
-        // --- LOGIN LOGIC ---
         function validarAdmin() {
             const p = document.getElementById('admin-pass').value;
             if(p) {
@@ -345,20 +439,18 @@
 
         function validarWorker() {
             const n = document.getElementById('worker-select').value;
-            if(n && n !== 'Cargando usuarios...') {
+            if(n && n !== 'Cargando...' && n !== 'Sin datos') {
                 localStorage.setItem('gyg_worker_name', n); localStorage.removeItem('gyg_admin_logged');
                 usuario = { rol: 'worker', nombre: n };
                 iniciar();
-            } else { alert("Selecciona nombre válido"); }
+            } else { alert("Selecciona un nombre válido"); }
         }
 
-        function cerrarSesionSegura() { if(confirm("¿Salir?")){ localStorage.clear(); location.reload(); } }
+        function cerrarSesionSegura() { if(confirm("¿Cerrar sesión?")){ localStorage.clear(); location.reload(); } }
 
         function iniciar() { 
             verPantalla('screen-app'); cargarDatos(); 
-            // Renderizar equipo si es admin, por si acaso
             if(usuario.rol === 'admin') renderEquipo();
-            
             if(usuario.rol==='admin') { nav('admin-dashboard'); document.getElementById('bottom-nav').style.display='none'; } 
             else { nav('worker-list'); document.getElementById('bottom-nav').style.display='flex'; document.getElementById('worker-name-display').innerText=usuario.nombre; } 
         }
@@ -366,97 +458,72 @@
         function nav(id) { 
             document.querySelectorAll('.app-view').forEach(v=>v.style.display='none'); 
             document.getElementById('view-'+id).style.display='block';
-            if(usuario.rol==='admin') document.getElementById('btn-home').style.display = (id==='admin-dashboard') ? 'none' : 'block';
             if(usuario.rol==='worker'){
-                document.getElementById('nav-btn-ruta').classList.remove('active-nav');
-                document.getElementById('nav-btn-hist').classList.remove('active-nav');
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
                 if(id==='worker-list') document.getElementById('nav-btn-ruta').classList.add('active-nav');
                 if(id==='worker-hist') document.getElementById('nav-btn-hist').classList.add('active-nav');
             }
         }
         function goHome() { nav('admin-dashboard'); }
 
+        // --- NORMALIZADOR DE NOMBRES (FIX DAVID/david) ---
+        const norm = (str) => (str || '').toString().trim().toUpperCase();
+
         function cargarDatos() { db.collection("articulos_recogidos").orderBy("creado","desc").onSnapshot(s => { misDatos=[]; s.forEach(d => { let o=d.data(); o.id=d.id; misDatos.push(o); }); refrescarVistas(); calcularStats(); }); }
         
-        // --- EQUIPO & LISTAS (LOGICA BLINDADA V69) ---
         function cargarListas() { 
             db.collection("config_recogedores").doc("lista").onSnapshot(d=>{
-                if(d.exists) { listaRecogedores = d.data().nombres || []; } 
-                else { listaRecogedores = []; } // Evitar errores si no existe
+                if(d.exists) { listaRecogedores = d.data().nombres || []; } else { listaRecogedores = []; }
                 updateSelects(); if(usuario.rol==='admin') renderEquipo();
             }); 
             db.collection("config_vendedores").doc("lista").onSnapshot(d=>{
-                if(d.exists) { listaVendedores = d.data().nombres || []; }
-                else { listaVendedores = []; }
+                if(d.exists) { listaVendedores = d.data().nombres || []; } else { listaVendedores = []; }
                 updateSelects(); if(usuario.rol==='admin') renderEquipo();
             }); 
         }
 
         function updateSelects() {
-            // Rellena todos los dropdowns
-            fill('worker-select', listaRecogedores); 
-            fill('reg-recogedor', listaRecogedores); 
-            fill('edit-recogedor', listaRecogedores);
-            fill('reg-vendedor', listaVendedores); 
-            fill('edit-vendedor', listaVendedores);
+            fill('worker-select', listaRecogedores); fill('reg-recogedor', listaRecogedores); fill('edit-recogedor', listaRecogedores);
+            fill('reg-vendedor', listaVendedores); fill('edit-vendedor', listaVendedores);
         }
 
         function fill(id, l) { 
-            const s=document.getElementById(id); 
-            if(!s) return; 
-            let v=s.value; 
-            s.innerHTML='<option value="">Seleccionar...</option>'; 
-            if(l && l.length > 0) {
-                l.forEach(i=>s.innerHTML+=`<option value="${i}">${i}</option>`); 
-                if(l.includes(v))s.value=v; 
-            } else {
-                s.innerHTML='<option value="">Sin datos</option>';
-            }
+            const s=document.getElementById(id); if(!s) return; 
+            let v=s.value; s.innerHTML='<option value="">Seleccionar...</option>'; 
+            if(l && l.length > 0) { l.forEach(i=>s.innerHTML+=`<option value="${i}">${i}</option>`); if(l.includes(v))s.value=v; }
+            else { s.innerHTML='<option value="">Sin datos</option>'; }
         }
 
         function agregarRecogedor() {
-            const input = document.getElementById('nuevo-recogedor'); 
-            const val = input.value.trim().toUpperCase();
+            const input = document.getElementById('nuevo-recogedor'); const val = input.value.trim().toUpperCase();
             if(val && !listaRecogedores.includes(val)) {
-                listaRecogedores.push(val); 
-                db.collection("config_recogedores").doc("lista").set({nombres:listaRecogedores});
-                input.value = ''; 
-                // Feedback visual instantaneo
-                renderEquipo();
-            } else if (!val) alert("Escribe un nombre");
+                listaRecogedores.push(val); db.collection("config_recogedores").doc("lista").set({nombres:listaRecogedores});
+                input.value = ''; renderEquipo();
+            } else if(!val) alert("Escribe un nombre");
         }
 
         function agregarVendedor() {
-            const input = document.getElementById('nuevo-vendedor'); 
-            const val = input.value.trim().toUpperCase();
+            const input = document.getElementById('nuevo-vendedor'); const val = input.value.trim().toUpperCase();
             if(val && !listaVendedores.includes(val)) {
-                listaVendedores.push(val); 
-                db.collection("config_vendedores").doc("lista").set({nombres:listaVendedores});
-                input.value = ''; 
-                renderEquipo();
-            } else if (!val) alert("Escribe un nombre");
+                listaVendedores.push(val); db.collection("config_vendedores").doc("lista").set({nombres:listaVendedores});
+                input.value = ''; renderEquipo();
+            } else if(!val) alert("Escribe un nombre");
         }
 
         function eliminarItem(n,t) {
             if(confirm("¿Eliminar a " + n + "?")) {
                 if(t==='recogedor') listaRecogedores = listaRecogedores.filter(x => x !== n); 
                 else listaVendedores = listaVendedores.filter(x => x !== n);
-                
                 db.collection(t==='recogedor'?"config_recogedores":"config_vendedores").doc("lista").set({nombres:(t==='recogedor'?listaRecogedores:listaVendedores)});
                 renderEquipo();
             }
         }
 
         function renderEquipo() {
-            // Renderiza listas solo si los elementos existen en el DOM
-            const divR = document.getElementById('lista-equipo');
-            if(divR) divR.innerHTML = listaRecogedores.map(i => `<div class="team-item"><span>${i}</span><button class="btn-trash" onclick="eliminarItem('${i}','recogedor')">🗑️</button></div>`).join('');
-            
-            const divV = document.getElementById('lista-vendedores-ui');
-            if(divV) divV.innerHTML = listaVendedores.map(i => `<div class="team-item"><span>${i}</span><button class="btn-trash" onclick="eliminarItem('${i}','vendedor')">🗑️</button></div>`).join('');
+            const divR = document.getElementById('lista-equipo'); if(divR) divR.innerHTML = listaRecogedores.map(i => `<div class="team-item"><span>${i}</span><button class="btn-trash" onclick="eliminarItem('${i}','recogedor')">🗑️</button></div>`).join('');
+            const divV = document.getElementById('lista-vendedores-ui'); if(divV) divV.innerHTML = listaVendedores.map(i => `<div class="team-item"><span>${i}</span><button class="btn-trash" onclick="eliminarItem('${i}','vendedor')">🗑️</button></div>`).join('');
         }
 
-        // --- MAPA (CON IMAGEN) ---
         function getMapInfo(zona) {
             const z = (zona || '').toString().toUpperCase();
             if(z.includes('SONAGUERA') || z.includes('TOCOA') || z.includes('TRUJILLO') || z.includes('BONITO')) return { dept: 'COLÓN 🌴', img: 'trujillo.jpg' };
@@ -467,10 +534,10 @@
         function abrirMapa(direccion, zona) { window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${direccion}, ${zona}, Honduras`)}`, '_blank'); }
         function toggleFiltroZona(z) { filtroZonaActivo = z; renderMisiones(); }
 
-        // --- RENDER ---
         function renderMisiones() {
             const c = document.getElementById('worker-misiones-container'); c.innerHTML="";
-            let data = misDatos.filter(d => d.recogio===usuario.nombre && (d.estado==='PENDIENTE'||d.estado==='NO_RECOGIDO'));
+            // USAR NORM PARA FILTRAR
+            let data = misDatos.filter(d => norm(d.recogio) === norm(usuario.nombre) && (d.estado==='PENDIENTE'||d.estado==='NO_RECOGIDO'));
             
             const zCont = document.getElementById('zona-summary');
             let counts = {}; data.forEach(d => counts[d.zona] = (counts[d.zona] || 0) + 1);
@@ -482,24 +549,24 @@
             const term = document.getElementById('worker-search').value.toUpperCase();
             if(term) data = data.filter(d => (d.tarjeta||'').toString().includes(term) || (d.cliente||'').toUpperCase().includes(term));
 
-            if(data.length===0) c.innerHTML = "<p style='text-align:center;color:#94a3b8;margin-top:20px;'>Sin tarjetas.</p>";
+            if(data.length===0) c.innerHTML = "<p style='text-align:center;color:#94a3b8;margin-top:20px;'>No tienes tarjetas pendientes.</p>";
 
             data.forEach(d => {
                 const mapInfo = getMapInfo(d.zona);
                 c.innerHTML += `
-                <div class="card mision-card" style="background:${d.estado==='NO_RECOGIDO'?'#fef2f2':'white'}">
+                <div class="card mision-card" style="background:${d.estado==='NO_RECOGIDO'?'#fef2f2':'white'}; padding:0;">
                     <div class="map-header" onclick="abrirMapa('${d.direccion}', '${d.zona}')" style="background-image: url('${mapInfo.img}');">
                         <span class="dept-tag">${mapInfo.dept}</span>
                         <span class="map-action">📍 VER MAPA</span>
                     </div>
-                    <div style="padding:15px;">
-                        <div><span class="zona-badge">${d.zona}</span> <span class="vend-badge">${d.vendedor}</span></div>
-                        <div style="font-size:24px; font-weight:800; color:#1e40af; margin:10px 0;">#${d.tarjeta}</div>
+                    <div style="padding:20px;">
+                        <div style="margin-bottom:10px;"><span class="zona-badge">${d.zona}</span> <span class="zona-badge" style="background:#f0f9ff; color:#0369a1;">${d.vendedor}</span></div>
+                        <div style="font-size:28px; font-weight:800; color:var(--primary); margin:5px 0;">#${d.tarjeta}</div>
                         <div class="financial-info">💰 Saldo: ${d.saldo_actual} | 📅 Abono: ${formatDate(d.ultima_fecha_pago)}</div>
-                        <div style="font-weight:700; margin-bottom:5px; color:#374151;">🏠 ${d.direccion}</div>
-                        <div style="margin-bottom:8px;"><a href="tel:${d.telefono}" style="text-decoration:none; color:#1e40af; font-weight:700; background:#eff6ff; padding:4px 8px; border-radius:6px;">📞 ${d.telefono || 'Llamar'}</a></div>
-                        <div style="font-size:13px; color:#6b7280; margin-bottom:15px; border-top:1px dashed #e5e7eb; padding-top:8px;">📦 ${d.articulo} | 👤 ${d.cliente}</div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div style="font-weight:700; font-size:15px; color:#334155; margin:10px 0;">🏠 ${d.direccion}</div>
+                        <div style="margin-bottom:15px;"><a href="tel:${d.telefono}" style="text-decoration:none; color:var(--primary); font-weight:700; background:#eff6ff; padding:6px 12px; border-radius:8px; display:inline-block;">📞 ${d.telefono || 'Llamar'}</a></div>
+                        <div style="font-size:13px; color:#64748b; margin-bottom:20px; border-top:1px dashed #e2e8f0; padding-top:10px;">📦 ${d.articulo} | 👤 ${d.cliente}</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                             <button class="app-btn btn-success" style="margin:0;" onclick="abrirModal('modal-confirm', '${d.id}')">RECOGER</button>
                             <button class="app-btn btn-danger" style="margin:0;" onclick="abrirModal('modal-obs', '${d.id}')">REPORTAR</button>
                         </div>
@@ -508,39 +575,39 @@
             });
         }
 
-        // --- HISTORIAL FUNCIONAL ---
         function renderHist() {
             const c = document.getElementById('worker-hist-container'); c.innerHTML="";
-            const h = misDatos.filter(d => d.recogio===usuario.nombre && d.estado!=='PENDIENTE');
+            // USAR NORM PARA FILTRAR
+            const h = misDatos.filter(d => norm(d.recogio) === norm(usuario.nombre) && d.estado!=='PENDIENTE');
             renderChips(h, 'zona', 'hist-zona-summary', 'chip-blue');
             
             if(h.length === 0) {
-                c.innerHTML = "<p style='text-align:center; color:#999; margin-top:20px;'>No hay movimientos hoy.</p>";
+                c.innerHTML = "<p style='text-align:center; color:#999; margin-top:20px;'>No has realizado movimientos hoy.</p>";
                 return;
             }
 
             h.forEach(d => {
                 const mapInfo = getMapInfo(d.zona);
-                let statusColor = d.estado === 'RECOGIDO' ? 'var(--success)' : (d.estado === 'NO_RECOGIDO' ? 'var(--danger)' : 'var(--review)');
+                let statusColor = d.estado === 'RECOGIDO' ? '#10b981' : (d.estado === 'NO_RECOGIDO' ? '#ef4444' : '#8b5cf6');
                 let statusText = d.estado === 'RECOGIDO' ? '✅ RECOGIDO' : (d.estado === 'NO_RECOGIDO' ? '⚠️ NO RECOGIDO' : '⏳ EN REVISIÓN');
 
                 c.innerHTML += `
                 <div class="card" style="padding:0; overflow:hidden;">
                     <div class="map-header" style="height:60px; background-image: url('${mapInfo.img}'); filter: grayscale(100%);">
-                        <span class="dept-tag" style="background:#555;">${mapInfo.dept}</span>
+                        <span class="dept-tag" style="background:#333;">${mapInfo.dept}</span>
                     </div>
-                    <div style="padding:15px;">
+                    <div style="padding:20px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <div>
                                 <span class="zona-badge">${d.zona}</span>
-                                <div style="font-size:20px; font-weight:800; color:#333; margin-top:5px;">#${d.tarjeta}</div>
+                                <div style="font-size:24px; font-weight:800; color:#333; margin-top:5px;">#${d.tarjeta}</div>
                             </div>
                             <div style="text-align:right;">
-                                <div style="color:${statusColor}; font-weight:800; font-size:12px;">${statusText}</div>
-                                ${d.estado !== 'RECOGIDO' ? `<button class="btn-icon" style="background:#f3f4f6; margin-top:5px;" onclick="deshacer('${d.id}')">↺ Deshacer</button>` : ''}
+                                <div style="color:${statusColor}; font-weight:800; font-size:12px; margin-bottom:5px;">${statusText}</div>
+                                ${d.estado !== 'RECOGIDO' ? `<button class="btn-icon" onclick="deshacer('${d.id}')">↺ Deshacer</button>` : ''}
                             </div>
                         </div>
-                        <div style="font-size:12px; color:#6b7280; margin-top:10px;">📦 ${d.articulo || '-'}</div>
+                        <div style="font-size:13px; color:#64748b; margin-top:10px;">📦 ${d.articulo || '-'}</div>
                     </div>
                 </div>`;
             });
@@ -560,7 +627,27 @@
         
         function formatDate(t) { if(!t)return'-'; let d=t.seconds?new Date(t.seconds*1000):new Date(t); return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`; }
         function checkMulta(){ const f=new Date(document.getElementById('reg-fecha-cuenta').value); const l=new Date("2025-02-24T00:00:00"); document.getElementById('reg-multa').value = f>=l ? 100 : 0; if(f>=l) document.getElementById('alerta-multa').style.display='block'; else document.getElementById('alerta-multa').style.display='none'; }
-        function calcularStats() { let cv={}, cz={}; misDatos.forEach(d=>{ let v=(d.vendedor||'').toUpperCase(); let z=(d.zona||'').toUpperCase(); cv[v]=(cv[v]||0)+1; cz[z]=(cz[z]||0)+1; }); document.getElementById('stats-vendedores').innerHTML = Object.entries(cv).sort((a,b)=>b[1]-a[1]).slice(0,5).map(e=>`<div class="stat-row"><span>${e[0]}</span> <span class="stat-badge badge-blue">${e[1]}</span></div>`).join(''); document.getElementById('stats-zonas').innerHTML = Object.entries(cz).sort((a,b)=>b[1]-a[1]).slice(0,5).map(e=>`<div class="stat-row"><span>${e[0]}</span> <span class="stat-badge badge-green">${e[1]}</span></div>`).join(''); }
+        
+        function calcularStats() { 
+            let cv={}, cz={}; 
+            misDatos.forEach(d=>{ 
+                let v=(d.vendedor||'').toUpperCase().trim(); 
+                let z=(d.zona||'').toUpperCase().trim(); 
+                cv[v]=(cv[v]||0)+1; 
+                cz[z]=(cz[z]||0)+1; 
+            }); 
+            const makeTable = (data, color) => {
+                const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+                if(sorted.length===0) return '<p style="text-align:center; color:#999; font-size:12px;">Sin datos</p>';
+                let h = '<table style="width:100%; font-size:13px;"><tr><th style="padding:10px;">NOMBRE</th><th style="padding:10px; text-align:right;">TOTAL</th></tr>';
+                sorted.forEach(([k,v]) => {
+                    h += `<tr><td style="padding:10px; border-bottom:1px solid #f1f5f9; font-weight:600; color:#334155;">${k}</td><td style="text-align:right; padding:10px; border-bottom:1px solid #f1f5f9;"><span style="background:${color}; color:white; padding:4px 10px; border-radius:12px; font-weight:bold; font-size:12px;">${v}</span></td></tr>`;
+                });
+                return h + '</table>';
+            };
+            document.getElementById('stats-vendedores').innerHTML = makeTable(cv, '#2563eb'); 
+            document.getElementById('stats-zonas').innerHTML = makeTable(cz, '#10b981'); 
+        }
         
         function exportarExcel() { const d = misDatos.map(x=>({Tarjeta:x.tarjeta, Estado:x.estado, Zona:x.zona})); XLSX.utils.book_append_sheet(wb=XLSX.utils.book_new(), XLSX.utils.json_to_sheet(d), "Datos"); XLSX.writeFile(wb, "Reporte.xlsx"); }
         function generarPDFProfesional() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text("REPORTE CMR", 10, 10); doc.autoTable({ html: '#tabla-admin' }); doc.save("Reporte.pdf"); }
@@ -580,16 +667,16 @@
         function renderTabla() {
             const t = document.getElementById('tbody-admin'); t.innerHTML="";
             misDatos.forEach(d => {
-                let btn = `<button class="btn-icon" style="background:#f3f4f6; color:#4b5563;" onclick="editar('${d.id}')">✏️</button>`;
+                let btn = `<button class="btn-icon" onclick="editar('${d.id}')">✏️</button>`;
                 let rowClass = "";
                 if(d.estado === 'EN_REVISION') {
-                    btn = `<button class="btn-icon btn-review" onclick="abrirModal('modal-aprobar','${d.id}')" style="margin-right:5px; color:white;">✅</button>` + btn;
+                    btn = `<button class="btn-icon" style="background:#8b5cf6; color:white; margin-right:5px;" onclick="abrirModal('modal-aprobar','${d.id}')">✅</button>` + btn;
                     rowClass = "row-review";
                 }
-                let color = d.estado==='RECOGIDO'?'#16a34a':(d.estado==='NO_RECOGIDO'?'#dc2626':(d.estado==='EN_REVISION'?'#7c3aed':'#ea580c'));
+                let color = d.estado==='RECOGIDO'?'#10b981':(d.estado==='NO_RECOGIDO'?'#ef4444':(d.estado==='EN_REVISION'?'#8b5cf6':'#f59e0b'));
                 t.innerHTML += `<tr class="${rowClass}">
-                    <td style="white-space:nowrap;">${btn}</td><td><b>${d.tarjeta}</b></td><td>${formatDate(d.creado)}</td><td>${d.zona}</td>
-                    <td style="color:${color}; font-weight:800; font-size:11px;">${d.estado.replace('_',' ')}</td>
+                    <td style="white-space:nowrap;">${btn}</td><td><b style="color:#1e40af;">${d.tarjeta}</b></td><td><span style="font-size:11px; font-weight:600; color:#64748b;">${d.zona}</span></td>
+                    <td><span style="color:${color}; font-weight:800; font-size:10px; background:#f8fafc; padding:4px 8px; border-radius:6px; border:1px solid ${color};">${d.estado.replace('_',' ')}</span></td>
                 </tr>`;
             });
         }
