@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Control CMR - V72 PRO</title>
+    <title>Control CMR - V78 Clásico</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,9 +21,9 @@
     <link rel="apple-touch-icon" href="logo-ctr.png">
 
     <style>
-        /* --- ESTILOS V71 (LOGIN PRO & MINIMALISTA) --- */
+        /* --- ESTILOS PREMIUM (RESTAURADOS) --- */
         :root {
-            --primary: #2563eb; 
+            --primary: #1e40af; 
             --primary-dark: #1e3a8a;
             --accent: #3b82f6;
             --bg-body: #f8fafc;
@@ -31,6 +31,7 @@
             --text-muted: #64748b;
             --radius-xl: 24px;
             --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.1);
+            --danger: #ef4444;
         }
 
         body { font-family: 'Inter', sans-serif; background: var(--bg-body); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; color: var(--text-main); }
@@ -39,14 +40,16 @@
         .visible { display: flex !important; }
         .app-view { display: none; padding: 15px; padding-bottom: 100px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
-        /* LOGIN PRO */
+        /* LOGIN PRO (DISEÑO ORIGINAL RESTAURADO) */
         #screen-rol, #screen-auth { align-items: center; justify-content: center; padding: 20px; background-color: #f8fafc; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 20px 20px; }
         .login-split-container { display: flex; width: 100%; max-width: 1000px; min-height: 600px; background: white; border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-soft); animation: fadeIn 0.6s ease-out; }
         .welcome-side { flex: 1.2; padding: 60px; color: white; display: flex; flex-direction: column; justify-content: center; background: #0f172a; background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1486406140926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; }
+        
         .brand-logo { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; opacity: 0.8; display: flex; align-items: center; gap: 10px; }
         .brand-line { width: 40px; height: 2px; background: white; }
         .brand-main-text { font-size: 48px; font-weight: 800; line-height: 1.1; margin: 0; letter-spacing: -1px; }
         .welcome-msg { font-size: 16px; line-height: 1.6; opacity: 0.7; margin-top: 20px; max-width: 400px; font-weight: 300; }
+        
         .form-side { flex: 1; padding: 50px; display: flex; align-items: center; justify-content: center; background: white; }
         .white-login-card { width: 100%; max-width: 380px; }
         .login-title { font-size: 26px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
@@ -106,6 +109,24 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
         .modal-box { background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
 
+        /* ESTILOS FUGA (INTEGRADOS AL DISEÑO PREMIUM) */
+        .fuga-badge {
+            background: #fef2f2; color: #ef4444; border: 1px solid #fecaca;
+            padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .fuga-switch-container {
+            background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px;
+            padding: 15px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .fuga-label { font-weight: 700; color: #b91c1c; font-size: 14px; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #ef4444; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
         @media (max-width: 768px) {
             .login-split-container { flex-direction: column; min-height: auto; width: 92%; margin: 20px auto; }
             .welcome-side { padding: 40px 30px; min-height: 200px; }
@@ -122,7 +143,7 @@
         <div style="text-align:center;">
             <h1 style="margin:0; font-size:32px; font-weight:800; letter-spacing:-1px;">CONTROL CMR</h1>
             <div style="font-size:12px; opacity:0.6; margin-top:10px; letter-spacing:2px;">BY LUIS ENAMORADO</div>
-            <div style="margin-top:20px; font-size:12px; color:#3b82f6;">Cargando Base de Datos...</div>
+            <div style="margin-top:20px; font-size:12px; color:#3b82f6;">V78 - Clásico + Fuga</div>
         </div>
     </div>
 
@@ -162,6 +183,8 @@
             <div class="form-side">
                 <div class="white-login-card">
                     <h3 class="login-title" id="auth-title">Iniciar Sesión</h3>
+                    <p class="login-subtitle">Introduce tus datos</p>
+                    
                     <div id="form-admin" style="display:none;">
                         <div class="input-group"><label class="input-label">Contraseña</label><input type="password" id="admin-pass" class="app-input" placeholder="••••••••"></div>
                         <button onclick="validarAdmin()" class="app-btn">ENTRAR AL PANEL</button>
@@ -201,6 +224,15 @@
             <button onclick="nav('admin-dashboard')" style="background:none; border:none; color:var(--text-muted); font-weight:600; cursor:pointer; margin-bottom:15px;">← Volver</button>
             <div class="card">
                 <div class="card-header">DETALLES DE ORDEN</div>
+                
+                <div class="fuga-switch-container">
+                    <span class="fuga-label">🚨 MARCAR COMO FUGA</span>
+                    <label class="switch">
+                        <input type="checkbox" id="reg-fuga">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
                 <label class="input-label">N° TARJETA</label><input type="number" id="reg-tarjeta" class="app-input" style="font-size:20px; font-weight:700; color:var(--primary);" placeholder="0000">
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
                     <div><label class="input-label">FECHA</label><input type="date" id="reg-fecha-cuenta" class="app-input" onchange="checkMulta()"></div>
@@ -228,15 +260,17 @@
 
         <div id="view-admin-tab" class="app-view">
             <button onclick="nav('admin-dashboard')" style="background:none; border:none; color:var(--text-muted); font-weight:600; cursor:pointer; margin-bottom:15px;">← Volver</button>
+            <div class="card">
+                <label class="input-label">BUSCAR EN TABLA</label>
+                <input type="text" id="admin-search" class="app-input" placeholder="Escribe Tarjeta, Zona o Estado..." onkeyup="renderTabla()">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+                    <div><label class="input-label">DESDE</label><input type="date" id="filtro-inicio" class="app-input" style="margin:0;" onchange="renderTabla()"></div>
+                    <div><label class="input-label">HASTA</label><input type="date" id="filtro-fin" class="app-input" style="margin:0;" onchange="renderTabla()"></div>
+                </div>
+            </div>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
                 <button class="app-btn" style="margin:0; background:#10b981;" onclick="exportarExcel()">Excel</button>
                 <button class="app-btn" style="margin:0; background:#6366f1;" onclick="generarPDFProfesional()">PDF</button>
-            </div>
-            <div class="card">
-                <div style="display:flex; gap:10px;">
-                    <input type="date" id="filtro-inicio" class="app-input" style="margin:0;">
-                    <input type="date" id="filtro-fin" class="app-input" style="margin:0;">
-                </div>
             </div>
             <div style="overflow-x:auto; background:white; border-radius:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); border:1px solid #e2e8f0;">
                 <table id="tabla-admin"><thead><tr><th>ACCION</th><th>#</th><th>ZONA</th><th>ESTADO</th></tr></thead><tbody id="tbody-admin"></tbody></table>
@@ -280,7 +314,8 @@
         </div>
 
         <div id="view-worker-hist" class="app-view">
-            <div style="text-align:center; font-weight:800; color:var(--text-main); margin-bottom:20px;">HISTORIAL DE HOY</div>
+            <div style="text-align:center; font-weight:800; color:var(--text-main); margin-bottom:10px;" id="hist-title">HISTORIAL COMPLETO</div>
+            <input type="text" id="hist-search" class="app-input" placeholder="🔍 Buscar en historial..." onkeyup="renderHist()" style="margin-bottom:15px;">
             <div id="hist-zona-summary" class="chip-container" style="margin-bottom:20px;"></div>
             <div id="worker-hist-container"></div>
         </div>
@@ -308,7 +343,6 @@
         auth.signInAnonymously();
 
         window.onload = function() {
-            // FIX: Carga inmediata de listas
             cargarListas();
             setTimeout(() => {
                 const sp = localStorage.getItem('gyg_saved_pass'); if(sp){document.getElementById('admin-pass').value=sp;}
@@ -325,7 +359,6 @@
             if(rol === 'worker') updateSelects();
         }
 
-        // --- NORM: Solución para que David = DAVID ---
         const norm = (str) => (str || '').toString().trim().toUpperCase();
 
         function validarAdmin() {
@@ -342,11 +375,9 @@
 
         function iniciar() { 
             verPantalla('screen-app'); 
-            // FIX: Se quitó el orderBy para que aparezcan TODAS las tarjetas (incluso sin fecha)
             db.collection("articulos_recogidos").onSnapshot(s => { 
                 misDatos=[]; 
                 s.forEach(d => { let o=d.data(); o.id=d.id; misDatos.push(o); }); 
-                // Ordenar por fecha localmente
                 misDatos.sort((a,b) => (b.creado?.seconds || 0) - (a.creado?.seconds || 0));
                 refrescarVistas(); calcularStats(); 
             });
@@ -366,7 +397,6 @@
         }
         function goHome() { nav('admin-dashboard'); }
 
-        // --- LISTAS Y EQUIPO ---
         function cargarListas() { 
             db.collection("config_recogedores").doc("lista").onSnapshot(d=>{ if(d.exists) { listaRecogedores = d.data().nombres || []; } else { listaRecogedores = []; } updateSelects(); if(usuario.rol==='admin') renderEquipo(); }); 
             db.collection("config_vendedores").doc("lista").onSnapshot(d=>{ if(d.exists) { listaVendedores = d.data().nombres || []; } else { listaVendedores = []; } updateSelects(); if(usuario.rol==='admin') renderEquipo(); }); 
@@ -374,15 +404,14 @@
         function updateSelects() { fill('worker-select', listaRecogedores); fill('reg-recogedor', listaRecogedores); fill('edit-recogedor', listaRecogedores); fill('reg-vendedor', listaVendedores); fill('edit-vendedor', listaVendedores); }
         function fill(id, l) { const s=document.getElementById(id); if(!s) return; let v=s.value; s.innerHTML='<option value="">Seleccionar...</option>'; if(l && l.length > 0) { l.forEach(i=>s.innerHTML+=`<option value="${i}">${i}</option>`); if(l.includes(v))s.value=v; } else { s.innerHTML='<option value="">Sin datos</option>'; } }
 
-        function agregarRecogedor() { const input = document.getElementById('nuevo-recogedor'); const val = input.value.trim().toUpperCase(); if(val && !listaRecogedores.includes(val)) { listaRecogedores.push(val); db.collection("config_recogedores").doc("lista").set({nombres:listaRecogedores}); input.value = ''; } }
-        function agregarVendedor() { const input = document.getElementById('nuevo-vendedor'); const val = input.value.trim().toUpperCase(); if(val && !listaVendedores.includes(val)) { listaVendedores.push(val); db.collection("config_vendedores").doc("lista").set({nombres:listaVendedores}); input.value = ''; } }
-        function eliminarItem(n,t) { if(confirm("¿Eliminar a " + n + "?")) { if(t==='recogedor') listaRecogedores = listaRecogedores.filter(x => x !== n); else listaVendedores = listaVendedores.filter(x => x !== n); db.collection(t==='recogedor'?"config_recogedores":"config_vendedores").doc("lista").set({nombres:(t==='recogedor'?listaRecogedores:listaVendedores)}); } }
+        function agregarRecogedor() { const input = document.getElementById('nuevo-recogedor'); const val = input.value.trim().toUpperCase(); if(val && !listaRecogedores.includes(val)) { listaRecogedores.push(val); db.collection("config_recogedores").doc("lista").set({nombres:listaRecogedores}); input.value = ''; renderEquipo(); } else if(!val) alert("Escribe un nombre"); }
+        function agregarVendedor() { const input = document.getElementById('nuevo-vendedor'); const val = input.value.trim().toUpperCase(); if(val && !listaVendedores.includes(val)) { listaVendedores.push(val); db.collection("config_vendedores").doc("lista").set({nombres:listaVendedores}); input.value = ''; renderEquipo(); } else if(!val) alert("Escribe un nombre"); }
+        function eliminarItem(n,t) { if(confirm("¿Eliminar a " + n + "?")) { if(t==='recogedor') listaRecogedores = listaRecogedores.filter(x => x !== n); else listaVendedores = listaVendedores.filter(x => x !== n); db.collection(t==='recogedor'?"config_recogedores":"config_vendedores").doc("lista").set({nombres:(t==='recogedor'?listaRecogedores:listaVendedores)}); renderEquipo(); } }
         function renderEquipo() {
             const divR = document.getElementById('lista-equipo'); if(divR) divR.innerHTML = listaRecogedores.map(i => `<div class="team-item"><span>${i}</span><button class="btn-trash" onclick="eliminarItem('${i}','recogedor')">🗑️</button></div>`).join('');
             const divV = document.getElementById('lista-vendedores-ui'); if(divV) divV.innerHTML = listaVendedores.map(i => `<div class="team-item"><span>${i}</span><button class="btn-trash" onclick="eliminarItem('${i}','vendedor')">🗑️</button></div>`).join('');
         }
 
-        // --- MAPAS ---
         function getMapInfo(zona) {
             const z = (zona || '').toString().toUpperCase();
             if(z.includes('SONAGUERA') || z.includes('TOCOA') || z.includes('TRUJILLO') || z.includes('BONITO')) return { dept: 'COLÓN 🌴', img: 'trujillo.jpg' };
@@ -393,11 +422,9 @@
         function abrirMapa(direccion, zona) { window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${direccion}, ${zona}, Honduras`)}`, '_blank'); }
         function toggleFiltroZona(z) { filtroZonaActivo = z; renderMisiones(); }
 
-        // --- RENDER ---
         function renderMisiones() {
             const c = document.getElementById('worker-misiones-container'); c.innerHTML="";
-            // FIX: USO DE NORM() PARA COMPARAR NOMBRES
-            let data = misDatos.filter(d => norm(d.recogio) === norm(usuario.nombre) && (d.estado==='PENDIENTE'||d.estado==='NO_RECOGIDO'));
+            let data = misDatos.filter(d => norm(d.recogio).includes(norm(usuario.nombre)) && (d.estado==='PENDIENTE'||d.estado==='NO_RECOGIDO'));
             
             const zCont = document.getElementById('zona-summary');
             let counts = {}; data.forEach(d => counts[d.zona] = (counts[d.zona] || 0) + 1);
@@ -413,14 +440,19 @@
 
             data.forEach(d => {
                 const mapInfo = getMapInfo(d.zona);
+                const fugaBadge = d.fuga ? '<span class="fuga-badge">🚨 FUGA</span>' : '';
+                
                 c.innerHTML += `
-                <div class="card" style="padding:0; overflow:hidden;">
+                <div class="card mision-card" style="background:${d.estado==='NO_RECOGIDO'?'#fef2f2':'white'}; padding:0;">
                     <div class="map-header" onclick="abrirMapa('${d.direccion}', '${d.zona}')" style="background-image: url('${mapInfo.img}');">
                         <span class="dept-tag">${mapInfo.dept}</span>
                         <span class="map-action">📍 VER MAPA</span>
                     </div>
                     <div style="padding:20px;">
-                        <div style="margin-bottom:10px;"><span class="zona-badge">${d.zona}</span> <span class="zona-badge" style="background:#f0f9ff; color:#0369a1;">${d.vendedor}</span></div>
+                        <div style="margin-bottom:10px;">
+                            ${fugaBadge}
+                            <span class="zona-badge">${d.zona}</span>
+                        </div>
                         <div style="font-size:28px; font-weight:800; color:var(--primary); margin:5px 0;">#${d.tarjeta}</div>
                         <div class="financial-info">💰 Saldo: ${d.saldo_actual} | 📅 Abono: ${formatDate(d.ultima_fecha_pago)}</div>
                         <div style="font-weight:700; font-size:15px; color:#334155; margin:10px 0;">🏠 ${d.direccion}</div>
@@ -435,12 +467,21 @@
             });
         }
 
+        // --- HISTORIAL FIX DAVID ---
         function renderHist() {
             const c = document.getElementById('worker-hist-container'); c.innerHTML="";
-            // FIX: USO DE NORM() PARA FILTRAR HISTORIAL
-            const h = misDatos.filter(d => norm(d.recogio) === norm(usuario.nombre) && d.estado!=='PENDIENTE');
             
-            if(h.length === 0) { c.innerHTML = "<p style='text-align:center; color:#999; margin-top:20px;'>No has realizado movimientos hoy.</p>"; return; }
+            // FILTRO FLEXIBLE (INCLUDES)
+            let h = misDatos.filter(d => norm(d.recogio).includes(norm(usuario.nombre)) && d.estado!=='PENDIENTE');
+            
+            document.getElementById('hist-title').innerText = `HISTORIAL COMPLETO (${h.length})`;
+
+            const term = document.getElementById('hist-search').value.toUpperCase();
+            if(term) h = h.filter(d => (d.tarjeta||'').toString().includes(term) || (d.cliente||'').toUpperCase().includes(term));
+
+            renderChips(h, 'zona', 'hist-zona-summary', 'chip-blue');
+            
+            if(h.length === 0) { c.innerHTML = "<p style='text-align:center; color:#999; margin-top:20px;'>No hay historial disponible.</p>"; return; }
 
             h.forEach(d => {
                 const mapInfo = getMapInfo(d.zona);
@@ -472,38 +513,26 @@
             const z = document.getElementById('reg-zona').value;
             const r = document.getElementById('reg-recogedor').value;
             
-            if(!t || !z || !r || r === 'Cargando...') { return alert("Faltan datos obligatorios (Tarjeta, Zona o Recogedor)"); }
+            if(!t || !z || !r || r === 'Cargando...') return alert("Faltan datos");
             
             const btn = document.getElementById('btn-save'); btn.disabled=true; btn.innerText="GUARDANDO...";
-            
+            const esFuga = document.getElementById('reg-fuga').checked;
+
             db.collection("articulos_recogidos").add({
-                uid: 'admin', 
-                tarjeta: t, 
-                zona: z, 
-                vendedor: document.getElementById('reg-vendedor').value,
-                recogio: r, 
-                cliente: document.getElementById('reg-cliente').value,
-                direccion: document.getElementById('reg-direccion').value, 
-                telefono: document.getElementById('reg-telefono').value,
-                articulo: document.getElementById('reg-articulo').value, 
-                fecha_cuenta: document.getElementById('reg-fecha-cuenta').value,
-                multa: Number(document.getElementById('reg-multa').value), 
-                saldo_actual: document.getElementById('reg-saldo').value,
+                uid: 'admin', tarjeta: t, zona: z, vendedor: document.getElementById('reg-vendedor').value,
+                recogio: r, cliente: document.getElementById('reg-cliente').value,
+                direccion: document.getElementById('reg-direccion').value, telefono: document.getElementById('reg-telefono').value,
+                articulo: document.getElementById('reg-articulo').value, fecha_cuenta: document.getElementById('reg-fecha-cuenta').value,
+                multa: Number(document.getElementById('reg-multa').value), saldo_actual: document.getElementById('reg-saldo').value,
                 ultima_fecha_pago: document.getElementById('reg-ultima-fecha').value, 
-                estado: 'PENDIENTE', 
-                creado: firebase.firestore.FieldValue.serverTimestamp() // Timestamp para orden, no critico si falla
+                estado: 'PENDIENTE', fuga: esFuga,
+                creado: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(()=>{ 
+                alert("Guardado correctamente"); btn.disabled=false; btn.innerText="GUARDAR ORDEN"; 
+                document.getElementById('reg-tarjeta').value=''; document.getElementById('reg-cliente').value='';
+                document.getElementById('reg-direccion').value=''; document.getElementById('reg-fuga').checked = false;
             })
-            .then(()=>{ 
-                alert("Guardado correctamente"); 
-                btn.disabled=false; btn.innerText="CREAR ORDEN"; 
-                document.getElementById('reg-tarjeta').value=''; 
-                document.getElementById('reg-cliente').value='';
-                document.getElementById('reg-direccion').value='';
-            })
-            .catch(error => {
-                alert("Error al guardar: " + error.message);
-                btn.disabled=false; btn.innerText="CREAR ORDEN";
-            });
+            .catch(e=>{ alert("Error: " + e.message); btn.disabled=false; });
         }
 
         function updateState(id, st, ex={}) { db.collection("articulos_recogidos").doc(id).update({estado:st,...ex}); }
@@ -536,14 +565,30 @@
         
         function exportarExcel() { const d = misDatos.map(x=>({Tarjeta:x.tarjeta, Estado:x.estado, Zona:x.zona})); XLSX.utils.book_append_sheet(wb=XLSX.utils.book_new(), XLSX.utils.json_to_sheet(d), "Datos"); XLSX.writeFile(wb, "Reporte.xlsx"); }
         function generarPDFProfesional() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text("REPORTE CMR", 10, 10); doc.autoTable({ html: '#tabla-admin' }); doc.save("Reporte.pdf"); }
+        
         function renderTabla() {
             const t = document.getElementById('tbody-admin'); t.innerHTML="";
-            misDatos.forEach(d => {
+            const i = document.getElementById('filtro-inicio').value;
+            const f = document.getElementById('filtro-fin').value;
+            let start = i ? new Date(i + "T00:00:00") : null;
+            let end = f ? new Date(f + "T23:59:59") : null;
+            const term = document.getElementById('admin-search').value.toUpperCase();
+
+            let data = misDatos.filter(d => {
+                if(d.creado && start && end) { let fecha = new Date(d.creado.seconds * 1000); if(fecha < start || fecha > end) return false; }
+                if(term) { let match = (d.tarjeta||'').toString().includes(term) || (d.zona||'').toUpperCase().includes(term) || (d.estado||'').toUpperCase().includes(term); if(!match) return false; }
+                return true;
+            });
+
+            if(data.length === 0) { t.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:20px; color:#999;'>No hay datos</td></tr>"; return; }
+
+            data.forEach(d => {
                 let btn = `<button class="btn-icon" onclick="editar('${d.id}')">✏️</button>`;
                 let rowClass = "";
+                let fugaIcon = d.fuga ? '🚨' : '';
                 if(d.estado === 'EN_REVISION') { btn = `<button class="btn-icon" style="background:#8b5cf6; color:white; margin-right:5px;" onclick="abrirModal('modal-aprobar','${d.id}')">✅</button>` + btn; rowClass = "row-review"; }
                 let color = d.estado==='RECOGIDO'?'#10b981':(d.estado==='NO_RECOGIDO'?'#ef4444':(d.estado==='EN_REVISION'?'#8b5cf6':'#f59e0b'));
-                t.innerHTML += `<tr class="${rowClass}"><td style="white-space:nowrap;">${btn}</td><td><b style="color:#1e40af;">${d.tarjeta}</b></td><td><span style="font-size:11px; font-weight:600; color:#64748b;">${d.zona}</span></td><td><span style="color:${color}; font-weight:800; font-size:10px; background:#f8fafc; padding:4px 8px; border-radius:6px; border:1px solid ${color};">${d.estado.replace('_',' ')}</span></td></tr>`;
+                t.innerHTML += `<tr class="${rowClass}"><td style="white-space:nowrap;">${btn}</td><td><b style="color:#1e40af;">${d.tarjeta}</b> ${fugaIcon}</td><td><span style="font-size:11px; font-weight:600; color:#64748b;">${d.zona}</span></td><td><span style="color:${color}; font-weight:800; font-size:10px; background:#f8fafc; padding:4px 8px; border-radius:6px; border:1px solid ${color};">${d.estado.replace('_',' ')}</span></td></tr>`;
             });
         }
     </script>
