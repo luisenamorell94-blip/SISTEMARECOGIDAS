@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Control CMR - V78 Clásico</title>
+    <title>Control CMR - V83 White Text</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,28 +21,87 @@
     <link rel="apple-touch-icon" href="logo-ctr.png">
 
     <style>
-        /* --- ESTILOS PREMIUM (RESTAURADOS) --- */
+        /* --- VARIABLES DE TEMA --- */
         :root {
+            /* MODO DIA (LIGHT) */
             --primary: #1e40af; 
             --primary-dark: #1e3a8a;
-            --accent: #3b82f6;
+            
             --bg-body: #f8fafc;
-            --text-main: #0f172a;
+            --bg-card: #ffffff;
+            --bg-input: #f8fafc;
+            --bg-header-table: #f1f5f9;
+            
+            --text-main: #0f172a;  /* Texto oscuro para día */
             --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
             --radius-xl: 24px;
             --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.1);
-            --danger: #ef4444;
         }
 
-        body { font-family: 'Inter', sans-serif; background: var(--bg-body); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; color: var(--text-main); }
-        button, input, select { transition: all 0.25s ease; outline: none; }
-        .full-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f1f5f9; display: none; flex-direction: column; z-index: 100; overflow-y: auto; }
+        /* --- MODO NOCHE (DARK) - TEXTOS BLANCOS --- */
+        body.dark-mode {
+            --bg-body: #0f172a;       /* Fondo azul muy oscuro */
+            --bg-card: #1e293b;       /* Tarjetas gris azulado oscuro */
+            --bg-input: #334155;      /* Inputs oscuros */
+            --bg-header-table: #0f172a;
+            
+            --text-main: #ffffff;     /* TEXTO BLANCO PURO */
+            --text-muted: #cbd5e1;    /* Texto secundario gris claro */
+            --border-color: #334155;  /* Bordes sutiles */
+            
+            --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-body); 
+            color: var(--text-main);
+            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; 
+            transition: background 0.3s ease, color 0.3s ease; 
+        }
+
+        button, input, select, textarea { transition: all 0.2s ease; outline: none; }
+        
+        .full-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); display: none; flex-direction: column; z-index: 100; overflow-y: auto; transition: background 0.3s ease; }
         .visible { display: flex !important; }
         .app-view { display: none; padding: 15px; padding-bottom: 100px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
-        /* LOGIN PRO (DISEÑO ORIGINAL RESTAURADO) */
-        #screen-rol, #screen-auth { align-items: center; justify-content: center; padding: 20px; background-color: #f8fafc; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 20px 20px; }
-        .login-split-container { display: flex; width: 100%; max-width: 1000px; min-height: 600px; background: white; border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-soft); animation: fadeIn 0.6s ease-out; }
+        /* --- BOTÓN TEMA --- */
+        .theme-toggle {
+            position: fixed; bottom: 80px; right: 20px;
+            width: 50px; height: 50px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            color: var(--text-main);
+        }
+
+        /* --- TRANSICION CENTRAL --- */
+        #center-transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(30, 58, 138, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 9999; display: none;
+            align-items: center; justify-content: center;
+            flex-direction: column;
+        }
+        .truck-center-box { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; }
+        .truck-svg-center { width: 80px; height: auto; z-index: 2; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3)); animation: engineBounce 0.6s ease-in-out infinite alternate; }
+        .radar-pulse { position: absolute; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.2); border-radius: 50%; z-index: 1; transform: scale(0.5); animation: radarWave 1.5s infinite linear; }
+        .loading-text-center { color: white; font-weight: 700; font-size: 14px; letter-spacing: 4px; margin-top: 30px; text-transform: uppercase; opacity: 0.8; animation: blinkText 1s infinite alternate; }
+        @keyframes engineBounce { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-10px) scale(1.05); } }
+        @keyframes radarWave { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+        @keyframes blinkText { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        /* LOGIN */
+        #screen-rol, #screen-auth { align-items: center; justify-content: center; padding: 20px; }
+        .login-split-container { display: flex; width: 100%; max-width: 1000px; min-height: 600px; background: var(--bg-card); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-soft); animation: fadeIn 0.6s ease-out; border: 1px solid var(--border-color); }
         .welcome-side { flex: 1.2; padding: 60px; color: white; display: flex; flex-direction: column; justify-content: center; background: #0f172a; background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1486406140926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; }
         
         .brand-logo { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; opacity: 0.8; display: flex; align-items: center; gap: 10px; }
@@ -50,76 +109,90 @@
         .brand-main-text { font-size: 48px; font-weight: 800; line-height: 1.1; margin: 0; letter-spacing: -1px; }
         .welcome-msg { font-size: 16px; line-height: 1.6; opacity: 0.7; margin-top: 20px; max-width: 400px; font-weight: 300; }
         
-        .form-side { flex: 1; padding: 50px; display: flex; align-items: center; justify-content: center; background: white; }
+        .form-side { flex: 1; padding: 50px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); }
         .white-login-card { width: 100%; max-width: 380px; }
+        /* FORZAR COLOR DE TEXTO */
         .login-title { font-size: 26px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
         .login-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
 
-        .role-card { border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 20px; transition: all 0.3s; background: white; }
+        .role-card { border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 20px; transition: all 0.3s; background: var(--bg-card); }
         .role-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1); }
         .role-icon-box { width: 45px; height: 45px; background: #eff6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary); }
+        /* COLOR TEXTO ROL */
         .role-info h4 { margin: 0; font-size: 16px; font-weight: 700; color: var(--text-main); }
         .role-info p { margin: 3px 0 0 0; font-size: 12px; color: var(--text-muted); }
 
         .input-group { margin-bottom: 20px; }
-        .input-label { display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 8px; text-transform: uppercase; }
-        .app-input { width: 100%; padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 15px; color: var(--text-main); background: #f8fafc; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        .app-input:focus { background: white; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
-        .app-btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 600; font-size: 15px; color: white; cursor: pointer; background: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .app-btn:hover { background: #334155; transform: translateY(-1px); }
-        .btn-success { background: var(--primary); }
-        .btn-success:hover { background: var(--primary-dark); }
+        .input-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
+        
+        /* INPUTS EN MODO NOCHE (Texto Blanco) */
+        .app-input { 
+            width: 100%; padding: 14px 16px; 
+            border: 1px solid var(--border-color); border-radius: 12px; 
+            font-size: 15px; 
+            color: var(--text-main); /* IMPORTANTE: Texto hereda color */
+            background: var(--bg-input); 
+            box-sizing: border-box; font-family: 'Inter', sans-serif; 
+        }
+        .app-input:focus { background: var(--bg-card); border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+        
+        .app-btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 600; font-size: 15px; color: white; cursor: pointer; background: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .app-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-success { background: #10b981; }
         .btn-review { background: #8b5cf6; }
 
-        /* APP INTERNA */
-        header { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+        /* APP */
+        header { background: var(--bg-card); padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--border-color); transition: background 0.3s; }
         .header-brand { font-weight: 800; font-size: 18px; color: var(--text-main); letter-spacing: -0.5px; }
         
-        .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); overflow: hidden; }
-        .card-header { font-size: 14px; font-weight: 700; color: #64748b; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card { background: var(--bg-card); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-soft); overflow: hidden; transition: background 0.3s; }
+        .card-header { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 
         .map-header { height: 100px; background-color: #333; background-size: cover; background-position: center; display: flex; align-items: flex-end; justify-content: space-between; padding: 15px; cursor: pointer; margin: -20px -20px 15px -20px; position: relative; }
         .map-header::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.6)); pointer-events: none; }
         .dept-tag { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: white; font-weight: 700; font-size: 10px; padding: 4px 10px; border-radius: 20px; z-index: 2; border: 1px solid rgba(255,255,255,0.2); }
-        .map-action { background: white; color: var(--text-main); font-weight: 700; font-size: 11px; padding: 6px 14px; border-radius: 20px; z-index: 2; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .map-action { background: white; color: #0f172a; font-weight: 700; font-size: 11px; padding: 6px 14px; border-radius: 20px; z-index: 2; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
         .dashboard-grid { display: grid; gap: 15px; grid-template-columns: 1fr; }
-        .menu-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #f1f5f9; cursor: pointer; display: flex; align-items: center; gap: 20px; transition: transform 0.2s; }
+        .menu-card { background: var(--bg-card); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); cursor: pointer; display: flex; align-items: center; gap: 20px; transition: transform 0.2s; }
         .menu-card:hover { transform: translateY(-2px); border-color: var(--primary); }
         .menu-icon { width: 48px; height: 48px; background: #eff6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--primary); }
+        body.dark-mode .menu-icon { background: #334155; color: #60a5fa; }
 
         .chip-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        .chip { padding: 8px 16px; border-radius: 100px; font-size: 12px; font-weight: 600; background: white; border: 1px solid #e2e8f0; cursor: pointer; white-space: nowrap; color: var(--text-muted); }
-        .chip.active { background: var(--text-main); color: white; border-color: var(--text-main); }
-        .zona-badge { background: #f1f5f9; color: var(--text-main); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+        .chip { padding: 8px 16px; border-radius: 100px; font-size: 12px; font-weight: 600; background: var(--bg-card); border: 1px solid var(--border-color); cursor: pointer; white-space: nowrap; color: var(--text-muted); }
+        .chip.active { background: var(--text-main); color: var(--bg-body); border-color: var(--text-main); }
+        body.dark-mode .chip.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+        .zona-badge { background: #f1f5f9; color: #334155; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+        body.dark-mode .zona-badge { background: #334155; color: #f8fafc; }
         
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { background: #f8fafc; padding: 12px; text-align: left; color: var(--text-muted); font-weight: 600; }
-        td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
-        .btn-icon { background: #f1f5f9; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        th { background: var(--bg-header-table); padding: 12px; text-align: left; color: var(--text-muted); font-weight: 600; }
+        td { padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+        .btn-icon { background: var(--bg-input); border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; color: var(--text-main); }
         
-        .team-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-weight: 500; }
+        .team-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); font-weight: 500; color: var(--text-main); }
         .btn-trash { background: #fef2f2; color: #ef4444; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        body.dark-mode .btn-trash { background: #7f1d1d; color: #fecaca; }
 
-        #bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; padding: 10px 0; border-top: 1px solid #f1f5f9; z-index: 90; display: flex; justify-content: space-around; backdrop-filter: blur(10px); }
-        .nav-item { text-align: center; color: #94a3b8; cursor: pointer; font-size: 10px; font-weight: 600; }
+        #bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--bg-card); padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 90; display: flex; justify-content: space-around; backdrop-filter: blur(10px); transition: background 0.3s; }
+        .nav-item { text-align: center; color: var(--text-muted); cursor: pointer; font-size: 10px; font-weight: 600; }
         .nav-item.active-nav { color: var(--primary); }
         .nav-icon { font-size: 20px; display: block; margin-bottom: 4px; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
-        .modal-box { background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
+        .modal-box { background: var(--bg-card); width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 
-        /* ESTILOS FUGA (INTEGRADOS AL DISEÑO PREMIUM) */
-        .fuga-badge {
-            background: #fef2f2; color: #ef4444; border: 1px solid #fecaca;
-            padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800;
-            display: inline-flex; align-items: center; gap: 5px;
-        }
-        .fuga-switch-container {
-            background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px;
-            padding: 15px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;
-        }
+        .fuga-badge { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; }
+        body.dark-mode .fuga-badge { background: #7f1d1d; color: #fecaca; border-color: #991b1b; }
+        
+        .fuga-switch-container { background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 15px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+        body.dark-mode .fuga-switch-container { background: #450a0a; border-color: #7f1d1d; }
+        
         .fuga-label { font-weight: 700; color: #b91c1c; font-size: 14px; }
+        body.dark-mode .fuga-label { color: #fecaca; }
+        
         .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
@@ -139,11 +212,24 @@
 </head>
 <body>
 
+    <button class="theme-toggle" onclick="toggleTheme()" id="btn-theme">🌙</button>
+
+    <div id="center-transition-overlay">
+        <div class="truck-center-box">
+            <div class="radar-pulse"></div>
+            <svg class="truck-svg-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="white">
+                <path d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28.2l112 96c4.8 4.1 10.9 6.3 17.2 6.3h96c13.3 0 24-10.7 24-24s-10.7-24-24-24h-79.3l-97-83.3 38.9-90.7 76.7 17.7c12.9 3 25.7-5.2 28.7-18.1s-5.2-25.7-18.1-28.7zM32 224H0v240c0 26.5 21.5 48 48 48h64c26.5 0 48-21.5 48-48V224H32zM448 464c0 26.5-21.5 48-48 48H176c-26.5 0-48-21.5-48-48v-96H448v96zM160 0H64C28.7 0 0 28.7 0 64V192H160V0z"/>
+                <path d="M309.3 236.4c-3.3-4.4-8.5-7-14.1-7H192c-9.6 0-17.5 7.9-17.5 17.5c0 9.6 7.9 17.5 17.5 17.5h91.9l31.5 42c3.3 4.4 8.5 7 14.1 7h70.9c9.6 0 17.5-7.9 17.5-17.5c0-9.6-7.9-17.5-17.5-17.5H341.2l-31.9-42z"/>
+            </svg>
+        </div>
+        <div class="loading-text-center">PROCESANDO...</div>
+    </div>
+
     <div id="screen-loading" class="full-screen visible" style="justify-content:center; align-items:center; background:#0f172a; color:white;">
         <div style="text-align:center;">
             <h1 style="margin:0; font-size:32px; font-weight:800; letter-spacing:-1px;">CONTROL CMR</h1>
             <div style="font-size:12px; opacity:0.6; margin-top:10px; letter-spacing:2px;">BY LUIS ENAMORADO</div>
-            <div style="margin-top:20px; font-size:12px; color:#3b82f6;">V78 - Clásico + Fuga</div>
+            <div style="margin-top:20px; font-size:12px; color:#3b82f6;">V83 - White Text Fix</div>
         </div>
     </div>
 
@@ -152,7 +238,7 @@
             <div class="welcome-side">
                 <div class="brand-logo"><div class="brand-line"></div>SISTEMA LOGÍSTICO</div>
                 <h1 class="brand-main-text">Control<br>Inteligente.</h1>
-                <p class="welcome-msg">Gestión de rutas y entregas.</p>
+                <p class="welcome-msg">Gestiona rutas, entregas y equipo desde una plataforma centralizada.</p>
             </div>
             <div class="form-side">
                 <div class="white-login-card">
@@ -165,7 +251,7 @@
                         <div class="role-info"><h4>Administrador</h4><p>Gestión global</p></div>
                     </div>
                     <div class="role-card" onclick="irLogin('worker')">
-                        <div class="role-icon-box" style="color:#10b981; background:#ecfdf5;">
+                        <div class="role-icon-box" style="color:#10b981; background:#eff6ff;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                         </div>
                         <div class="role-info"><h4>Recogedor</h4><p>Ruta y entregas</p></div>
@@ -193,7 +279,7 @@
                         <div class="input-group"><label class="input-label">Usuario</label><select id="worker-select" class="app-input"><option>Cargando lista...</option></select></div>
                         <button onclick="validarWorker()" class="app-btn btn-success">VER MI RUTA</button>
                     </div>
-                    <button onclick="verPantalla('screen-rol')" style="background:transparent; border:none; color:#94a3b8; font-weight:600; margin-top:25px; cursor:pointer; font-size:13px;">← Regresar</button>
+                    <button onclick="verPantalla('screen-rol')" style="background:transparent; border:none; color:var(--text-muted); font-weight:600; margin-top:25px; cursor:pointer; font-size:13px;">← Regresar</button>
                 </div>
             </div>
         </div>
@@ -209,13 +295,13 @@
             <h2 style="color:var(--text-main); margin-top:0; font-weight:800;">Hola, Admin.</h2>
             <div class="dashboard-grid">
                 <div class="menu-card" onclick="nav('admin-reg')">
-                    <div class="menu-icon">📝</div><div><span style="font-weight:700; display:block;">Nueva Orden</span><span style="font-size:12px; color:var(--text-muted);">Crear registros</span></div>
+                    <div class="menu-icon">📝</div><div><span style="font-weight:700; display:block; color:var(--text-main);">Nueva Orden</span><span style="font-size:12px; color:var(--text-muted);">Crear registros</span></div>
                 </div>
                 <div class="menu-card" onclick="nav('admin-tab')">
-                    <div class="menu-icon">📊</div><div><span style="font-weight:700; display:block;">Control Total</span><span style="font-size:12px; color:var(--text-muted);">Tablas y reportes</span></div>
+                    <div class="menu-icon">📊</div><div><span style="font-weight:700; display:block; color:var(--text-main);">Control Total</span><span style="font-size:12px; color:var(--text-muted);">Tablas y reportes</span></div>
                 </div>
                 <div class="menu-card" onclick="nav('admin-team')">
-                    <div class="menu-icon">👥</div><div><span style="font-weight:700; display:block;">Equipo</span><span style="font-size:12px; color:var(--text-muted);">Gestionar personal</span></div>
+                    <div class="menu-icon">👥</div><div><span style="font-weight:700; display:block; color:var(--text-main);">Equipo</span><span style="font-size:12px; color:var(--text-muted);">Gestionar personal</span></div>
                 </div>
             </div>
         </div>
@@ -227,10 +313,7 @@
                 
                 <div class="fuga-switch-container">
                     <span class="fuga-label">🚨 MARCAR COMO FUGA</span>
-                    <label class="switch">
-                        <input type="checkbox" id="reg-fuga">
-                        <span class="slider"></span>
-                    </label>
+                    <label class="switch"><input type="checkbox" id="reg-fuga"><span class="slider"></span></label>
                 </div>
 
                 <label class="input-label">N° TARJETA</label><input type="number" id="reg-tarjeta" class="app-input" style="font-size:20px; font-weight:700; color:var(--primary);" placeholder="0000">
@@ -239,7 +322,7 @@
                     <div><label class="input-label">MULTA</label><input type="number" id="reg-multa" class="app-input" value="0"></div>
                 </div>
                 <div id="alerta-multa" style="display:none; background:#fef2f2; color:#b91c1c; padding:12px; border-radius:12px; text-align:center; font-weight:700; font-size:12px; margin-bottom:15px;">⚠️ MULTA APLICABLE</div>
-                <div style="background:#f8fafc; padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #e2e8f0;">
+                <div style="background:var(--bg-input); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid var(--border-color);">
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                         <div><label class="input-label">SALDO</label><input type="number" id="reg-saldo" class="app-input" style="margin-bottom:0;" placeholder="0.00"></div>
                         <div><label class="input-label">ULT. PAGO</label><input type="date" id="reg-ultima-fecha" class="app-input" style="margin-bottom:0;"></div>
@@ -272,7 +355,7 @@
                 <button class="app-btn" style="margin:0; background:#10b981;" onclick="exportarExcel()">Excel</button>
                 <button class="app-btn" style="margin:0; background:#6366f1;" onclick="generarPDFProfesional()">PDF</button>
             </div>
-            <div style="overflow-x:auto; background:white; border-radius:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); border:1px solid #e2e8f0;">
+            <div style="overflow-x:auto; background:var(--bg-card); border-radius:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); border:1px solid var(--border-color);">
                 <table id="tabla-admin"><thead><tr><th>ACCION</th><th>#</th><th>ZONA</th><th>ESTADO</th></tr></thead><tbody id="tbody-admin"></tbody></table>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
@@ -326,10 +409,10 @@
         </div>
     </div>
 
-    <div id="modal-confirm" class="modal-overlay"><div class="modal-box"><h3>CONFIRMAR</h3><p style="color:#64748b;">¿Marcar tarjeta como recogida?</p><input type="hidden" id="conf-id"><button onclick="confirmarEntregaWorker()" class="app-btn btn-success">SÍ, RECOGIDO</button><button onclick="document.getElementById('modal-confirm').style.display='none'" class="app-btn" style="background:#f1f5f9; color:#475569; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-obs" class="modal-overlay"><div class="modal-box"><h3>REPORTAR</h3><p style="color:#64748b;">Indica el motivo:</p><input type="hidden" id="obs-id"><textarea id="obs-texto" class="app-input" placeholder="Escribe aquí..."></textarea><button onclick="reportarFalloWorker()" class="app-btn" style="background:#ef4444;">ENVIAR REPORTE</button><button onclick="document.getElementById('modal-obs').style.display='none'" class="app-btn" style="background:#f1f5f9; color:#475569; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-aprobar" class="modal-overlay"><div class="modal-box"><h3>APROBAR</h3><p style="color:#64748b;">¿Confirmar recepción de dinero/ficha?</p><input type="hidden" id="aprobar-id"><button onclick="aprobarRecepcionAdmin()" class="app-btn btn-review">CONFIRMAR</button><button onclick="document.getElementById('modal-aprobar').style.display='none'" class="app-btn" style="background:#f1f5f9; color:#475569; margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-edit" class="modal-overlay"><div class="modal-box"><h3>EDITAR</h3><input type="hidden" id="edit-id"><label class="input-label">Estado</label><select id="edit-estado" class="app-input"><option value="PENDIENTE">PENDIENTE</option><option value="EN_REVISION">EN REVISIÓN</option><option value="RECOGIDO">RECOGIDO</option><option value="NO_RECOGIDO">NO RECOGIDO</option></select><input id="edit-tarjeta" class="app-input" placeholder="Tarjeta"><input id="edit-multa" class="app-input" placeholder="Multa"><select id="edit-recogedor" class="app-input"></select><select id="edit-vendedor" class="app-input"></select><input id="edit-direccion" class="app-input"><button onclick="guardarEdicion()" class="app-btn">GUARDAR CAMBIOS</button><button onclick="borrarRegistro()" class="app-btn" style="background:#fee2e2; color:#ef4444; margin-top:10px; box-shadow:none;">BORRAR</button><button onclick="document.getElementById('modal-edit').style.display='none'" class="app-btn" style="background:#f1f5f9; color:#475569; margin-top:10px; box-shadow:none;">CERRAR</button></div></div>
+    <div id="modal-confirm" class="modal-overlay"><div class="modal-box"><h3>CONFIRMAR</h3><p style="color:var(--text-muted);">¿Marcar tarjeta como recogida?</p><input type="hidden" id="conf-id"><button onclick="confirmarEntregaWorker()" class="app-btn btn-success">SÍ, RECOGIDO</button><button onclick="document.getElementById('modal-confirm').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
+    <div id="modal-obs" class="modal-overlay"><div class="modal-box"><h3>REPORTAR</h3><p style="color:var(--text-muted);">Indica el motivo:</p><input type="hidden" id="obs-id"><textarea id="obs-texto" class="app-input" placeholder="Escribe aquí..."></textarea><button onclick="reportarFalloWorker()" class="app-btn" style="background:#ef4444;">ENVIAR REPORTE</button><button onclick="document.getElementById('modal-obs').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
+    <div id="modal-aprobar" class="modal-overlay"><div class="modal-box"><h3>APROBAR</h3><p style="color:var(--text-muted);">¿Confirmar recepción de dinero/ficha?</p><input type="hidden" id="aprobar-id"><button onclick="aprobarRecepcionAdmin()" class="app-btn btn-review">CONFIRMAR</button><button onclick="document.getElementById('modal-aprobar').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
+    <div id="modal-edit" class="modal-overlay"><div class="modal-box"><h3>EDITAR</h3><input type="hidden" id="edit-id"><label class="input-label">Estado</label><select id="edit-estado" class="app-input"><option value="PENDIENTE">PENDIENTE</option><option value="EN_REVISION">EN REVISIÓN</option><option value="RECOGIDO">RECOGIDO</option><option value="NO_RECOGIDO">NO RECOGIDO</option></select><input id="edit-tarjeta" class="app-input" placeholder="Tarjeta"><input id="edit-multa" class="app-input" placeholder="Multa"><select id="edit-recogedor" class="app-input"></select><select id="edit-vendedor" class="app-input"></select><input id="edit-direccion" class="app-input"><button onclick="guardarEdicion()" class="app-btn">GUARDAR CAMBIOS</button><button onclick="borrarRegistro()" class="app-btn" style="background:#fee2e2; color:#ef4444; margin-top:10px; box-shadow:none;">BORRAR</button><button onclick="document.getElementById('modal-edit').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CERRAR</button></div></div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyAbyNccFOMXruf2Dk_qtARD97JwXPU2Q-Y", authDomain: "control-recogido.firebaseapp.com", projectId: "control-recogido", storageBucket: "control-recogido.firebasestorage.app", messagingSenderId: "757224344188", appId: "1:757224344188:web:e13c9574e2378fd7ead7f9", measurementId: "G-CPMJV5WHR3" };
@@ -343,6 +426,10 @@
         auth.signInAnonymously();
 
         window.onload = function() {
+            if(localStorage.getItem('cmr_theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('btn-theme').innerText = '☀️';
+            }
             cargarListas();
             setTimeout(() => {
                 const sp = localStorage.getItem('gyg_saved_pass'); if(sp){document.getElementById('admin-pass').value=sp;}
@@ -350,6 +437,13 @@
                 if(a){ usuario={rol:'admin',nombre:'ADMIN'}; iniciar(); } else if(w){ usuario={rol:'worker',nombre:w}; iniciar(); } else { verPantalla('screen-rol'); }
             }, 800);
         };
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            document.getElementById('btn-theme').innerText = isDark ? '☀️' : '🌙';
+            localStorage.setItem('cmr_theme', isDark ? 'dark' : 'light');
+        }
 
         function verPantalla(id) { document.querySelectorAll('.full-screen').forEach(p => p.classList.remove('visible')); document.getElementById(id).classList.add('visible'); }
         function irLogin(rol) { 
@@ -387,14 +481,20 @@
         }
         
         function nav(id) { 
-            document.querySelectorAll('.app-view').forEach(v=>v.style.display='none'); 
-            document.getElementById('view-'+id).style.display='block';
-            if(usuario.rol==='worker'){
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
-                if(id==='worker-list') document.getElementById('nav-btn-ruta').classList.add('active-nav');
-                if(id==='worker-hist') document.getElementById('nav-btn-hist').classList.add('active-nav');
-            }
+            const ov = document.getElementById('center-transition-overlay');
+            ov.style.display = 'flex';
+            setTimeout(() => {
+                ov.style.display = 'none';
+                document.querySelectorAll('.app-view').forEach(v=>v.style.display='none'); 
+                document.getElementById('view-'+id).style.display='block';
+                if(usuario.rol==='worker'){
+                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+                    if(id==='worker-list') document.getElementById('nav-btn-ruta').classList.add('active-nav');
+                    if(id==='worker-hist') document.getElementById('nav-btn-hist').classList.add('active-nav');
+                }
+            }, 1000); 
         }
+        
         function goHome() { nav('admin-dashboard'); }
 
         function cargarListas() { 
@@ -436,28 +536,24 @@
             const term = document.getElementById('worker-search').value.toUpperCase();
             if(term) data = data.filter(d => (d.tarjeta||'').toString().includes(term) || (d.cliente||'').toUpperCase().includes(term));
 
-            if(data.length===0) c.innerHTML = "<p style='text-align:center;color:#94a3b8;margin-top:20px;'>No tienes tarjetas pendientes.</p>";
+            if(data.length===0) c.innerHTML = "<p style='text-align:center;color:var(--text-muted);margin-top:20px;'>No tienes tarjetas pendientes.</p>";
 
             data.forEach(d => {
                 const mapInfo = getMapInfo(d.zona);
                 const fugaBadge = d.fuga ? '<span class="fuga-badge">🚨 FUGA</span>' : '';
-                
                 c.innerHTML += `
-                <div class="card mision-card" style="background:${d.estado==='NO_RECOGIDO'?'#fef2f2':'white'}; padding:0;">
+                <div class="card mision-card" style="background:${d.estado==='NO_RECOGIDO'?'#fef2f2':'var(--bg-card)'}; padding:0;">
                     <div class="map-header" onclick="abrirMapa('${d.direccion}', '${d.zona}')" style="background-image: url('${mapInfo.img}');">
                         <span class="dept-tag">${mapInfo.dept}</span>
                         <span class="map-action">📍 VER MAPA</span>
                     </div>
                     <div style="padding:20px;">
-                        <div style="margin-bottom:10px;">
-                            ${fugaBadge}
-                            <span class="zona-badge">${d.zona}</span>
-                        </div>
+                        <div style="margin-bottom:10px;">${fugaBadge} <span class="zona-badge">${d.zona}</span></div>
                         <div style="font-size:28px; font-weight:800; color:var(--primary); margin:5px 0;">#${d.tarjeta}</div>
-                        <div class="financial-info">💰 Saldo: ${d.saldo_actual} | 📅 Abono: ${formatDate(d.ultima_fecha_pago)}</div>
-                        <div style="font-weight:700; font-size:15px; color:#334155; margin:10px 0;">🏠 ${d.direccion}</div>
-                        <div style="margin-bottom:15px;"><a href="tel:${d.telefono}" style="text-decoration:none; color:var(--primary); font-weight:700; background:#eff6ff; padding:6px 12px; border-radius:8px; display:inline-block;">📞 ${d.telefono || 'Llamar'}</a></div>
-                        <div style="font-size:13px; color:#64748b; margin-bottom:20px; border-top:1px dashed #e2e8f0; padding-top:10px;">📦 ${d.articulo} | 👤 ${d.cliente}</div>
+                        <div class="financial-info" style="background:#f0f9ff; color:#0369a1; padding:10px; border-radius:8px; font-size:12px; font-weight:700;">💰 Saldo: ${d.saldo_actual} | 📅 Abono: ${formatDate(d.ultima_fecha_pago)}</div>
+                        <div style="font-weight:700; font-size:15px; color:var(--text-main); margin:10px 0;">🏠 ${d.direccion}</div>
+                        <div style="margin-bottom:15px;"><a href="tel:${d.telefono}" style="text-decoration:none; color:var(--primary); font-weight:700; background:#f0f7ff; padding:6px 12px; border-radius:8px; display:inline-block;">📞 ${d.telefono || 'Llamar'}</a></div>
+                        <div style="font-size:13px; color:var(--text-muted); margin-bottom:20px; border-top:1px dashed var(--border-color); padding-top:10px;">📦 ${d.articulo} | 👤 ${d.cliente}</div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                             <button class="app-btn btn-success" style="margin:0;" onclick="abrirModal('modal-confirm', '${d.id}')">RECOGER</button>
                             <button class="app-btn btn-danger" style="margin:0;" onclick="abrirModal('modal-obs', '${d.id}')">REPORTAR</button>
@@ -467,21 +563,17 @@
             });
         }
 
-        // --- HISTORIAL FIX DAVID ---
         function renderHist() {
             const c = document.getElementById('worker-hist-container'); c.innerHTML="";
-            
-            // FILTRO FLEXIBLE (INCLUDES)
             let h = misDatos.filter(d => norm(d.recogio).includes(norm(usuario.nombre)) && d.estado!=='PENDIENTE');
             
             document.getElementById('hist-title').innerText = `HISTORIAL COMPLETO (${h.length})`;
-
             const term = document.getElementById('hist-search').value.toUpperCase();
             if(term) h = h.filter(d => (d.tarjeta||'').toString().includes(term) || (d.cliente||'').toUpperCase().includes(term));
 
             renderChips(h, 'zona', 'hist-zona-summary', 'chip-blue');
             
-            if(h.length === 0) { c.innerHTML = "<p style='text-align:center; color:#999; margin-top:20px;'>No hay historial disponible.</p>"; return; }
+            if(h.length === 0) { c.innerHTML = "<p style='text-align:center; color:var(--text-muted); margin-top:20px;'>No hay historial disponible.</p>"; return; }
 
             h.forEach(d => {
                 const mapInfo = getMapInfo(d.zona);
@@ -495,13 +587,13 @@
                     </div>
                     <div style="padding:20px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div><span class="zona-badge">${d.zona}</span><div style="font-size:24px; font-weight:800; color:#333; margin-top:5px;">#${d.tarjeta}</div></div>
+                            <div><span class="zona-badge">${d.zona}</span><div style="font-size:24px; font-weight:800; color:var(--text-main); margin-top:5px;">#${d.tarjeta}</div></div>
                             <div style="text-align:right;">
                                 <div style="color:${statusColor}; font-weight:800; font-size:12px; margin-bottom:5px;">${statusText}</div>
                                 ${d.estado !== 'RECOGIDO' ? `<button class="btn-icon" onclick="deshacer('${d.id}')">↺ Deshacer</button>` : ''}
                             </div>
                         </div>
-                        <div style="font-size:13px; color:#64748b; margin-top:10px;">📦 ${d.articulo || '-'}</div>
+                        <div style="font-size:13px; color:var(--text-muted); margin-top:10px;">📦 ${d.articulo || '-'}</div>
                     </div>
                 </div>`;
             });
@@ -512,9 +604,7 @@
             const t = document.getElementById('reg-tarjeta').value.toString();
             const z = document.getElementById('reg-zona').value;
             const r = document.getElementById('reg-recogedor').value;
-            
             if(!t || !z || !r || r === 'Cargando...') return alert("Faltan datos");
-            
             const btn = document.getElementById('btn-save'); btn.disabled=true; btn.innerText="GUARDANDO...";
             const esFuga = document.getElementById('reg-fuga').checked;
 
@@ -554,9 +644,9 @@
             misDatos.forEach(d=>{ let v=norm(d.vendedor); let z=norm(d.zona); cv[v]=(cv[v]||0)+1; cz[z]=(cz[z]||0)+1; }); 
             const makeTable = (data, color) => {
                 const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
-                if(sorted.length===0) return '<p style="text-align:center; color:#999; font-size:12px;">Sin datos</p>';
+                if(sorted.length===0) return '<p style="text-align:center; color:var(--text-muted); font-size:12px;">Sin datos</p>';
                 let h = '<table style="width:100%; font-size:13px;"><tr><th style="padding:10px;">NOMBRE</th><th style="padding:10px; text-align:right;">TOTAL</th></tr>';
-                sorted.forEach(([k,v]) => { h += `<tr><td style="padding:10px; border-bottom:1px solid #f1f5f9; font-weight:600; color:#334155;">${k}</td><td style="text-align:right; padding:10px; border-bottom:1px solid #f1f5f9;"><span style="background:${color}; color:white; padding:4px 10px; border-radius:12px; font-weight:bold; font-size:12px;">${v}</span></td></tr>`; });
+                sorted.forEach(([k,v]) => { h += `<tr><td style="padding:10px; border-bottom:1px solid var(--border-color); font-weight:600; color:var(--text-main);">${k}</td><td style="text-align:right; padding:10px; border-bottom:1px solid var(--border-color);"><span style="background:${color}; color:white; padding:4px 10px; border-radius:12px; font-weight:bold; font-size:12px;">${v}</span></td></tr>`; });
                 return h + '</table>';
             };
             document.getElementById('stats-vendedores').innerHTML = makeTable(cv, '#2563eb'); 
@@ -580,7 +670,7 @@
                 return true;
             });
 
-            if(data.length === 0) { t.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:20px; color:#999;'>No hay datos</td></tr>"; return; }
+            if(data.length === 0) { t.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:20px; color:var(--text-muted);'>No hay datos</td></tr>"; return; }
 
             data.forEach(d => {
                 let btn = `<button class="btn-icon" onclick="editar('${d.id}')">✏️</button>`;
@@ -588,7 +678,7 @@
                 let fugaIcon = d.fuga ? '🚨' : '';
                 if(d.estado === 'EN_REVISION') { btn = `<button class="btn-icon" style="background:#8b5cf6; color:white; margin-right:5px;" onclick="abrirModal('modal-aprobar','${d.id}')">✅</button>` + btn; rowClass = "row-review"; }
                 let color = d.estado==='RECOGIDO'?'#10b981':(d.estado==='NO_RECOGIDO'?'#ef4444':(d.estado==='EN_REVISION'?'#8b5cf6':'#f59e0b'));
-                t.innerHTML += `<tr class="${rowClass}"><td style="white-space:nowrap;">${btn}</td><td><b style="color:#1e40af;">${d.tarjeta}</b> ${fugaIcon}</td><td><span style="font-size:11px; font-weight:600; color:#64748b;">${d.zona}</span></td><td><span style="color:${color}; font-weight:800; font-size:10px; background:#f8fafc; padding:4px 8px; border-radius:6px; border:1px solid ${color};">${d.estado.replace('_',' ')}</span></td></tr>`;
+                t.innerHTML += `<tr class="${rowClass}"><td style="white-space:nowrap;">${btn}</td><td><b style="color:var(--primary);">${d.tarjeta}</b> ${fugaIcon}</td><td><span style="font-size:11px; font-weight:600; color:var(--text-muted);">${d.zona}</span></td><td><span style="color:${color}; font-weight:800; font-size:10px; background:var(--bg-header-table); padding:4px 8px; border-radius:6px; border:1px solid ${color};">${d.estado.replace('_',' ')}</span></td></tr>`;
             });
         }
     </script>
