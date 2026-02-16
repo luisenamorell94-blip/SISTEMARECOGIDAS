@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Control CMR - V83 White Text</title>
+    <title>Control CMR - V88 Time Tracker</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,7 @@
     <style>
         /* --- VARIABLES DE TEMA --- */
         :root {
-            /* MODO DIA (LIGHT) */
+            /* MODO DIA */
             --primary: #1e40af; 
             --primary-dark: #1e3a8a;
             
@@ -32,7 +32,7 @@
             --bg-input: #f8fafc;
             --bg-header-table: #f1f5f9;
             
-            --text-main: #0f172a;  /* Texto oscuro para día */
+            --text-main: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
             
@@ -40,56 +40,38 @@
             --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.1);
         }
 
-        /* --- MODO NOCHE (DARK) - TEXTOS BLANCOS --- */
+        /* --- MODO NOCHE (TEXTO BLANCO) --- */
         body.dark-mode {
-            --bg-body: #0f172a;       /* Fondo azul muy oscuro */
-            --bg-card: #1e293b;       /* Tarjetas gris azulado oscuro */
-            --bg-input: #334155;      /* Inputs oscuros */
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
             --bg-header-table: #0f172a;
             
-            --text-main: #ffffff;     /* TEXTO BLANCO PURO */
-            --text-muted: #cbd5e1;    /* Texto secundario gris claro */
-            --border-color: #334155;  /* Bordes sutiles */
+            --text-main: #ffffff;
+            --text-muted: #cbd5e1;
+            --border-color: #334155;
             
             --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.5);
         }
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg-body); 
-            color: var(--text-main);
-            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; 
-            transition: background 0.3s ease, color 0.3s ease; 
-        }
-
+        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; transition: background 0.3s ease, color 0.3s ease; }
         button, input, select, textarea { transition: all 0.2s ease; outline: none; }
-        
         .full-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); display: none; flex-direction: column; z-index: 100; overflow-y: auto; transition: background 0.3s ease; }
         .visible { display: flex !important; }
         .app-view { display: none; padding: 15px; padding-bottom: 100px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
         /* --- BOTÓN TEMA --- */
         .theme-toggle {
-            position: fixed; bottom: 80px; right: 20px;
-            width: 50px; height: 50px;
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
-            color: var(--text-main);
+            position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px;
+            background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; color: var(--text-main);
         }
 
         /* --- TRANSICION CENTRAL --- */
         #center-transition-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(30, 58, 138, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 9999; display: none;
-            align-items: center; justify-content: center;
-            flex-direction: column;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 58, 138, 0.95);
+            backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column;
         }
         .truck-center-box { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; }
         .truck-svg-center { width: 80px; height: auto; z-index: 2; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3)); animation: engineBounce 0.6s ease-in-out infinite alternate; }
@@ -101,9 +83,8 @@
 
         /* LOGIN */
         #screen-rol, #screen-auth { align-items: center; justify-content: center; padding: 20px; }
-        .login-split-container { display: flex; width: 100%; max-width: 1000px; min-height: 600px; background: var(--bg-card); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-soft); animation: fadeIn 0.6s ease-out; border: 1px solid var(--border-color); }
+        .login-split-container { display: flex; width: 100%; max-width: 1000px; min-height: 600px; background: var(--bg-card); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); }
         .welcome-side { flex: 1.2; padding: 60px; color: white; display: flex; flex-direction: column; justify-content: center; background: #0f172a; background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1486406140926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; }
-        
         .brand-logo { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; opacity: 0.8; display: flex; align-items: center; gap: 10px; }
         .brand-line { width: 40px; height: 2px; background: white; }
         .brand-main-text { font-size: 48px; font-weight: 800; line-height: 1.1; margin: 0; letter-spacing: -1px; }
@@ -111,29 +92,18 @@
         
         .form-side { flex: 1; padding: 50px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); }
         .white-login-card { width: 100%; max-width: 380px; }
-        /* FORZAR COLOR DE TEXTO */
         .login-title { font-size: 26px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
         .login-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
 
         .role-card { border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 20px; transition: all 0.3s; background: var(--bg-card); }
         .role-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1); }
         .role-icon-box { width: 45px; height: 45px; background: #eff6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary); }
-        /* COLOR TEXTO ROL */
         .role-info h4 { margin: 0; font-size: 16px; font-weight: 700; color: var(--text-main); }
         .role-info p { margin: 3px 0 0 0; font-size: 12px; color: var(--text-muted); }
 
         .input-group { margin-bottom: 20px; }
         .input-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
-        
-        /* INPUTS EN MODO NOCHE (Texto Blanco) */
-        .app-input { 
-            width: 100%; padding: 14px 16px; 
-            border: 1px solid var(--border-color); border-radius: 12px; 
-            font-size: 15px; 
-            color: var(--text-main); /* IMPORTANTE: Texto hereda color */
-            background: var(--bg-input); 
-            box-sizing: border-box; font-family: 'Inter', sans-serif; 
-        }
+        .app-input { width: 100%; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; color: var(--text-main); background: var(--bg-input); box-sizing: border-box; font-family: 'Inter', sans-serif; }
         .app-input:focus { background: var(--bg-card); border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
         
         .app-btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 600; font-size: 15px; color: white; cursor: pointer; background: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
@@ -184,14 +154,17 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
         .modal-box { background: var(--bg-card); width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 
+        /* FUGA Y OBS */
         .fuga-badge { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; }
         body.dark-mode .fuga-badge { background: #7f1d1d; color: #fecaca; border-color: #991b1b; }
         
         .fuga-switch-container { background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 15px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
         body.dark-mode .fuga-switch-container { background: #450a0a; border-color: #7f1d1d; }
-        
         .fuga-label { font-weight: 700; color: #b91c1c; font-size: 14px; }
         body.dark-mode .fuga-label { color: #fecaca; }
+
+        .obs-box { background: #fef2f2; color: #ef4444; padding: 8px 12px; border-radius: 8px; margin-top: 10px; font-size: 11px; font-weight: 600; border: 1px solid #fecaca; display: block; }
+        body.dark-mode .obs-box { background: #450a0a; color: #fecaca; border-color: #7f1d1d; }
         
         .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -200,6 +173,13 @@
         input:checked + .slider { background-color: #ef4444; }
         input:checked + .slider:before { transform: translateX(22px); }
 
+        .gps-btn-link { display: inline-block; background: #10b981; color: white !important; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; text-decoration: none; margin-top: 8px; transition: background 0.2s; }
+        .gps-btn-link:hover { background: #059669; }
+        .gps-missing { font-size: 11px; color: var(--text-muted); display:block; margin-top:5px; }
+        
+        /* TIEMPO ESTILOS V88 */
+        .time-stamp { font-size: 11px; color: var(--text-muted); margin-top: 5px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+
         @media (max-width: 768px) {
             .login-split-container { flex-direction: column; min-height: auto; width: 92%; margin: 20px auto; }
             .welcome-side { padding: 40px 30px; min-height: 200px; }
@@ -207,7 +187,6 @@
             .brand-main-text { font-size: 32px; }
             .app-view { padding: 15px; padding-bottom: 90px; }
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -229,7 +208,7 @@
         <div style="text-align:center;">
             <h1 style="margin:0; font-size:32px; font-weight:800; letter-spacing:-1px;">CONTROL CMR</h1>
             <div style="font-size:12px; opacity:0.6; margin-top:10px; letter-spacing:2px;">BY LUIS ENAMORADO</div>
-            <div style="margin-top:20px; font-size:12px; color:#3b82f6;">V83 - White Text Fix</div>
+            <div style="margin-top:20px; font-size:12px; color:#3b82f6;">V88 - Time Tracker</div>
         </div>
     </div>
 
@@ -238,22 +217,18 @@
             <div class="welcome-side">
                 <div class="brand-logo"><div class="brand-line"></div>SISTEMA LOGÍSTICO</div>
                 <h1 class="brand-main-text">Control<br>Inteligente.</h1>
-                <p class="welcome-msg">Gestiona rutas, entregas y equipo desde una plataforma centralizada.</p>
+                <p class="welcome-msg">Gestión de rutas y entregas.</p>
             </div>
             <div class="form-side">
                 <div class="white-login-card">
                     <div class="login-title">Bienvenido</div>
                     <div class="login-subtitle">Selecciona tu perfil</div>
                     <div class="role-card" onclick="irLogin('admin')">
-                        <div class="role-icon-box">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                        </div>
+                        <div class="role-icon-box"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
                         <div class="role-info"><h4>Administrador</h4><p>Gestión global</p></div>
                     </div>
                     <div class="role-card" onclick="irLogin('worker')">
-                        <div class="role-icon-box" style="color:#10b981; background:#eff6ff;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                        </div>
+                        <div class="role-icon-box" style="color:#10b981; background:#eff6ff;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
                         <div class="role-info"><h4>Recogedor</h4><p>Ruta y entregas</p></div>
                     </div>
                 </div>
@@ -270,7 +245,6 @@
                 <div class="white-login-card">
                     <h3 class="login-title" id="auth-title">Iniciar Sesión</h3>
                     <p class="login-subtitle">Introduce tus datos</p>
-                    
                     <div id="form-admin" style="display:none;">
                         <div class="input-group"><label class="input-label">Contraseña</label><input type="password" id="admin-pass" class="app-input" placeholder="••••••••"></div>
                         <button onclick="validarAdmin()" class="app-btn">ENTRAR AL PANEL</button>
@@ -310,12 +284,10 @@
             <button onclick="nav('admin-dashboard')" style="background:none; border:none; color:var(--text-muted); font-weight:600; cursor:pointer; margin-bottom:15px;">← Volver</button>
             <div class="card">
                 <div class="card-header">DETALLES DE ORDEN</div>
-                
                 <div class="fuga-switch-container">
                     <span class="fuga-label">🚨 MARCAR COMO FUGA</span>
                     <label class="switch"><input type="checkbox" id="reg-fuga"><span class="slider"></span></label>
                 </div>
-
                 <label class="input-label">N° TARJETA</label><input type="number" id="reg-tarjeta" class="app-input" style="font-size:20px; font-weight:700; color:var(--primary);" placeholder="0000">
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
                     <div><label class="input-label">FECHA</label><input type="date" id="reg-fecha-cuenta" class="app-input" onchange="checkMulta()"></div>
@@ -356,7 +328,7 @@
                 <button class="app-btn" style="margin:0; background:#6366f1;" onclick="generarPDFProfesional()">PDF</button>
             </div>
             <div style="overflow-x:auto; background:var(--bg-card); border-radius:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); border:1px solid var(--border-color);">
-                <table id="tabla-admin"><thead><tr><th>ACCION</th><th>#</th><th>ZONA</th><th>ESTADO</th></tr></thead><tbody id="tbody-admin"></tbody></table>
+                <table id="tabla-admin"><thead><tr><th>ACCION</th><th># DATOS</th><th>ZONA</th><th>ESTADO / HORA</th></tr></thead><tbody id="tbody-admin"></tbody></table>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
                 <div class="card"><div class="card-header">TOP VENDEDORES</div><div id="stats-vendedores"></div></div>
@@ -409,10 +381,29 @@
         </div>
     </div>
 
-    <div id="modal-confirm" class="modal-overlay"><div class="modal-box"><h3>CONFIRMAR</h3><p style="color:var(--text-muted);">¿Marcar tarjeta como recogida?</p><input type="hidden" id="conf-id"><button onclick="confirmarEntregaWorker()" class="app-btn btn-success">SÍ, RECOGIDO</button><button onclick="document.getElementById('modal-confirm').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-obs" class="modal-overlay"><div class="modal-box"><h3>REPORTAR</h3><p style="color:var(--text-muted);">Indica el motivo:</p><input type="hidden" id="obs-id"><textarea id="obs-texto" class="app-input" placeholder="Escribe aquí..."></textarea><button onclick="reportarFalloWorker()" class="app-btn" style="background:#ef4444;">ENVIAR REPORTE</button><button onclick="document.getElementById('modal-obs').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-aprobar" class="modal-overlay"><div class="modal-box"><h3>APROBAR</h3><p style="color:var(--text-muted);">¿Confirmar recepción de dinero/ficha?</p><input type="hidden" id="aprobar-id"><button onclick="aprobarRecepcionAdmin()" class="app-btn btn-review">CONFIRMAR</button><button onclick="document.getElementById('modal-aprobar').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
-    <div id="modal-edit" class="modal-overlay"><div class="modal-box"><h3>EDITAR</h3><input type="hidden" id="edit-id"><label class="input-label">Estado</label><select id="edit-estado" class="app-input"><option value="PENDIENTE">PENDIENTE</option><option value="EN_REVISION">EN REVISIÓN</option><option value="RECOGIDO">RECOGIDO</option><option value="NO_RECOGIDO">NO RECOGIDO</option></select><input id="edit-tarjeta" class="app-input" placeholder="Tarjeta"><input id="edit-multa" class="app-input" placeholder="Multa"><select id="edit-recogedor" class="app-input"></select><select id="edit-vendedor" class="app-input"></select><input id="edit-direccion" class="app-input"><button onclick="guardarEdicion()" class="app-btn">GUARDAR CAMBIOS</button><button onclick="borrarRegistro()" class="app-btn" style="background:#fee2e2; color:#ef4444; margin-top:10px; box-shadow:none;">BORRAR</button><button onclick="document.getElementById('modal-edit').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CERRAR</button></div></div>
+    <div id="modal-confirm" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="color:var(--text-main);">CONFIRMAR</h3>
+            <p style="color:var(--text-muted);">¿Marcar tarjeta como recogida?</p>
+            <input type="hidden" id="conf-id">
+            <button id="btn-conf-gps" onclick="confirmarEntregaWorker()" class="app-btn btn-success">SÍ, RECOGIDO</button>
+            <button onclick="document.getElementById('modal-confirm').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CANCELAR</button>
+        </div>
+    </div>
+    
+    <div id="modal-obs" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="color:var(--text-main);">REPORTAR</h3>
+            <p style="color:var(--text-muted);">Indica el motivo de la falla:</p>
+            <input type="hidden" id="obs-id">
+            <textarea id="obs-texto" class="app-input" rows="3" placeholder="Ej: La casa estaba cerrada..."></textarea>
+            <button id="btn-rep-gps" onclick="reportarFalloWorker()" class="app-btn" style="background:#ef4444;">ENVIAR REPORTE</button>
+            <button onclick="document.getElementById('modal-obs').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CANCELAR</button>
+        </div>
+    </div>
+
+    <div id="modal-aprobar" class="modal-overlay"><div class="modal-box"><h3 style="color:var(--text-main);">APROBAR</h3><p style="color:var(--text-muted);">¿Confirmar recepción de dinero/ficha?</p><input type="hidden" id="aprobar-id"><button onclick="aprobarRecepcionAdmin()" class="app-btn btn-review">CONFIRMAR</button><button onclick="document.getElementById('modal-aprobar').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
+    <div id="modal-edit" class="modal-overlay"><div class="modal-box"><h3 style="color:var(--text-main);">EDITAR</h3><input type="hidden" id="edit-id"><label class="input-label">Estado</label><select id="edit-estado" class="app-input"><option value="PENDIENTE">PENDIENTE</option><option value="EN_REVISION">EN REVISIÓN</option><option value="RECOGIDO">RECOGIDO</option><option value="NO_RECOGIDO">NO RECOGIDO</option></select><input id="edit-tarjeta" class="app-input" placeholder="Tarjeta"><input id="edit-multa" class="app-input" placeholder="Multa"><select id="edit-recogedor" class="app-input"></select><select id="edit-vendedor" class="app-input"></select><input id="edit-direccion" class="app-input"><button onclick="guardarEdicion()" class="app-btn">GUARDAR CAMBIOS</button><button onclick="borrarRegistro()" class="app-btn" style="background:#fee2e2; color:#ef4444; margin-top:10px; box-shadow:none;">BORRAR</button><button onclick="document.getElementById('modal-edit').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CERRAR</button></div></div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyAbyNccFOMXruf2Dk_qtARD97JwXPU2Q-Y", authDomain: "control-recogido.firebaseapp.com", projectId: "control-recogido", storageBucket: "control-recogido.firebasestorage.app", messagingSenderId: "757224344188", appId: "1:757224344188:web:e13c9574e2378fd7ead7f9", measurementId: "G-CPMJV5WHR3" };
@@ -454,6 +445,15 @@
         }
 
         const norm = (str) => (str || '').toString().trim().toUpperCase();
+
+        // --- FORMATEADOR DE FECHA Y HORA (V88) ---
+        function formatDateTime(isoString) {
+            if(!isoString) return '';
+            let d = new Date(isoString);
+            let date = d.toLocaleDateString('es-HN', { day:'2-digit', month:'2-digit', year:'numeric' });
+            let time = d.toLocaleTimeString('es-HN', { hour: '2-digit', minute:'2-digit' });
+            return `${date} - ${time}`;
+        }
 
         function validarAdmin() {
             const p = document.getElementById('admin-pass').value;
@@ -519,12 +519,20 @@
             if(z.includes('LA CEIBA') || z.includes('JUTIAPA')) return { dept: 'ATLÁNTIDA 🌊', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e4/Parque_Central_Olanchito.jpg' };
             return { dept: 'HONDURAS 🇭🇳', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tegucigalpa_at_dusk.jpg/1200px-Tegucigalpa_at_dusk.jpg' };
         }
-        function abrirMapa(direccion, zona) { window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${direccion}, ${zona}, Honduras`)}`, '_blank'); }
+        function abrirMapa(direccion, zona) { 
+            const query = encodeURIComponent(direccion + ', ' + zona + ', Honduras');
+            window.open("https://www.google.com/maps/search/?api=1&query=$" + query, '_blank'); 
+        }
+        
         function toggleFiltroZona(z) { filtroZonaActivo = z; renderMisiones(); }
 
         function renderMisiones() {
             const c = document.getElementById('worker-misiones-container'); c.innerHTML="";
-            let data = misDatos.filter(d => norm(d.recogio).includes(norm(usuario.nombre)) && (d.estado==='PENDIENTE'||d.estado==='NO_RECOGIDO'));
+            
+            let data = misDatos.filter(d => {
+                let r = norm(d.recogio); let u = norm(usuario.nombre);
+                return (r.includes(u) || u.includes(r)) && (d.estado==='PENDIENTE'||d.estado==='NO_RECOGIDO');
+            });
             
             const zCont = document.getElementById('zona-summary');
             let counts = {}; data.forEach(d => counts[d.zona] = (counts[d.zona] || 0) + 1);
@@ -563,9 +571,14 @@
             });
         }
 
+        // --- HISTORIAL (V88: MUESTRA HORA EXACTA) ---
         function renderHist() {
             const c = document.getElementById('worker-hist-container'); c.innerHTML="";
-            let h = misDatos.filter(d => norm(d.recogio).includes(norm(usuario.nombre)) && d.estado!=='PENDIENTE');
+            
+            let h = misDatos.filter(d => {
+                let r = norm(d.recogio); let u = norm(usuario.nombre);
+                return (r.includes(u) || u.includes(r)) && d.estado!=='PENDIENTE';
+            });
             
             document.getElementById('hist-title').innerText = `HISTORIAL COMPLETO (${h.length})`;
             const term = document.getElementById('hist-search').value.toUpperCase();
@@ -579,6 +592,13 @@
                 const mapInfo = getMapInfo(d.zona);
                 let statusColor = d.estado === 'RECOGIDO' ? '#10b981' : (d.estado === 'NO_RECOGIDO' ? '#ef4444' : '#8b5cf6');
                 let statusText = d.estado === 'RECOGIDO' ? '✅ RECOGIDO' : (d.estado === 'NO_RECOGIDO' ? '⚠️ NO RECOGIDO' : '⏳ EN REVISIÓN');
+                
+                let gpsBtn = d.lat && d.lng ? `<a href="https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}" target="_blank" class="gps-btn-link">📍 MAPA</a>` : '';
+                let gpsMissing = (!d.lat && d.gps_error) ? `<span class="gps-missing">📵 ${d.gps_error}</span>` : '';
+                let obsHtml = d.obs ? `<div class="obs-box">💬 NOTA: ${d.obs}</div>` : '';
+                
+                // MUESTRA HORA DEL MOVIMIENTO EN HISTORIAL
+                let timeHtml = d.fecha_gestion ? `<div class="time-stamp">🕒 ${formatDateTime(d.fecha_gestion)}</div>` : '';
 
                 c.innerHTML += `
                 <div class="card" style="padding:0; overflow:hidden;">
@@ -594,12 +614,45 @@
                             </div>
                         </div>
                         <div style="font-size:13px; color:var(--text-muted); margin-top:10px;">📦 ${d.articulo || '-'}</div>
+                        ${timeHtml}
+                        ${obsHtml}
+                        <div style="margin-top:5px;">${gpsBtn} ${gpsMissing}</div>
                     </div>
                 </div>`;
             });
         }
 
-        // --- SISTEMA ---
+        function obtenerGPSYActualizar(id, st, ex={}, btnId, originalText) {
+            const btn = document.getElementById(btnId);
+            if(btn) { btn.innerText = "📍 OBTENIENDO GPS..."; btn.disabled = true; }
+
+            // SE GUARDA LA HORA EXACTA DEL MOVIMIENTO
+            ex.fecha_gestion = new Date().toISOString(); 
+
+            const finalizar = () => {
+                updateState(id, st, ex);
+                if(btn) { btn.innerText = originalText; btn.disabled = false; }
+                document.getElementById('modal-confirm').style.display='none';
+                document.getElementById('modal-obs').style.display='none';
+            };
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => { ex.lat = pos.coords.latitude; ex.lng = pos.coords.longitude; finalizar(); },
+                    (err) => { ex.gps_error = "Sin acceso"; finalizar(); },
+                    { enableHighAccuracy: true, timeout: 6000, maximumAge: 0 }
+                );
+            } else { ex.gps_error = "No soportado"; finalizar(); }
+        }
+
+        function confirmarEntregaWorker() { obtenerGPSYActualizar(document.getElementById('conf-id').value, 'EN_REVISION', {}, 'btn-conf-gps', 'SÍ, RECOGIDO'); }
+        function reportarFalloWorker() { 
+            let nota = document.getElementById('obs-texto').value;
+            if(!nota) { alert("Debes escribir un motivo."); return; }
+            obtenerGPSYActualizar(document.getElementById('obs-id').value, 'NO_RECOGIDO', {obs: nota}, 'btn-rep-gps', 'ENVIAR REPORTE'); 
+        }
+
+        // --- SISTEMA ADMIN---
         function guardarMision() {
             const t = document.getElementById('reg-tarjeta').value.toString();
             const z = document.getElementById('reg-zona').value;
@@ -626,11 +679,9 @@
         }
 
         function updateState(id, st, ex={}) { db.collection("articulos_recogidos").doc(id).update({estado:st,...ex}); }
-        function confirmarEntregaWorker() { updateState(document.getElementById('conf-id').value, 'EN_REVISION'); document.getElementById('modal-confirm').style.display='none'; }
-        function reportarFalloWorker() { updateState(document.getElementById('obs-id').value, 'NO_RECOGIDO', {obs:document.getElementById('obs-texto').value}); document.getElementById('modal-obs').style.display='none'; }
         function aprobarRecepcionAdmin() { updateState(document.getElementById('aprobar-id').value, 'RECOGIDO', {fecha_confirmacion:new Date().toISOString()}); document.getElementById('modal-aprobar').style.display='none'; }
         function deshacer(id) { if(confirm("¿Deshacer acción?")) updateState(id, 'PENDIENTE'); }
-        function abrirModal(id, uid) { document.getElementById(id).style.display='flex'; if(uid) { if(id==='modal-confirm')document.getElementById('conf-id').value=uid; if(id==='modal-obs')document.getElementById('obs-id').value=uid; if(id==='modal-aprobar')document.getElementById('aprobar-id').value=uid; } }
+        function abrirModal(id, uid) { document.getElementById(id).style.display='flex'; if(uid) { if(id==='modal-confirm')document.getElementById('conf-id').value=uid; if(id==='modal-obs') { document.getElementById('obs-id').value=uid; document.getElementById('obs-texto').value=''; } if(id==='modal-aprobar')document.getElementById('aprobar-id').value=uid; } }
         function editar(id) { const d=misDatos.find(x=>x.id===id); document.getElementById('edit-id').value=id; document.getElementById('edit-estado').value=d.estado; document.getElementById('edit-tarjeta').value=d.tarjeta; document.getElementById('edit-direccion').value=d.direccion; document.getElementById('modal-edit').style.display='flex'; }
         function guardarEdicion() { updateState(document.getElementById('edit-id').value, document.getElementById('edit-estado').value, {tarjeta:document.getElementById('edit-tarjeta').value, direccion:document.getElementById('edit-direccion').value}); document.getElementById('modal-edit').style.display='none'; }
         function borrarRegistro() { if(confirm("¿Borrar?")) db.collection("articulos_recogidos").doc(document.getElementById('edit-id').value).delete(); document.getElementById('modal-edit').style.display='none'; }
@@ -653,9 +704,21 @@
             document.getElementById('stats-zonas').innerHTML = makeTable(cz, '#10b981'); 
         }
         
-        function exportarExcel() { const d = misDatos.map(x=>({Tarjeta:x.tarjeta, Estado:x.estado, Zona:x.zona})); XLSX.utils.book_append_sheet(wb=XLSX.utils.book_new(), XLSX.utils.json_to_sheet(d), "Datos"); XLSX.writeFile(wb, "Reporte.xlsx"); }
+        // V88: Agregar Hora al Excel
+        function exportarExcel() { 
+            const d = misDatos.map(x=>({
+                Tarjeta: x.tarjeta, 
+                Estado: x.estado, 
+                Zona: x.zona, 
+                Observacion: x.obs||'',
+                Hora_Gestion: x.fecha_gestion ? formatDateTime(x.fecha_gestion) : ''
+            })); 
+            XLSX.utils.book_append_sheet(wb=XLSX.utils.book_new(), XLSX.utils.json_to_sheet(d), "Datos"); 
+            XLSX.writeFile(wb, "Reporte_CMR.xlsx"); 
+        }
         function generarPDFProfesional() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text("REPORTE CMR", 10, 10); doc.autoTable({ html: '#tabla-admin' }); doc.save("Reporte.pdf"); }
         
+        // --- TABLA ADMIN (V88: MUESTRA HORA) ---
         function renderTabla() {
             const t = document.getElementById('tbody-admin'); t.innerHTML="";
             const i = document.getElementById('filtro-inicio').value;
@@ -676,9 +739,35 @@
                 let btn = `<button class="btn-icon" onclick="editar('${d.id}')">✏️</button>`;
                 let rowClass = "";
                 let fugaIcon = d.fuga ? '🚨' : '';
+                
+                let gpsLink = "";
+                if(d.lat && d.lng) {
+                    gpsLink = `<a href="https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}" target="_blank" class="gps-btn-link" style="margin-top:5px; padding:3px 8px; font-size:10px;">📍 VER GPS</a>`;
+                } else if(d.gps_error) {
+                    gpsLink = `<span class="gps-missing">📵 ${d.gps_error}</span>`;
+                }
+
                 if(d.estado === 'EN_REVISION') { btn = `<button class="btn-icon" style="background:#8b5cf6; color:white; margin-right:5px;" onclick="abrirModal('modal-aprobar','${d.id}')">✅</button>` + btn; rowClass = "row-review"; }
                 let color = d.estado==='RECOGIDO'?'#10b981':(d.estado==='NO_RECOGIDO'?'#ef4444':(d.estado==='EN_REVISION'?'#8b5cf6':'#f59e0b'));
-                t.innerHTML += `<tr class="${rowClass}"><td style="white-space:nowrap;">${btn}</td><td><b style="color:var(--primary);">${d.tarjeta}</b> ${fugaIcon}</td><td><span style="font-size:11px; font-weight:600; color:var(--text-muted);">${d.zona}</span></td><td><span style="color:${color}; font-weight:800; font-size:10px; background:var(--bg-header-table); padding:4px 8px; border-radius:6px; border:1px solid ${color};">${d.estado.replace('_',' ')}</span></td></tr>`;
+                
+                let obsHtmlAdmin = d.obs ? `<div style="margin-top:6px; font-size:10px; color:var(--text-muted); max-width:140px; white-space:normal; line-height:1.2;">💬 <b>Obs:</b> ${d.obs}</div>` : '';
+                
+                // MUESTRA HORA DEL MOVIMIENTO EN TABLA ADMIN
+                let timeHtmlAdmin = d.fecha_gestion ? `<div class="time-stamp" style="font-size:9px; margin-top:4px;">🕒 ${formatDateTime(d.fecha_gestion)}</div>` : '';
+
+                t.innerHTML += `<tr class="${rowClass}">
+                    <td style="white-space:nowrap;">${btn}</td>
+                    <td>
+                        <b style="color:var(--primary); font-size:14px;">${d.tarjeta}</b> ${fugaIcon}
+                        <br>${gpsLink}
+                    </td>
+                    <td><span style="font-size:11px; font-weight:600; color:var(--text-muted);">${d.zona}</span></td>
+                    <td>
+                        <span style="color:${color}; font-weight:800; font-size:10px; background:var(--bg-header-table); padding:4px 8px; border-radius:6px; border:1px solid ${color};">${d.estado.replace('_',' ')}</span>
+                        ${timeHtmlAdmin}
+                        ${obsHtmlAdmin}
+                    </td>
+                </tr>`;
             });
         }
     </script>
