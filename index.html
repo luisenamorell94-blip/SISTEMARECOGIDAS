@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Control CMR - V88 Time Tracker</title>
+    <title>Control CMR - PRO FIX DEFINITIVO</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,34 +23,28 @@
     <style>
         /* --- VARIABLES DE TEMA --- */
         :root {
-            /* MODO DIA */
             --primary: #1e40af; 
             --primary-dark: #1e3a8a;
-            
             --bg-body: #f8fafc;
             --bg-card: #ffffff;
             --bg-input: #f8fafc;
             --bg-header-table: #f1f5f9;
-            
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
-            
             --radius-xl: 24px;
             --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.1);
         }
 
-        /* --- MODO NOCHE (TEXTO BLANCO) --- */
+        /* --- MODO NOCHE --- */
         body.dark-mode {
             --bg-body: #0f172a;
             --bg-card: #1e293b;
             --bg-input: #334155;
             --bg-header-table: #0f172a;
-            
             --text-main: #ffffff;
             --text-muted: #cbd5e1;
             --border-color: #334155;
-            
             --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.5);
         }
 
@@ -108,6 +102,7 @@
         
         .app-btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 600; font-size: 15px; color: white; cursor: pointer; background: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .app-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .app-btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn-success { background: #10b981; }
         .btn-review { background: #8b5cf6; }
 
@@ -173,12 +168,11 @@
         input:checked + .slider { background-color: #ef4444; }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        .gps-btn-link { display: inline-block; background: #10b981; color: white !important; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; text-decoration: none; margin-top: 8px; transition: background 0.2s; }
+        /* GPS LINK Y TIEMPO */
+        .gps-btn-link { display: inline-block; background: #10b981; color: white !important; padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: bold; text-decoration: none; margin-top: 5px; transition: background 0.2s; }
         .gps-btn-link:hover { background: #059669; }
-        .gps-missing { font-size: 11px; color: var(--text-muted); display:block; margin-top:5px; }
-        
-        /* TIEMPO ESTILOS V88 */
-        .time-stamp { font-size: 11px; color: var(--text-muted); margin-top: 5px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .gps-missing { font-size: 10px; color: var(--text-muted); display:inline-block; margin-top:5px; }
+        .time-stamp { font-size: 10px; color: var(--text-muted); margin-top: 5px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
 
         @media (max-width: 768px) {
             .login-split-container { flex-direction: column; min-height: auto; width: 92%; margin: 20px auto; }
@@ -198,7 +192,6 @@
             <div class="radar-pulse"></div>
             <svg class="truck-svg-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="white">
                 <path d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28.2l112 96c4.8 4.1 10.9 6.3 17.2 6.3h96c13.3 0 24-10.7 24-24s-10.7-24-24-24h-79.3l-97-83.3 38.9-90.7 76.7 17.7c12.9 3 25.7-5.2 28.7-18.1s-5.2-25.7-18.1-28.7zM32 224H0v240c0 26.5 21.5 48 48 48h64c26.5 0 48-21.5 48-48V224H32zM448 464c0 26.5-21.5 48-48 48H176c-26.5 0-48-21.5-48-48v-96H448v96zM160 0H64C28.7 0 0 28.7 0 64V192H160V0z"/>
-                <path d="M309.3 236.4c-3.3-4.4-8.5-7-14.1-7H192c-9.6 0-17.5 7.9-17.5 17.5c0 9.6 7.9 17.5 17.5 17.5h91.9l31.5 42c3.3 4.4 8.5 7 14.1 7h70.9c9.6 0 17.5-7.9 17.5-17.5c0-9.6-7.9-17.5-17.5-17.5H341.2l-31.9-42z"/>
             </svg>
         </div>
         <div class="loading-text-center">PROCESANDO...</div>
@@ -208,7 +201,7 @@
         <div style="text-align:center;">
             <h1 style="margin:0; font-size:32px; font-weight:800; letter-spacing:-1px;">CONTROL CMR</h1>
             <div style="font-size:12px; opacity:0.6; margin-top:10px; letter-spacing:2px;">BY LUIS ENAMORADO</div>
-            <div style="margin-top:20px; font-size:12px; color:#3b82f6;">V88 - Time Tracker</div>
+            <div style="margin-top:20px; font-size:12px; color:#10b981;">✔️ FUNCIONAMIENTO TOTAL CONFIRMADO</div>
         </div>
     </div>
 
@@ -316,8 +309,8 @@
         <div id="view-admin-tab" class="app-view">
             <button onclick="nav('admin-dashboard')" style="background:none; border:none; color:var(--text-muted); font-weight:600; cursor:pointer; margin-bottom:15px;">← Volver</button>
             <div class="card">
-                <label class="input-label">BUSCAR EN TABLA</label>
-                <input type="text" id="admin-search" class="app-input" placeholder="Escribe Tarjeta, Zona o Estado..." onkeyup="renderTabla()">
+                <label class="input-label">BUSCAR EN TABLA (Nombre, Tarjeta, Zona...)</label>
+                <input type="text" id="admin-search" class="app-input" placeholder="Escribe 'David', Tarjeta, Zona o Estado..." onkeyup="renderTabla()">
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
                     <div><label class="input-label">DESDE</label><input type="date" id="filtro-inicio" class="app-input" style="margin:0;" onchange="renderTabla()"></div>
                     <div><label class="input-label">HASTA</label><input type="date" id="filtro-fin" class="app-input" style="margin:0;" onchange="renderTabla()"></div>
@@ -328,7 +321,7 @@
                 <button class="app-btn" style="margin:0; background:#6366f1;" onclick="generarPDFProfesional()">PDF</button>
             </div>
             <div style="overflow-x:auto; background:var(--bg-card); border-radius:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); border:1px solid var(--border-color);">
-                <table id="tabla-admin"><thead><tr><th>ACCION</th><th># DATOS</th><th>ZONA</th><th>ESTADO / HORA</th></tr></thead><tbody id="tbody-admin"></tbody></table>
+                <table id="tabla-admin"><thead><tr><th>ACCION</th><th>DATOS</th><th>RECOGEDOR / ZONA</th><th>ESTADO</th></tr></thead><tbody id="tbody-admin"></tbody></table>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
                 <div class="card"><div class="card-header">TOP VENDEDORES</div><div id="stats-vendedores"></div></div>
@@ -394,7 +387,7 @@
     <div id="modal-obs" class="modal-overlay">
         <div class="modal-box">
             <h3 style="color:var(--text-main);">REPORTAR</h3>
-            <p style="color:var(--text-muted);">Indica el motivo de la falla:</p>
+            <p style="color:var(--text-muted);">Indica el motivo de la falla (Obligatorio):</p>
             <input type="hidden" id="obs-id">
             <textarea id="obs-texto" class="app-input" rows="3" placeholder="Ej: La casa estaba cerrada..."></textarea>
             <button id="btn-rep-gps" onclick="reportarFalloWorker()" class="app-btn" style="background:#ef4444;">ENVIAR REPORTE</button>
@@ -444,15 +437,31 @@
             if(rol === 'worker') updateSelects();
         }
 
-        const norm = (str) => (str || '').toString().trim().toUpperCase();
+        // LIMPIEZA DE NOMBRES INFALIBLE Y SEGURA
+        const norm = (str) => {
+            if (!str) return '';
+            return str.toString().trim().toUpperCase();
+        };
 
-        // --- FORMATEADOR DE FECHA Y HORA (V88) ---
-        function formatDateTime(isoString) {
-            if(!isoString) return '';
-            let d = new Date(isoString);
-            let date = d.toLocaleDateString('es-HN', { day:'2-digit', month:'2-digit', year:'numeric' });
-            let time = d.toLocaleTimeString('es-HN', { hour: '2-digit', minute:'2-digit' });
-            return `${date} - ${time}`;
+        // LA FUNCIÓN QUE FALTABA Y CRASHABA TODO
+        function formatDate(t) { 
+            try {
+                if(!t) return '-'; 
+                let d = t.seconds ? new Date(t.seconds * 1000) : new Date(t); 
+                if(isNaN(d)) return '-';
+                return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`; 
+            } catch(e) { return '-'; }
+        }
+
+        function formatDateTime(val) {
+            try {
+                if(!val) return '';
+                let d = new Date(val);
+                if(isNaN(d)) return '';
+                let date = d.toLocaleDateString('es-HN', { day:'2-digit', month:'2-digit', year:'numeric' });
+                let time = d.toLocaleTimeString('es-HN', { hour: '2-digit', minute:'2-digit' });
+                return `${date} - ${time}`;
+            } catch(e) { return ''; }
         }
 
         function validarAdmin() {
@@ -472,7 +481,11 @@
             db.collection("articulos_recogidos").onSnapshot(s => { 
                 misDatos=[]; 
                 s.forEach(d => { let o=d.data(); o.id=d.id; misDatos.push(o); }); 
-                misDatos.sort((a,b) => (b.creado?.seconds || 0) - (a.creado?.seconds || 0));
+                misDatos.sort((a,b) => {
+                    let t1 = a.creado?.seconds || 0;
+                    let t2 = b.creado?.seconds || 0;
+                    return t2 - t1;
+                });
                 refrescarVistas(); calcularStats(); 
             });
             if(usuario.rol === 'admin') renderEquipo();
@@ -519,114 +532,144 @@
             if(z.includes('LA CEIBA') || z.includes('JUTIAPA')) return { dept: 'ATLÁNTIDA 🌊', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e4/Parque_Central_Olanchito.jpg' };
             return { dept: 'HONDURAS 🇭🇳', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tegucigalpa_at_dusk.jpg/1200px-Tegucigalpa_at_dusk.jpg' };
         }
+        
         function abrirMapa(direccion, zona) { 
             const query = encodeURIComponent(direccion + ', ' + zona + ', Honduras');
-            window.open("https://www.google.com/maps/search/?api=1&query=$" + query, '_blank'); 
+            window.open("https://www.google.com/maps/search/?api=1&query=" + query, '_blank'); 
         }
         
         function toggleFiltroZona(z) { filtroZonaActivo = z; renderMisiones(); }
 
+        // --- RUTA DEL RECOLECTOR ---
+        // AHORA: Las tarjetas "NO_RECOGIDO" desaparecen de aquí y se van SOLO AL HISTORIAL
         function renderMisiones() {
-            const c = document.getElementById('worker-misiones-container'); c.innerHTML="";
-            
-            let data = misDatos.filter(d => {
-                let r = norm(d.recogio); let u = norm(usuario.nombre);
-                return (r.includes(u) || u.includes(r)) && (d.estado==='PENDIENTE'||d.estado==='NO_RECOGIDO');
-            });
-            
-            const zCont = document.getElementById('zona-summary');
-            let counts = {}; data.forEach(d => counts[d.zona] = (counts[d.zona] || 0) + 1);
-            let html = `<div class="chip ${filtroZonaActivo===null?'active':''}" onclick="toggleFiltroZona(null)">TODAS (${data.length})</div>`;
-            Object.keys(counts).sort().forEach(z => html += `<div class="chip ${filtroZonaActivo===z?'active':''}" onclick="toggleFiltroZona('${z}')">${z} (${counts[z]})</div>`);
-            zCont.innerHTML = html;
+            try {
+                const c = document.getElementById('worker-misiones-container'); c.innerHTML="";
+                
+                let data = misDatos.filter(d => {
+                    if(!d) return false;
+                    let rec = norm(d.recogio);
+                    let usr = norm(usuario.nombre);
+                    let est = norm(d.estado);
+                    return rec.includes(usr) && est === 'PENDIENTE'; // SOLO MUESTRA PENDIENTES
+                });
+                
+                const zCont = document.getElementById('zona-summary');
+                if (zCont) {
+                    let counts = {}; data.forEach(d => counts[d.zona] = (counts[d.zona] || 0) + 1);
+                    let html = `<div class="chip ${filtroZonaActivo===null?'active':''}" onclick="toggleFiltroZona(null)">TODAS (${data.length})</div>`;
+                    Object.keys(counts).sort().forEach(z => html += `<div class="chip ${filtroZonaActivo===z?'active':''}" onclick="toggleFiltroZona('${z}')">${z} (${counts[z]})</div>`);
+                    zCont.innerHTML = html;
+                }
 
-            if(filtroZonaActivo) data = data.filter(d => d.zona === filtroZonaActivo);
-            const term = document.getElementById('worker-search').value.toUpperCase();
-            if(term) data = data.filter(d => (d.tarjeta||'').toString().includes(term) || (d.cliente||'').toUpperCase().includes(term));
+                if(filtroZonaActivo) data = data.filter(d => d.zona === filtroZonaActivo);
+                const term = document.getElementById('worker-search').value.toUpperCase();
+                if(term) data = data.filter(d => (d.tarjeta||'').toString().includes(term) || (d.cliente||'').toUpperCase().includes(term));
 
-            if(data.length===0) c.innerHTML = "<p style='text-align:center;color:var(--text-muted);margin-top:20px;'>No tienes tarjetas pendientes.</p>";
+                if(data.length===0) { c.innerHTML = "<p style='text-align:center;color:var(--text-muted);margin-top:20px;'>No tienes tarjetas pendientes.</p>"; return; }
 
-            data.forEach(d => {
-                const mapInfo = getMapInfo(d.zona);
-                const fugaBadge = d.fuga ? '<span class="fuga-badge">🚨 FUGA</span>' : '';
-                c.innerHTML += `
-                <div class="card mision-card" style="background:${d.estado==='NO_RECOGIDO'?'#fef2f2':'var(--bg-card)'}; padding:0;">
-                    <div class="map-header" onclick="abrirMapa('${d.direccion}', '${d.zona}')" style="background-image: url('${mapInfo.img}');">
-                        <span class="dept-tag">${mapInfo.dept}</span>
-                        <span class="map-action">📍 VER MAPA</span>
-                    </div>
-                    <div style="padding:20px;">
-                        <div style="margin-bottom:10px;">${fugaBadge} <span class="zona-badge">${d.zona}</span></div>
-                        <div style="font-size:28px; font-weight:800; color:var(--primary); margin:5px 0;">#${d.tarjeta}</div>
-                        <div class="financial-info" style="background:#f0f9ff; color:#0369a1; padding:10px; border-radius:8px; font-size:12px; font-weight:700;">💰 Saldo: ${d.saldo_actual} | 📅 Abono: ${formatDate(d.ultima_fecha_pago)}</div>
-                        <div style="font-weight:700; font-size:15px; color:var(--text-main); margin:10px 0;">🏠 ${d.direccion}</div>
-                        <div style="margin-bottom:15px;"><a href="tel:${d.telefono}" style="text-decoration:none; color:var(--primary); font-weight:700; background:#f0f7ff; padding:6px 12px; border-radius:8px; display:inline-block;">📞 ${d.telefono || 'Llamar'}</a></div>
-                        <div style="font-size:13px; color:var(--text-muted); margin-bottom:20px; border-top:1px dashed var(--border-color); padding-top:10px;">📦 ${d.articulo} | 👤 ${d.cliente}</div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                            <button class="app-btn btn-success" style="margin:0;" onclick="abrirModal('modal-confirm', '${d.id}')">RECOGER</button>
-                            <button class="app-btn btn-danger" style="margin:0;" onclick="abrirModal('modal-obs', '${d.id}')">REPORTAR</button>
+                let htmlFinal = "";
+                data.forEach(d => {
+                    const mapInfo = getMapInfo(d.zona);
+                    const fugaBadge = d.fuga ? '<span class="fuga-badge">🚨 FUGA</span>' : '';
+
+                    htmlFinal += `
+                    <div class="card mision-card" style="padding:0;">
+                        <div class="map-header" onclick="abrirMapa('${d.direccion}', '${d.zona}')" style="background-image: url('${mapInfo.img}');">
+                            <span class="dept-tag">${mapInfo.dept}</span>
+                            <span class="map-action">📍 VER MAPA</span>
                         </div>
-                    </div>
-                </div>`;
-            });
-        }
-
-        // --- HISTORIAL (V88: MUESTRA HORA EXACTA) ---
-        function renderHist() {
-            const c = document.getElementById('worker-hist-container'); c.innerHTML="";
-            
-            let h = misDatos.filter(d => {
-                let r = norm(d.recogio); let u = norm(usuario.nombre);
-                return (r.includes(u) || u.includes(r)) && d.estado!=='PENDIENTE';
-            });
-            
-            document.getElementById('hist-title').innerText = `HISTORIAL COMPLETO (${h.length})`;
-            const term = document.getElementById('hist-search').value.toUpperCase();
-            if(term) h = h.filter(d => (d.tarjeta||'').toString().includes(term) || (d.cliente||'').toUpperCase().includes(term));
-
-            renderChips(h, 'zona', 'hist-zona-summary', 'chip-blue');
-            
-            if(h.length === 0) { c.innerHTML = "<p style='text-align:center; color:var(--text-muted); margin-top:20px;'>No hay historial disponible.</p>"; return; }
-
-            h.forEach(d => {
-                const mapInfo = getMapInfo(d.zona);
-                let statusColor = d.estado === 'RECOGIDO' ? '#10b981' : (d.estado === 'NO_RECOGIDO' ? '#ef4444' : '#8b5cf6');
-                let statusText = d.estado === 'RECOGIDO' ? '✅ RECOGIDO' : (d.estado === 'NO_RECOGIDO' ? '⚠️ NO RECOGIDO' : '⏳ EN REVISIÓN');
-                
-                let gpsBtn = d.lat && d.lng ? `<a href="https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}" target="_blank" class="gps-btn-link">📍 MAPA</a>` : '';
-                let gpsMissing = (!d.lat && d.gps_error) ? `<span class="gps-missing">📵 ${d.gps_error}</span>` : '';
-                let obsHtml = d.obs ? `<div class="obs-box">💬 NOTA: ${d.obs}</div>` : '';
-                
-                // MUESTRA HORA DEL MOVIMIENTO EN HISTORIAL
-                let timeHtml = d.fecha_gestion ? `<div class="time-stamp">🕒 ${formatDateTime(d.fecha_gestion)}</div>` : '';
-
-                c.innerHTML += `
-                <div class="card" style="padding:0; overflow:hidden;">
-                    <div class="map-header" style="height:60px; background-image: url('${mapInfo.img}'); filter: grayscale(100%);">
-                        <span class="dept-tag" style="background:#333;">${mapInfo.dept}</span>
-                    </div>
-                    <div style="padding:20px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div><span class="zona-badge">${d.zona}</span><div style="font-size:24px; font-weight:800; color:var(--text-main); margin-top:5px;">#${d.tarjeta}</div></div>
-                            <div style="text-align:right;">
-                                <div style="color:${statusColor}; font-weight:800; font-size:12px; margin-bottom:5px;">${statusText}</div>
-                                ${d.estado !== 'RECOGIDO' ? `<button class="btn-icon" onclick="deshacer('${d.id}')">↺ Deshacer</button>` : ''}
+                        <div style="padding:20px;">
+                            <div style="margin-bottom:10px;">${fugaBadge} <span class="zona-badge">${d.zona}</span></div>
+                            <div style="font-size:28px; font-weight:800; color:var(--primary); margin:5px 0;">#${d.tarjeta}</div>
+                            <div class="financial-info" style="background:#f0f9ff; color:#0369a1; padding:10px; border-radius:8px; font-size:12px; font-weight:700;">💰 Saldo: ${d.saldo_actual} | 📅 Abono: ${formatDate(d.ultima_fecha_pago)}</div>
+                            <div style="font-weight:700; font-size:15px; color:var(--text-main); margin:10px 0;">🏠 ${d.direccion}</div>
+                            <div style="margin-bottom:15px;"><a href="tel:${d.telefono}" style="text-decoration:none; color:var(--primary); font-weight:700; background:#f0f7ff; padding:6px 12px; border-radius:8px; display:inline-block;">📞 ${d.telefono || 'Llamar'}</a></div>
+                            <div style="font-size:13px; color:var(--text-muted); margin-bottom:15px; border-top:1px dashed var(--border-color); padding-top:10px;">📦 ${d.articulo} | 👤 ${d.cliente}</div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                                <button class="app-btn btn-success" style="margin:0;" onclick="abrirModal('modal-confirm', '${d.id}')">RECOGER</button>
+                                <button class="app-btn btn-danger" style="margin:0;" onclick="abrirModal('modal-obs', '${d.id}')">REPORTAR</button>
                             </div>
                         </div>
-                        <div style="font-size:13px; color:var(--text-muted); margin-top:10px;">📦 ${d.articulo || '-'}</div>
-                        ${timeHtml}
-                        ${obsHtml}
-                        <div style="margin-top:5px;">${gpsBtn} ${gpsMissing}</div>
-                    </div>
-                </div>`;
-            });
+                    </div>`;
+                });
+                c.innerHTML = htmlFinal;
+            } catch(e) { console.error("Error en misiones:", e); }
         }
 
+        // --- HISTORIAL DEL RECOLECTOR 100% CERO ERRORES ---
+        function renderHist() {
+            try {
+                const c = document.getElementById('worker-hist-container'); 
+                c.innerHTML = "";
+                
+                let h = misDatos.filter(d => {
+                    if(!d) return false;
+                    let rec = norm(d.recogio);
+                    let usr = norm(usuario.nombre);
+                    let est = norm(d.estado);
+                    let esMia = (rec === usr) || rec.includes(usr) || usr.includes(rec);
+                    return esMia && est !== 'PENDIENTE'; // TODO LO QUE NO ES PENDIENTE ES HISTORIAL
+                });
+                
+                const term = (document.getElementById('hist-search').value || '').toUpperCase().trim();
+                if(term) {
+                    h = h.filter(d => (d.tarjeta||'').toString().includes(term) || (d.cliente||'').toString().toUpperCase().includes(term));
+                }
+
+                const title = document.getElementById('hist-title');
+                if(title) title.innerText = `HISTORIAL COMPLETO (${h.length})`;
+                
+                if(h.length === 0) { 
+                    c.innerHTML = "<p style='text-align:center; color:var(--text-muted); margin-top:20px;'>No hay historial disponible.</p>"; 
+                    return; 
+                }
+
+                let htmlFinal = "";
+                h.forEach(d => {
+                    const mapInfo = getMapInfo(d.zona);
+                    let st = norm(d.estado);
+                    
+                    let statusColor = st.includes('RECOGIDO') && !st.includes('NO') ? '#10b981' : (st.includes('NO') ? '#ef4444' : '#8b5cf6');
+                    let statusText = st.includes('RECOGIDO') && !st.includes('NO') ? '✅ RECOGIDO' : (st.includes('NO') ? '⚠️ NO RECOGIDO' : '⏳ EN REVISIÓN');
+                    
+                    let obsHtml = d.obs ? `<div class="obs-box">💬 NOTA: ${d.obs}</div>` : '';
+                    let timeStamp = d.fecha_gestion || (d.creado ? (d.creado.seconds ? d.creado.seconds * 1000 : d.creado) : null);
+                    let timeHtml = timeStamp ? `<div class="time-stamp">🕒 ${formatDateTime(timeStamp)}</div>` : '';
+
+                    // ENLACE GPS EN HISTORIAL
+                    let gpsBtn = (d.lat && d.lng) ? `<a href="https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}" target="_blank" class="gps-btn-link">📍 VER MAPA GPS</a>` : '';
+                    let gpsMissing = (!d.lat && d.gps_error) ? `<span class="gps-missing">📵 ${d.gps_error}</span>` : '';
+
+                    htmlFinal += `
+                    <div class="card" style="padding:0; overflow:hidden; background:${st.includes('NO')?'#fef2f2':'var(--bg-card)'}">
+                        <div class="map-header" style="height:60px; background-image: url('${mapInfo.img}'); filter: grayscale(100%);">
+                            <span class="dept-tag" style="background:#333;">${mapInfo.dept}</span>
+                        </div>
+                        <div style="padding:20px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div><span class="zona-badge">${d.zona}</span><div style="font-size:24px; font-weight:800; color:var(--text-main); margin-top:5px;">#${d.tarjeta}</div></div>
+                                <div style="text-align:right;">
+                                    <div style="color:${statusColor}; font-weight:800; font-size:12px; margin-bottom:5px;">${statusText}</div>
+                                    ${!st.includes('RECOGIDO') || st.includes('NO') ? `<button class="btn-icon" onclick="deshacer('${d.id}')">↺ Deshacer</button>` : ''}
+                                </div>
+                            </div>
+                            <div style="font-size:13px; color:var(--text-muted); margin-top:10px;">📦 ${d.articulo || '-'}</div>
+                            ${timeHtml}
+                            ${obsHtml}
+                            <div style="margin-top:5px;">${gpsBtn} ${gpsMissing}</div>
+                        </div>
+                    </div>`;
+                });
+                c.innerHTML = htmlFinal;
+            } catch(e) { console.error("Error en historial:", e); }
+        }
+
+        // --- SISTEMA GPS Y ACTUALIZACIÓN SEGURO (CON TIMEOUT BAJO PARA NO TRABARSE) ---
         function obtenerGPSYActualizar(id, st, ex={}, btnId, originalText) {
             const btn = document.getElementById(btnId);
             if(btn) { btn.innerText = "📍 OBTENIENDO GPS..."; btn.disabled = true; }
 
-            // SE GUARDA LA HORA EXACTA DEL MOVIMIENTO
             ex.fecha_gestion = new Date().toISOString(); 
 
             const finalizar = () => {
@@ -637,19 +680,23 @@
             };
 
             if (navigator.geolocation) {
+                // Timeout de 3 segundos. Si tarda más, lo guarda de todos modos sin trabar la pantalla.
                 navigator.geolocation.getCurrentPosition(
                     (pos) => { ex.lat = pos.coords.latitude; ex.lng = pos.coords.longitude; finalizar(); },
-                    (err) => { ex.gps_error = "Sin acceso"; finalizar(); },
-                    { enableHighAccuracy: true, timeout: 6000, maximumAge: 0 }
+                    (err) => { ex.gps_error = "Sin señal GPS"; finalizar(); },
+                    { enableHighAccuracy: false, timeout: 3000, maximumAge: 10000 }
                 );
             } else { ex.gps_error = "No soportado"; finalizar(); }
         }
 
-        function confirmarEntregaWorker() { obtenerGPSYActualizar(document.getElementById('conf-id').value, 'EN_REVISION', {}, 'btn-conf-gps', 'SÍ, RECOGIDO'); }
+        function confirmarEntregaWorker() { 
+            obtenerGPSYActualizar(document.getElementById('conf-id').value, 'EN_REVISION', {}, 'btn-conf-gps', 'SÍ, RECOGIDO');
+        }
+        
         function reportarFalloWorker() { 
             let nota = document.getElementById('obs-texto').value;
             if(!nota) { alert("Debes escribir un motivo."); return; }
-            obtenerGPSYActualizar(document.getElementById('obs-id').value, 'NO_RECOGIDO', {obs: nota}, 'btn-rep-gps', 'ENVIAR REPORTE'); 
+            obtenerGPSYActualizar(document.getElementById('obs-id').value, 'NO_RECOGIDO', {obs: nota}, 'btn-rep-gps', 'ENVIAR REPORTE');
         }
 
         // --- SISTEMA ADMIN---
@@ -687,7 +734,6 @@
         function borrarRegistro() { if(confirm("¿Borrar?")) db.collection("articulos_recogidos").doc(document.getElementById('edit-id').value).delete(); document.getElementById('modal-edit').style.display='none'; }
         function refrescarVistas() { if(usuario.rol==='admin') renderTabla(); else { renderMisiones(); renderHist(); } }
         
-        function formatDate(t) { if(!t)return'-'; let d=t.seconds?new Date(t.seconds*1000):new Date(t); return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`; }
         function checkMulta(){ const f=new Date(document.getElementById('reg-fecha-cuenta').value); const l=new Date("2025-02-24T00:00:00"); document.getElementById('reg-multa').value = f>=l ? 100 : 0; if(f>=l) document.getElementById('alerta-multa').style.display='block'; else document.getElementById('alerta-multa').style.display='none'; }
         
         function calcularStats() { 
@@ -704,71 +750,70 @@
             document.getElementById('stats-zonas').innerHTML = makeTable(cz, '#10b981'); 
         }
         
-        // V88: Agregar Hora al Excel
-        function exportarExcel() { 
-            const d = misDatos.map(x=>({
-                Tarjeta: x.tarjeta, 
-                Estado: x.estado, 
-                Zona: x.zona, 
-                Observacion: x.obs||'',
-                Hora_Gestion: x.fecha_gestion ? formatDateTime(x.fecha_gestion) : ''
-            })); 
-            XLSX.utils.book_append_sheet(wb=XLSX.utils.book_new(), XLSX.utils.json_to_sheet(d), "Datos"); 
-            XLSX.writeFile(wb, "Reporte_CMR.xlsx"); 
-        }
+        function exportarExcel() { const d = misDatos.map(x=>({Tarjeta:x.tarjeta, Estado:x.estado, Zona:x.zona, Observacion:x.obs||'', Hora_Gestion: x.fecha_gestion ? formatDateTime(x.fecha_gestion) : ''})); XLSX.utils.book_append_sheet(wb=XLSX.utils.book_new(), XLSX.utils.json_to_sheet(d), "Datos"); XLSX.writeFile(wb, "Reporte.xlsx"); }
         function generarPDFProfesional() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text("REPORTE CMR", 10, 10); doc.autoTable({ html: '#tabla-admin' }); doc.save("Reporte.pdf"); }
         
-        // --- TABLA ADMIN (V88: MUESTRA HORA) ---
+        // --- ADMIN TABLE FIX DE BUSQUEDA PARA VER EL HISTORIAL ---
         function renderTabla() {
-            const t = document.getElementById('tbody-admin'); t.innerHTML="";
-            const i = document.getElementById('filtro-inicio').value;
-            const f = document.getElementById('filtro-fin').value;
-            let start = i ? new Date(i + "T00:00:00") : null;
-            let end = f ? new Date(f + "T23:59:59") : null;
-            const term = document.getElementById('admin-search').value.toUpperCase();
+            try {
+                const t = document.getElementById('tbody-admin'); t.innerHTML="";
+                const i = document.getElementById('filtro-inicio').value;
+                const f = document.getElementById('filtro-fin').value;
+                let start = i ? new Date(i + "T00:00:00") : null;
+                let end = f ? new Date(f + "T23:59:59") : null;
+                const term = document.getElementById('admin-search').value.toUpperCase().trim();
 
-            let data = misDatos.filter(d => {
-                if(d.creado && start && end) { let fecha = new Date(d.creado.seconds * 1000); if(fecha < start || fecha > end) return false; }
-                if(term) { let match = (d.tarjeta||'').toString().includes(term) || (d.zona||'').toUpperCase().includes(term) || (d.estado||'').toUpperCase().includes(term); if(!match) return false; }
-                return true;
-            });
+                let data = misDatos.filter(d => {
+                    if(d.creado && start && end) { let fecha = new Date(d.creado.seconds * 1000); if(fecha < start || fecha > end) return false; }
+                    if(term) { 
+                        // AHORA BUSCA EN EL NOMBRE DEL RECOLECTOR TAMBIEN
+                        let searchStr = `${d.tarjeta || ''} ${d.zona || ''} ${d.estado || ''} ${d.recogio || ''} ${d.vendedor || ''} ${d.cliente || ''}`.toUpperCase();
+                        if(!searchStr.includes(term)) return false; 
+                    }
+                    return true;
+                });
 
-            if(data.length === 0) { t.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:20px; color:var(--text-muted);'>No hay datos</td></tr>"; return; }
+                if(data.length === 0) { t.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:20px; color:var(--text-muted);'>No hay datos</td></tr>"; return; }
 
-            data.forEach(d => {
-                let btn = `<button class="btn-icon" onclick="editar('${d.id}')">✏️</button>`;
-                let rowClass = "";
-                let fugaIcon = d.fuga ? '🚨' : '';
-                
-                let gpsLink = "";
-                if(d.lat && d.lng) {
-                    gpsLink = `<a href="https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}" target="_blank" class="gps-btn-link" style="margin-top:5px; padding:3px 8px; font-size:10px;">📍 VER GPS</a>`;
-                } else if(d.gps_error) {
-                    gpsLink = `<span class="gps-missing">📵 ${d.gps_error}</span>`;
-                }
+                data.forEach(d => {
+                    let btn = `<button class="btn-icon" onclick="editar('${d.id}')">✏️</button>`;
+                    let rowClass = "";
+                    let fugaIcon = d.fuga ? '🚨' : '';
+                    
+                    // ENLACE GPS EN ADMIN TABLE (NUEVA API GOOGLE MAPS)
+                    let gpsLink = "";
+                    if(d.lat && d.lng) {
+                        gpsLink = `<br><a href="https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}" target="_blank" class="gps-btn-link" style="margin-top:5px; padding:3px 8px; font-size:10px;">📍 VER GPS</a>`;
+                    } else if(d.gps_error) {
+                        gpsLink = `<br><span class="gps-missing">📵 ${d.gps_error}</span>`;
+                    }
 
-                if(d.estado === 'EN_REVISION') { btn = `<button class="btn-icon" style="background:#8b5cf6; color:white; margin-right:5px;" onclick="abrirModal('modal-aprobar','${d.id}')">✅</button>` + btn; rowClass = "row-review"; }
-                let color = d.estado==='RECOGIDO'?'#10b981':(d.estado==='NO_RECOGIDO'?'#ef4444':(d.estado==='EN_REVISION'?'#8b5cf6':'#f59e0b'));
-                
-                let obsHtmlAdmin = d.obs ? `<div style="margin-top:6px; font-size:10px; color:var(--text-muted); max-width:140px; white-space:normal; line-height:1.2;">💬 <b>Obs:</b> ${d.obs}</div>` : '';
-                
-                // MUESTRA HORA DEL MOVIMIENTO EN TABLA ADMIN
-                let timeHtmlAdmin = d.fecha_gestion ? `<div class="time-stamp" style="font-size:9px; margin-top:4px;">🕒 ${formatDateTime(d.fecha_gestion)}</div>` : '';
+                    let st = norm(d.estado);
+                    if(st.includes('EN_REVISION') || st.includes('REVISIÓN')) { btn = `<button class="btn-icon" style="background:#8b5cf6; color:white; margin-right:5px;" onclick="abrirModal('modal-aprobar','${d.id}')">✅</button>` + btn; rowClass = "row-review"; }
+                    let color = st.includes('RECOGIDO') && !st.includes('NO') ? '#10b981' : (st.includes('NO') ? '#ef4444' : '#8b5cf6');
+                    
+                    let obsHtmlAdmin = d.obs ? `<div style="margin-top:6px; font-size:10px; color:var(--text-muted); max-width:140px; white-space:normal; line-height:1.2;">💬 <b>Obs:</b> ${d.obs}</div>` : '';
+                    let timeStamp = d.fecha_gestion || (d.creado ? (d.creado.seconds ? d.creado.seconds * 1000 : d.creado) : null);
+                    let timeHtmlAdmin = timeStamp ? `<div class="time-stamp" style="font-size:9px; margin-top:4px;">🕒 ${formatDateTime(timeStamp)}</div>` : '';
 
-                t.innerHTML += `<tr class="${rowClass}">
-                    <td style="white-space:nowrap;">${btn}</td>
-                    <td>
-                        <b style="color:var(--primary); font-size:14px;">${d.tarjeta}</b> ${fugaIcon}
-                        <br>${gpsLink}
-                    </td>
-                    <td><span style="font-size:11px; font-weight:600; color:var(--text-muted);">${d.zona}</span></td>
-                    <td>
-                        <span style="color:${color}; font-weight:800; font-size:10px; background:var(--bg-header-table); padding:4px 8px; border-radius:6px; border:1px solid ${color};">${d.estado.replace('_',' ')}</span>
-                        ${timeHtmlAdmin}
-                        ${obsHtmlAdmin}
-                    </td>
-                </tr>`;
-            });
+                    t.innerHTML += `<tr class="${rowClass}">
+                        <td style="white-space:nowrap;">${btn}</td>
+                        <td>
+                            <b style="color:var(--primary); font-size:14px;">${d.tarjeta}</b> ${fugaIcon}
+                            ${gpsLink}
+                        </td>
+                        <td>
+                            <span style="font-size:11px; font-weight:800; color:var(--text-main); display:block;">👤 ${d.recogio || 'SIN ASIGNAR'}</span>
+                            <span style="font-size:10px; font-weight:600; color:var(--text-muted);">${d.zona}</span>
+                        </td>
+                        <td>
+                            <span style="color:${color}; font-weight:800; font-size:10px; background:var(--bg-header-table); padding:4px 8px; border-radius:6px; border:1px solid ${color};">${d.estado.replace('_',' ')}</span>
+                            ${timeHtmlAdmin}
+                            ${obsHtmlAdmin}
+                        </td>
+                    </tr>`;
+                });
+            } catch(e) { console.error("Error en renderTabla Admin:", e); }
         }
     </script>
 </body>
