@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Control CMR - PRO FIX DEFINITIVO</title>
+    <title>Control CMR - V100 APP</title>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CMR App">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +22,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
     <link rel="icon" type="image/png" href="logo-ctr.png">
     <link rel="apple-touch-icon" href="logo-ctr.png">
@@ -36,7 +45,6 @@
             --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.1);
         }
 
-        /* --- MODO NOCHE --- */
         body.dark-mode {
             --bg-body: #0f172a;
             --bg-card: #1e293b;
@@ -54,19 +62,9 @@
         .visible { display: flex !important; }
         .app-view { display: none; padding: 15px; padding-bottom: 100px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
-        /* --- BOTÓN TEMA --- */
-        .theme-toggle {
-            position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px;
-            background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; color: var(--text-main);
-        }
+        .theme-toggle { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; color: var(--text-main); }
 
-        /* --- TRANSICION CENTRAL --- */
-        #center-transition-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 58, 138, 0.95);
-            backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column;
-        }
+        #center-transition-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 58, 138, 0.95); backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; }
         .truck-center-box { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; }
         .truck-svg-center { width: 80px; height: auto; z-index: 2; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3)); animation: engineBounce 0.6s ease-in-out infinite alternate; }
         .radar-pulse { position: absolute; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.2); border-radius: 50%; z-index: 1; transform: scale(0.5); animation: radarWave 1.5s infinite linear; }
@@ -75,52 +73,38 @@
         @keyframes radarWave { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
         @keyframes blinkText { 0% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        /* LOGIN */
-        #screen-rol, #screen-auth { align-items: center; justify-content: center; padding: 20px; }
         .login-split-container { display: flex; width: 100%; max-width: 1000px; min-height: 600px; background: var(--bg-card); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); }
         .welcome-side { flex: 1.2; padding: 60px; color: white; display: flex; flex-direction: column; justify-content: center; background: #0f172a; background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1486406140926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; }
         .brand-logo { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; opacity: 0.8; display: flex; align-items: center; gap: 10px; }
         .brand-line { width: 40px; height: 2px; background: white; }
         .brand-main-text { font-size: 48px; font-weight: 800; line-height: 1.1; margin: 0; letter-spacing: -1px; }
-        .welcome-msg { font-size: 16px; line-height: 1.6; opacity: 0.7; margin-top: 20px; max-width: 400px; font-weight: 300; }
-        
         .form-side { flex: 1; padding: 50px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); }
         .white-login-card { width: 100%; max-width: 380px; }
         .login-title { font-size: 26px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
         .login-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
-
         .role-card { border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 20px; transition: all 0.3s; background: var(--bg-card); }
         .role-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1); }
         .role-icon-box { width: 45px; height: 45px; background: #eff6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary); }
         .role-info h4 { margin: 0; font-size: 16px; font-weight: 700; color: var(--text-main); }
         .role-info p { margin: 3px 0 0 0; font-size: 12px; color: var(--text-muted); }
-
         .input-group { margin-bottom: 20px; }
         .input-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
         .app-input { width: 100%; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; color: var(--text-main); background: var(--bg-input); box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        .app-input:focus { background: var(--bg-card); border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
-        
-        .app-btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 600; font-size: 15px; color: white; cursor: pointer; background: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .app-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .app-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .app-btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 600; font-size: 15px; color: white; cursor: pointer; background: var(--primary); margin-top: 10px; }
         .btn-success { background: #10b981; }
-        .btn-review { background: #8b5cf6; }
 
-        /* APP */
-        header { background: var(--bg-card); padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--border-color); transition: background 0.3s; }
-        .header-brand { font-weight: 800; font-size: 18px; color: var(--text-main); letter-spacing: -0.5px; }
+        header { background: var(--bg-card); padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--border-color); }
+        .header-brand { font-weight: 800; font-size: 18px; color: var(--text-main); }
         
-        .card { background: var(--bg-card); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-soft); overflow: hidden; transition: background 0.3s; }
-        .card-header { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .map-header { height: 100px; background-color: #333; background-size: cover; background-position: center; display: flex; align-items: flex-end; justify-content: space-between; padding: 15px; cursor: pointer; margin: -20px -20px 15px -20px; position: relative; }
-        .map-header::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.6)); pointer-events: none; }
+        .card { background: var(--bg-card); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-soft); }
+        .card-header { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .map-header { height: 70px; background-color: #333; background-size: cover; background-position: center; display: flex; align-items: flex-end; justify-content: space-between; padding: 15px; margin: -20px -20px 15px -20px; position: relative; }
+        .map-header::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.6)); }
         .dept-tag { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: white; font-weight: 700; font-size: 10px; padding: 4px 10px; border-radius: 20px; z-index: 2; border: 1px solid rgba(255,255,255,0.2); }
-        .map-action { background: white; color: #0f172a; font-weight: 700; font-size: 11px; padding: 6px 14px; border-radius: 20px; z-index: 2; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .map-action { background: white; color: #0f172a; font-weight: 700; font-size: 11px; padding: 6px 14px; border-radius: 20px; z-index: 2; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer;}
 
         .dashboard-grid { display: grid; gap: 15px; grid-template-columns: 1fr; }
-        .menu-card { background: var(--bg-card); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); cursor: pointer; display: flex; align-items: center; gap: 20px; transition: transform 0.2s; }
-        .menu-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+        .menu-card { background: var(--bg-card); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); cursor: pointer; display: flex; align-items: center; gap: 20px; }
         .menu-icon { width: 48px; height: 48px; background: #eff6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--primary); }
         body.dark-mode .menu-icon { background: #334155; color: #60a5fa; }
 
@@ -128,7 +112,6 @@
         .chip { padding: 8px 16px; border-radius: 100px; font-size: 12px; font-weight: 600; background: var(--bg-card); border: 1px solid var(--border-color); cursor: pointer; white-space: nowrap; color: var(--text-muted); }
         .chip.active { background: var(--text-main); color: var(--bg-body); border-color: var(--text-main); }
         body.dark-mode .chip.active { background: var(--primary); border-color: var(--primary); color: white; }
-
         .zona-badge { background: #f1f5f9; color: #334155; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
         body.dark-mode .zona-badge { background: #334155; color: #f8fafc; }
         
@@ -136,26 +119,22 @@
         th { background: var(--bg-header-table); padding: 12px; text-align: left; color: var(--text-muted); font-weight: 600; }
         td { padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
         .btn-icon { background: var(--bg-input); border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; color: var(--text-main); }
-        
         .team-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); font-weight: 500; color: var(--text-main); }
         .btn-trash { background: #fef2f2; color: #ef4444; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        body.dark-mode .btn-trash { background: #7f1d1d; color: #fecaca; }
-
-        #bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--bg-card); padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 90; display: flex; justify-content: space-around; backdrop-filter: blur(10px); transition: background 0.3s; }
+        
+        #bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--bg-card); padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 90; display: flex; justify-content: space-around; }
         .nav-item { text-align: center; color: var(--text-muted); cursor: pointer; font-size: 10px; font-weight: 600; }
         .nav-item.active-nav { color: var(--primary); }
         .nav-icon { font-size: 20px; display: block; margin-bottom: 4px; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; display: none; align-items: center; justify-content: center; }
         .modal-box { background: var(--bg-card); width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 
-        /* FUGA Y OBS */
         .fuga-badge { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; }
-        body.dark-mode .fuga-badge { background: #7f1d1d; color: #fecaca; border-color: #991b1b; }
-        
         .fuga-switch-container { background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 15px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
-        body.dark-mode .fuga-switch-container { background: #450a0a; border-color: #7f1d1d; }
         .fuga-label { font-weight: 700; color: #b91c1c; font-size: 14px; }
+        body.dark-mode .fuga-badge { background: #7f1d1d; color: #fecaca; border-color: #991b1b; }
+        body.dark-mode .fuga-switch-container { background: #450a0a; border-color: #7f1d1d; }
         body.dark-mode .fuga-label { color: #fecaca; }
 
         .obs-box { background: #fef2f2; color: #ef4444; padding: 8px 12px; border-radius: 8px; margin-top: 10px; font-size: 11px; font-weight: 600; border: 1px solid #fecaca; display: block; }
@@ -168,24 +147,36 @@
         input:checked + .slider { background-color: #ef4444; }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* GPS LINK Y TIEMPO */
-        .gps-btn-link { display: inline-block; background: #10b981; color: white !important; padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: bold; text-decoration: none; margin-top: 5px; transition: background 0.2s; }
+        .gps-btn-link { display: inline-block; background: #10b981; color: white !important; padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: bold; text-decoration: none; margin-top: 5px; border:none; cursor:pointer; }
         .gps-btn-link:hover { background: #059669; }
         .gps-missing { font-size: 10px; color: var(--text-muted); display:inline-block; margin-top:5px; }
-        .time-stamp { font-size: 10px; color: var(--text-muted); margin-top: 5px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .time-stamp { font-size: 11px; color: var(--text-muted); margin-top: 5px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
 
-        @media (max-width: 768px) {
-            .login-split-container { flex-direction: column; min-height: auto; width: 92%; margin: 20px auto; }
-            .welcome-side { padding: 40px 30px; min-height: 200px; }
-            .form-side { padding: 30px 20px; }
-            .brand-main-text { font-size: 32px; }
-            .app-view { padding: 15px; padding-bottom: 90px; }
+        /* BANNER DE INSTALACIÓN (PWA) */
+        #pwa-install-banner {
+            position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%);
+            background: #1e40af; color: white; padding: 12px 20px; border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 1000; display: none;
+            align-items: center; gap: 15px; width: 90%; max-width: 400px;
+            font-family: 'Inter', sans-serif;
         }
+        #pwa-install-btn { background: white; color: #1e40af; border: none; padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        @media (max-width: 768px) { .login-split-container { flex-direction: column; min-height: auto; width: 92%; margin: 20px auto; } .welcome-side { padding: 40px 30px; min-height: 200px; } .form-side { padding: 30px 20px; } .app-view { padding: 15px; padding-bottom: 90px; } }
     </style>
 </head>
 <body>
 
     <button class="theme-toggle" onclick="toggleTheme()" id="btn-theme">🌙</button>
+
+    <div id="pwa-install-banner">
+        <span style="font-size: 24px;">📱</span>
+        <div style="flex-grow: 1;">
+            <b style="font-size: 14px;">Instalar CMR Control</b>
+            <div style="font-size: 11px; opacity: 0.8;">Añadir icono a la pantalla</div>
+        </div>
+        <button id="pwa-install-btn">Instalar</button>
+    </div>
 
     <div id="center-transition-overlay">
         <div class="truck-center-box">
@@ -201,7 +192,7 @@
         <div style="text-align:center;">
             <h1 style="margin:0; font-size:32px; font-weight:800; letter-spacing:-1px;">CONTROL CMR</h1>
             <div style="font-size:12px; opacity:0.6; margin-top:10px; letter-spacing:2px;">BY LUIS ENAMORADO</div>
-            <div style="margin-top:20px; font-size:12px; color:#10b981;">✔️ FUNCIONAMIENTO TOTAL CONFIRMADO</div>
+            <div style="margin-top:20px; font-size:12px; color:#10b981;">V100 - PWA APP</div>
         </div>
     </div>
 
@@ -217,11 +208,11 @@
                     <div class="login-title">Bienvenido</div>
                     <div class="login-subtitle">Selecciona tu perfil</div>
                     <div class="role-card" onclick="irLogin('admin')">
-                        <div class="role-icon-box"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
-                        <div class="role-info"><h4>Administrador</h4><p>Gestión global</p></div>
+                        <div class="role-icon-box">🗺️</div>
+                        <div class="role-info"><h4>Administrador</h4><p>Gestión global y Mapas</p></div>
                     </div>
                     <div class="role-card" onclick="irLogin('worker')">
-                        <div class="role-icon-box" style="color:#10b981; background:#eff6ff;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
+                        <div class="role-icon-box" style="color:#10b981; background:#eff6ff;">📍</div>
                         <div class="role-info"><h4>Recogedor</h4><p>Ruta y entregas</p></div>
                     </div>
                 </div>
@@ -267,9 +258,20 @@
                 <div class="menu-card" onclick="nav('admin-tab')">
                     <div class="menu-icon">📊</div><div><span style="font-weight:700; display:block; color:var(--text-main);">Control Total</span><span style="font-size:12px; color:var(--text-muted);">Tablas y reportes</span></div>
                 </div>
+                <div class="menu-card" onclick="abrirMapaMaestro()">
+                    <div class="menu-icon">🗺️</div><div><span style="font-weight:700; display:block; color:var(--text-main);">Mapa Maestro</span><span style="font-size:12px; color:var(--text-muted);">Radar GPS de ubicaciones</span></div>
+                </div>
                 <div class="menu-card" onclick="nav('admin-team')">
                     <div class="menu-icon">👥</div><div><span style="font-weight:700; display:block; color:var(--text-main);">Equipo</span><span style="font-size:12px; color:var(--text-muted);">Gestionar personal</span></div>
                 </div>
+            </div>
+        </div>
+
+        <div id="view-admin-mapa" class="app-view">
+            <button onclick="nav('admin-dashboard')" style="background:none; border:none; color:var(--text-muted); font-weight:600; cursor:pointer; margin-bottom:15px;">← Volver al Panel</button>
+            <div class="card" style="padding:10px;">
+                <div class="card-header" style="margin-left:10px; margin-top:10px;">RADAR DE GESTIONES</div>
+                <div id="mapa-maestro-div" style="width:100%; height:60vh; border-radius:12px; z-index:1;"></div>
             </div>
         </div>
 
@@ -309,7 +311,7 @@
         <div id="view-admin-tab" class="app-view">
             <button onclick="nav('admin-dashboard')" style="background:none; border:none; color:var(--text-muted); font-weight:600; cursor:pointer; margin-bottom:15px;">← Volver</button>
             <div class="card">
-                <label class="input-label">BUSCAR EN TABLA (Nombre, Tarjeta, Zona...)</label>
+                <label class="input-label">BUSCAR EN TABLA (Nombre, Tarjeta...)</label>
                 <input type="text" id="admin-search" class="app-input" placeholder="Escribe 'David', Tarjeta, Zona o Estado..." onkeyup="renderTabla()">
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
                     <div><label class="input-label">DESDE</label><input type="date" id="filtro-inicio" class="app-input" style="margin:0;" onchange="renderTabla()"></div>
@@ -396,9 +398,44 @@
     </div>
 
     <div id="modal-aprobar" class="modal-overlay"><div class="modal-box"><h3 style="color:var(--text-main);">APROBAR</h3><p style="color:var(--text-muted);">¿Confirmar recepción de dinero/ficha?</p><input type="hidden" id="aprobar-id"><button onclick="aprobarRecepcionAdmin()" class="app-btn btn-review">CONFIRMAR</button><button onclick="document.getElementById('modal-aprobar').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CANCELAR</button></div></div>
+    
     <div id="modal-edit" class="modal-overlay"><div class="modal-box"><h3 style="color:var(--text-main);">EDITAR</h3><input type="hidden" id="edit-id"><label class="input-label">Estado</label><select id="edit-estado" class="app-input"><option value="PENDIENTE">PENDIENTE</option><option value="EN_REVISION">EN REVISIÓN</option><option value="RECOGIDO">RECOGIDO</option><option value="NO_RECOGIDO">NO RECOGIDO</option></select><input id="edit-tarjeta" class="app-input" placeholder="Tarjeta"><input id="edit-multa" class="app-input" placeholder="Multa"><select id="edit-recogedor" class="app-input"></select><select id="edit-vendedor" class="app-input"></select><input id="edit-direccion" class="app-input"><button onclick="guardarEdicion()" class="app-btn">GUARDAR CAMBIOS</button><button onclick="borrarRegistro()" class="app-btn" style="background:#fee2e2; color:#ef4444; margin-top:10px; box-shadow:none;">BORRAR</button><button onclick="document.getElementById('modal-edit').style.display='none'" class="app-btn" style="background:var(--bg-input); color:var(--text-muted); margin-top:10px; box-shadow:none;">CERRAR</button></div></div>
 
+    <div id="modal-mapa" class="modal-overlay">
+        <div class="modal-box" style="width: 95%; max-width: 500px; padding: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 style="margin:0; color:var(--text-main);" id="mapa-modal-title">UBICACIÓN</h3>
+                <button onclick="cerrarMapaModal()" style="background:#fef2f2; color:#ef4444; border:none; width:30px; height:30px; border-radius:8px; font-weight:bold; cursor:pointer;">X</button>
+            </div>
+            <div id="mapa-mini-div" style="width:100%; height:350px; border-radius:12px; background:#e2e8f0; z-index:1;"></div>
+        </div>
+    </div>
+
     <script>
+        // --- PWA SCRIPT INSTALACION ---
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('pwa-install-banner').style.display = 'flex';
+        });
+
+        document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                document.getElementById('pwa-install-banner').style.display = 'none';
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+            }
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW no registrado (requiere archivo)'));
+            });
+        }
+
+        // FIREBASE SETUP
         const firebaseConfig = { apiKey: "AIzaSyAbyNccFOMXruf2Dk_qtARD97JwXPU2Q-Y", authDomain: "control-recogido.firebaseapp.com", projectId: "control-recogido", storageBucket: "control-recogido.firebasestorage.app", messagingSenderId: "757224344188", appId: "1:757224344188:web:e13c9574e2378fd7ead7f9", measurementId: "G-CPMJV5WHR3" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(); const db = firebase.firestore();
@@ -437,31 +474,14 @@
             if(rol === 'worker') updateSelects();
         }
 
-        // LIMPIEZA DE NOMBRES INFALIBLE Y SEGURA
-        const norm = (str) => {
-            if (!str) return '';
-            return str.toString().trim().toUpperCase();
-        };
+        const norm = (str) => { if (!str) return ''; return str.toString().trim().toUpperCase(); };
 
-        // LA FUNCIÓN QUE FALTABA Y CRASHABA TODO
         function formatDate(t) { 
-            try {
-                if(!t) return '-'; 
-                let d = t.seconds ? new Date(t.seconds * 1000) : new Date(t); 
-                if(isNaN(d)) return '-';
-                return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`; 
-            } catch(e) { return '-'; }
+            try { if(!t) return '-'; let d = t.seconds ? new Date(t.seconds * 1000) : new Date(t); if(isNaN(d)) return '-'; return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`; } catch(e) { return '-'; }
         }
 
         function formatDateTime(val) {
-            try {
-                if(!val) return '';
-                let d = new Date(val);
-                if(isNaN(d)) return '';
-                let date = d.toLocaleDateString('es-HN', { day:'2-digit', month:'2-digit', year:'numeric' });
-                let time = d.toLocaleTimeString('es-HN', { hour: '2-digit', minute:'2-digit' });
-                return `${date} - ${time}`;
-            } catch(e) { return ''; }
+            try { if(!val) return ''; let d = new Date(val); if(isNaN(d)) return ''; let date = d.toLocaleDateString('es-HN', { day:'2-digit', month:'2-digit', year:'numeric' }); let time = d.toLocaleTimeString('es-HN', { hour: '2-digit', minute:'2-digit' }); return `${date} - ${time}`; } catch(e) { return ''; }
         }
 
         function validarAdmin() {
@@ -481,11 +501,7 @@
             db.collection("articulos_recogidos").onSnapshot(s => { 
                 misDatos=[]; 
                 s.forEach(d => { let o=d.data(); o.id=d.id; misDatos.push(o); }); 
-                misDatos.sort((a,b) => {
-                    let t1 = a.creado?.seconds || 0;
-                    let t2 = b.creado?.seconds || 0;
-                    return t2 - t1;
-                });
+                misDatos.sort((a,b) => { let t1 = a.creado?.seconds || 0; let t2 = b.creado?.seconds || 0; return t2 - t1; });
                 refrescarVistas(); calcularStats(); 
             });
             if(usuario.rol === 'admin') renderEquipo();
@@ -533,15 +549,14 @@
             return { dept: 'HONDURAS 🇭🇳', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tegucigalpa_at_dusk.jpg/1200px-Tegucigalpa_at_dusk.jpg' };
         }
         
-        function abrirMapa(direccion, zona) { 
+        function abrirMapaLlegar(direccion, zona) { 
             const query = encodeURIComponent(direccion + ', ' + zona + ', Honduras');
-            window.open("https://www.google.com/maps/search/?api=1&query=" + query, '_blank'); 
+            window.open("https://maps.google.com/?q=" + query, '_blank'); 
         }
         
         function toggleFiltroZona(z) { filtroZonaActivo = z; renderMisiones(); }
 
         // --- RUTA DEL RECOLECTOR ---
-        // AHORA: Las tarjetas "NO_RECOGIDO" desaparecen de aquí y se van SOLO AL HISTORIAL
         function renderMisiones() {
             try {
                 const c = document.getElementById('worker-misiones-container'); c.innerHTML="";
@@ -551,7 +566,7 @@
                     let rec = norm(d.recogio);
                     let usr = norm(usuario.nombre);
                     let est = norm(d.estado);
-                    return rec.includes(usr) && est === 'PENDIENTE'; // SOLO MUESTRA PENDIENTES
+                    return rec.includes(usr) && (est === 'PENDIENTE'); // AQUI SOLO PENDIENTES
                 });
                 
                 const zCont = document.getElementById('zona-summary');
@@ -575,9 +590,9 @@
 
                     htmlFinal += `
                     <div class="card mision-card" style="padding:0;">
-                        <div class="map-header" onclick="abrirMapa('${d.direccion}', '${d.zona}')" style="background-image: url('${mapInfo.img}');">
+                        <div class="map-header" onclick="abrirMapaLlegar('${d.direccion}', '${d.zona}')" style="background-image: url('${mapInfo.img}');">
                             <span class="dept-tag">${mapInfo.dept}</span>
-                            <span class="map-action">📍 VER MAPA</span>
+                            <span class="map-action">🚕 CÓMO LLEGAR</span>
                         </div>
                         <div style="padding:20px;">
                             <div style="margin-bottom:10px;">${fugaBadge} <span class="zona-badge">${d.zona}</span></div>
@@ -597,7 +612,7 @@
             } catch(e) { console.error("Error en misiones:", e); }
         }
 
-        // --- HISTORIAL DEL RECOLECTOR 100% CERO ERRORES ---
+        // --- HISTORIAL DEL RECOLECTOR ---
         function renderHist() {
             try {
                 const c = document.getElementById('worker-hist-container'); 
@@ -637,8 +652,8 @@
                     let timeStamp = d.fecha_gestion || (d.creado ? (d.creado.seconds ? d.creado.seconds * 1000 : d.creado) : null);
                     let timeHtml = timeStamp ? `<div class="time-stamp">🕒 ${formatDateTime(timeStamp)}</div>` : '';
 
-                    // ENLACE GPS EN HISTORIAL
-                    let gpsBtn = (d.lat && d.lng) ? `<a href="https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}" target="_blank" class="gps-btn-link">📍 VER MAPA GPS</a>` : '';
+                    // MINI MAPA PARA RECOLECTOR
+                    let gpsBtn = (d.lat && d.lng) ? `<button onclick="abrirMapaModal(${d.lat}, ${d.lng}, '${d.tarjeta}', '${d.recogio}')" class="gps-btn-link">📍 VER MINI MAPA</button>` : '';
                     let gpsMissing = (!d.lat && d.gps_error) ? `<span class="gps-missing">📵 ${d.gps_error}</span>` : '';
 
                     htmlFinal += `
@@ -665,7 +680,7 @@
             } catch(e) { console.error("Error en historial:", e); }
         }
 
-        // --- SISTEMA GPS Y ACTUALIZACIÓN SEGURO (CON TIMEOUT BAJO PARA NO TRABARSE) ---
+        // --- SISTEMA GPS Y ACTUALIZACIÓN SEGURO ---
         function obtenerGPSYActualizar(id, st, ex={}, btnId, originalText) {
             const btn = document.getElementById(btnId);
             if(btn) { btn.innerText = "📍 OBTENIENDO GPS..."; btn.disabled = true; }
@@ -680,10 +695,9 @@
             };
 
             if (navigator.geolocation) {
-                // Timeout de 3 segundos. Si tarda más, lo guarda de todos modos sin trabar la pantalla.
                 navigator.geolocation.getCurrentPosition(
                     (pos) => { ex.lat = pos.coords.latitude; ex.lng = pos.coords.longitude; finalizar(); },
-                    (err) => { ex.gps_error = "Sin señal GPS"; finalizar(); },
+                    (err) => { ex.gps_error = "Sin acceso"; finalizar(); },
                     { enableHighAccuracy: false, timeout: 3000, maximumAge: 10000 }
                 );
             } else { ex.gps_error = "No soportado"; finalizar(); }
@@ -753,7 +767,7 @@
         function exportarExcel() { const d = misDatos.map(x=>({Tarjeta:x.tarjeta, Estado:x.estado, Zona:x.zona, Observacion:x.obs||'', Hora_Gestion: x.fecha_gestion ? formatDateTime(x.fecha_gestion) : ''})); XLSX.utils.book_append_sheet(wb=XLSX.utils.book_new(), XLSX.utils.json_to_sheet(d), "Datos"); XLSX.writeFile(wb, "Reporte.xlsx"); }
         function generarPDFProfesional() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text("REPORTE CMR", 10, 10); doc.autoTable({ html: '#tabla-admin' }); doc.save("Reporte.pdf"); }
         
-        // --- ADMIN TABLE FIX DE BUSQUEDA PARA VER EL HISTORIAL ---
+        // --- TABLA ADMIN ---
         function renderTabla() {
             try {
                 const t = document.getElementById('tbody-admin'); t.innerHTML="";
@@ -766,7 +780,6 @@
                 let data = misDatos.filter(d => {
                     if(d.creado && start && end) { let fecha = new Date(d.creado.seconds * 1000); if(fecha < start || fecha > end) return false; }
                     if(term) { 
-                        // AHORA BUSCA EN EL NOMBRE DEL RECOLECTOR TAMBIEN
                         let searchStr = `${d.tarjeta || ''} ${d.zona || ''} ${d.estado || ''} ${d.recogio || ''} ${d.vendedor || ''} ${d.cliente || ''}`.toUpperCase();
                         if(!searchStr.includes(term)) return false; 
                     }
@@ -780,10 +793,10 @@
                     let rowClass = "";
                     let fugaIcon = d.fuga ? '🚨' : '';
                     
-                    // ENLACE GPS EN ADMIN TABLE (NUEVA API GOOGLE MAPS)
+                    // MINI MAPA PRO PARA ADMIN
                     let gpsLink = "";
                     if(d.lat && d.lng) {
-                        gpsLink = `<br><a href="https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}" target="_blank" class="gps-btn-link" style="margin-top:5px; padding:3px 8px; font-size:10px;">📍 VER GPS</a>`;
+                        gpsLink = `<br><button class="gps-btn-link" onclick="abrirMapaModal(${d.lat}, ${d.lng}, '${d.tarjeta}', '${d.recogio || 'Sin asignar'}')">📍 VER MINI-MAPA</button>`;
                     } else if(d.gps_error) {
                         gpsLink = `<br><span class="gps-missing">📵 ${d.gps_error}</span>`;
                     }
@@ -814,6 +827,74 @@
                     </tr>`;
                 });
             } catch(e) { console.error("Error en renderTabla Admin:", e); }
+        }
+
+        // --- SISTEMA MAPAS PROFESIONALES (LEAFLET) ---
+        let mapMini = null;
+        let mapMaestro = null;
+        let markersMaestro = [];
+
+        function abrirMapaModal(lat, lng, tarjeta, recogio) {
+            document.getElementById('modal-mapa').style.display = 'flex';
+            document.getElementById('mapa-modal-title').innerText = `TARJETA #${tarjeta} - 👤 ${recogio}`;
+            
+            setTimeout(() => {
+                if(!mapMini) {
+                    mapMini = L.map('mapa-mini-div').setView([lat, lng], 16);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(mapMini);
+                } else {
+                    mapMini.setView([lat, lng], 16);
+                    mapMini.eachLayer((layer) => { if (layer instanceof L.Marker) mapMini.removeLayer(layer); });
+                }
+                L.marker([lat, lng]).addTo(mapMini).bindPopup(`<b>#${tarjeta}</b><br>👤 ${recogio}`).openPopup();
+                mapMini.invalidateSize(); 
+            }, 300);
+        }
+
+        function cerrarMapaModal() {
+            document.getElementById('modal-mapa').style.display = 'none';
+        }
+
+        function abrirMapaMaestro() {
+            nav('admin-mapa');
+            
+            setTimeout(() => {
+                if(!mapMaestro) {
+                    mapMaestro = L.map('mapa-maestro-div').setView([15.5000, -88.0333], 8);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(mapMaestro);
+                }
+                
+                markersMaestro.forEach(m => mapMaestro.removeLayer(m));
+                markersMaestro = [];
+                
+                let bounds = [];
+                misDatos.forEach(d => {
+                    if(d.lat && d.lng) {
+                        let st = (d.estado||'').toUpperCase();
+                        let colorPin = st.includes('RECOGIDO') && !st.includes('NO') ? '#10b981' : (st.includes('NO') ? '#ef4444' : '#3b82f6');
+                        
+                        let m = L.circleMarker([d.lat, d.lng], {
+                            color: colorPin, fillColor: colorPin, fillOpacity: 0.8, radius: 8
+                        }).addTo(mapMaestro);
+                        
+                        m.bindPopup(`
+                            <div style="font-family:'Inter',sans-serif; text-align:center;">
+                                <b style="font-size:16px; color:#1e40af;">#${d.tarjeta}</b><br>
+                                <b>👤 ${d.recogio || 'N/A'}</b><br>
+                                <span style="font-size:11px; color:#64748b;">${d.zona}</span><br>
+                                <span style="font-size:10px; padding:2px 6px; background:${colorPin}; color:white; border-radius:4px; font-weight:bold; margin-top:5px; display:inline-block;">${d.estado.replace('_',' ')}</span>
+                            </div>
+                        `);
+                        markersMaestro.push(m);
+                        bounds.push([d.lat, d.lng]);
+                    }
+                });
+                
+                if(bounds.length > 0) {
+                    mapMaestro.fitBounds(bounds, {padding: [30, 30]});
+                }
+                mapMaestro.invalidateSize();
+            }, 1100); 
         }
     </script>
 </body>
